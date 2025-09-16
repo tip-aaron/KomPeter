@@ -1,0 +1,99 @@
+############################
+# Maven
+############################
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/timing.properties
+!mvnw
+!mvnw.cmd
+
+############################
+# IntelliJ IDEA
+############################
+.idea/
+*.iml
+*.iws
+out/
+.idea_modules/
+*.ipr
+
+############################
+# Eclipse
+############################
+.project
+.classpath
+.settings/
+bin/
+tmp/
+*.launch
+*.prefs
+
+############################
+# NetBeans
+############################
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+*.nb-gradle-properties
+
+############################
+# VS Code
+############################
+.vscode/settings.json
+.history/
+*.code-workspace
+
+############################
+# Common Java
+############################
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+############################
+# Logs
+############################
+*.log
+*.out
+
+############################
+# OS / Misc
+############################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.cache
+*.swp
+*.swo
+
+############################
+# Others (optional)
+############################
+# JetBrains Fleet
+.fleet/
+
+# Sonar
+.sonar/
+.scannerwork/
+
+# Coverage / Reports
+jacoco.exec
+.coverage
+.coverage.*
+*.lcov

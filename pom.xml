@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.ragudos.kompeter</groupId>
+    <artifactId>KomPeter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>KomPeter</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>22</maven.compiler.release>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>development</env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>production</env>
+            </properties>
+        </profile>
+    </profiles>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>kompeter-app-desktop</module>
+        <module>kompeter-assets</module>
+        <module>kompeter-configuration</module>
+        <module>kompeter-core</module>
+        <module>kompeter-cryptography</module>
+        <module>kompeter-database</module>
+        <module>kompeter-inventory</module>
+        <module>kompeter-lookandfeel</module>
+        <module>kompeter-monitoring</module>
+        <module>kompeter-pointofsale</module>
+        <module>kompeter-utilities</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.11.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Optionally: parameterized tests support -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <!-- Filter .properties for dynamic values
+        then exclude them on the next resource build -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see
+        https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.4.0</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see
+        https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <!-- site lifecycle, see
+        https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.12.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>2.44.4</version>
+                    <configuration>
+                        <ratchetFrom>origin/main</ratchetFrom>
+                        <java>
+                            <googleJavaFormat>
+                                <version>1.26.0</version>
+                                <style>GOOGLE</style>
+                                <reflowLongStrings>true</reflowLongStrings>
+                                <formatJavadoc>true</formatJavadoc>
+                            </googleJavaFormat>
+                            <importOrder />
+                            <removeUnusedImports />
+                            <formatAnnotations />
+                            <indent>
+                                <tabs>true</tabs>
+                                <spacesPerTab>2</spacesPerTab>
+                            </indent>
+                            <indent>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                            <licenseHeader>
+                                <file>${project.basedir}/LICENSE</file>
+                                <delimiter>package </delimiter>
+                            </licenseHeader>
+                        </java>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>build</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>install</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-Run Desktop App (prod)</actionName>
+            <displayName>Run Desktop App (prod)</displayName>
+            <goals>
+                <goal>exec:java</goal>
+                <goal>-pl</goal>
+                <goal>kompeter-app-desktop</goal>
+                <goal>-Dexec.mainClass=com.github.ragudos.kompeter.app.desktop.KompeterDesktopApp</goal>
+                
+                
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>prod</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>
