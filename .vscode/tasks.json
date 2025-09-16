@@ -2,6 +2,26 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Check Formatting",
+            "type": "shell",
+            "command": "./mvnw spotless:check",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Apply Formatting",
+            "type": "shell",
+            "command": "./mvnw spotless:apply",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Maven Build (Prod)",
             "type": "shell",
             "command": "./mvnw clean install -Pprod",
@@ -9,7 +29,8 @@
                 "kind": "build",
                 "isDefault": false
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "dependsOn": ["Check Formatting"]
         },
         {
             "label": "Maven Build (Dev)",
@@ -19,7 +40,8 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "dependsOn": ["Check Formatting"]
         },
         {
             "label": "Run Desktop App (Dev)",
