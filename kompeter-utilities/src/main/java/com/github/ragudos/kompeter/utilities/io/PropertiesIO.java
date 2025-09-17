@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
-public final class PropertiesIO {
+public class PropertiesIO {
     private static final Logger LOGGER = KompeterLogger.getLogger(PropertiesIO.class);
     public static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
