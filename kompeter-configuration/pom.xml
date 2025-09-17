@@ -10,4 +10,12 @@
     </parent>
 
     <artifactId>kompeter-configuration</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.ragudos.kompeter</groupId>
+            <artifactId>kompeter-utilities</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
