@@ -4,7 +4,7 @@
 
 - Java JDK 22+
 - Maven 3.9+
-- IDE: IntelliJ IDEA / Eclipse / VS Code (with Java extension)
+- IDE: IntelliJ IDEA / Eclipse / VS Code / NetBeans (with Java extension)
 
 ## Cloning the Repo
 
