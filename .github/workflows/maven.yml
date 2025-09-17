@@ -1,0 +1,38 @@
+name: Java CI
+
+on:
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: Set up JDK 22
+              uses: actions/setup-java@v4
+              with:
+                  java-version: "22"
+                  distribution: "temurin"
+
+            - name: Make Maven Wrapper Executable
+              run: chmod +x ./mvnw
+
+            - name: Run the Maven verify phase
+              run: ./mvnw --batch-mode --update-snapshots verify
+
+            - name: Build with Maven (package)
+              run: ./mvnw --batch-mode --update-snapshots package
+
+            - name: Copy Desktop App JAR to staging directory
+              run: mkdir staging && cp kompeter-app-desktop/target/*.jar staging/
+
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: Package
+                  path: staging
