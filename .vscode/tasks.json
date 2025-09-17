@@ -2,6 +2,26 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Run All Tests (Dev)",
+            "type": "shell",
+            "command": "./mvnw test -Pdev",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run All Tests (Prod)",
+            "type": "shell",
+            "command": "./mvnw test -Pprod",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Check Formatting",
             "type": "shell",
             "command": "./mvnw spotless:check",
