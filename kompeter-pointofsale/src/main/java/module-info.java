@@ -1,3 +1,1 @@
-module kompeter.pointofsale {
-
-}
+module kompeter.pointofsale {}

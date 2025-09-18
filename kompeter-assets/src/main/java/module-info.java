@@ -1,3 +1,1 @@
-module kompeter.assets {
-
-}
+module kompeter.assets {}

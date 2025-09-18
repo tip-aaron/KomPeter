@@ -1,3 +1,1 @@
-module kompeter.core {
-
-}
+module kompeter.core {}

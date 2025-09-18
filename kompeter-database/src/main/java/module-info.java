@@ -1,3 +1,1 @@
-module kompeter.database {
-
-}
+module kompeter.database {}

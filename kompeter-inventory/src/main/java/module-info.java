@@ -1,3 +1,1 @@
-module kompeter.inventory {
-
-}
+module kompeter.inventory {}

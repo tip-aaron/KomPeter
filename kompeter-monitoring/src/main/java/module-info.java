@@ -1,3 +1,1 @@
-module kompeter.monitoring {
-
-}
+module kompeter.monitoring {}
