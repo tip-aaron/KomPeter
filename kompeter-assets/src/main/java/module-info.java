@@ -1,3 +1,1 @@
-module com.github.ragudos.kompeter.assets {
-
-}
+module kompeter.assets {}

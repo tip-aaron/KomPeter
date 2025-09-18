@@ -1,4 +1,4 @@
-module com.github.ragudos.kompeter.utilities {
+module kompeter.utilities {
     requires transitive java.logging;
     requires static org.jetbrains.annotations;
 

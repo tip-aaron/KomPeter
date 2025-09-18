@@ -38,6 +38,8 @@ dist/
 nbdist/
 .nb-gradle/
 *.nb-gradle-properties
+nbactions.xml
+nb-configuration.xml
 
 ############################
 # VS Code
