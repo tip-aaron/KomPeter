@@ -1,3 +1,3 @@
-module com.github.ragudos.kompeter.utilities {
+module kompeter.core {
 
 }

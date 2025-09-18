@@ -1,3 +1,3 @@
-module com.github.ragudos.kompeter.database {
+module kompeter.database {
 
 }

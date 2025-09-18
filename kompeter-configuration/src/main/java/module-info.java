@@ -1,5 +1,5 @@
-module com.github.ragudos.kompeter.configuration {
-    requires transitive com.github.ragudos.kompeter.utilities;
+module kompeter.configuration {
+    requires transitive kompeter.utilities;
 
     exports com.github.ragudos.kompeter.configurations;
 }

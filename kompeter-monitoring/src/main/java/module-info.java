@@ -1,3 +1,3 @@
-module com.github.ragudos.kompeter.monitoring {
+module kompeter.monitoring {
 
 }

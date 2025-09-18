@@ -1,3 +1,3 @@
-module com.github.ragudos.kompeter.inventory {
+module kompeter.inventory {
 
 }
