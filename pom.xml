@@ -42,6 +42,7 @@
     </licenses>
 
     <modules>
+        <module>kompeter-app-desktop</module>
         <module>kompeter-assets</module>
         <module>kompeter-configuration</module>
         <module>kompeter-core</module>
