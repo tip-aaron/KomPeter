@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.ragudos.kompeter</groupId>
@@ -42,7 +43,6 @@
 
     <modules>
         <module>kompeter-app-desktop</module>
-        <module>kompeter-assets</module>
         <module>kompeter-configuration</module>
         <module>kompeter-core</module>
         <module>kompeter-cryptography</module>
@@ -67,6 +67,26 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -98,8 +118,23 @@
                 </excludes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <app.title>${project.parent.name}</app.title>
+                        <app.version>${project.version}</app.version>
+                        <app.env>${env}</app.env>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
-            <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent
+            pom) -->
             <plugins>
                 <!-- clean lifecycle, see
         https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -108,7 +143,7 @@
                     <version>3.4.0</version>
                 </plugin>
                 <!-- default lifecycle, jar packaging: see
-        https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.3.1</version>
@@ -148,7 +183,6 @@
                     <artifactId>spotless-maven-plugin</artifactId>
                     <version>2.44.4</version>
                     <configuration>
-                        <ratchetFrom>origin/main</ratchetFrom>
                         <java>
                             <googleJavaFormat>
                                 <version>1.26.0</version>
@@ -167,10 +201,6 @@
                                 <spaces>true</spaces>
                                 <spacesPerTab>4</spacesPerTab>
                             </indent>
-                            <licenseHeader>
-                                <file>${project.basedir}/LICENSE</file>
-                                <delimiter>package </delimiter>
-                            </licenseHeader>
                         </java>
                     </configuration>
                 </plugin>

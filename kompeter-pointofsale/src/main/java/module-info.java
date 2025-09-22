@@ -1,3 +1,1 @@
-module com.github.ragudos.kompeter.pointofsale {
-
-}
+module kompeter.pointofsale {}
