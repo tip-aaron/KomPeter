@@ -1,11 +1,13 @@
 module kompeter.utilities {
     requires transitive java.logging;
     requires static org.jetbrains.annotations;
+    //requires kompeter.database;
 
     exports com.github.ragudos.kompeter.utilities;
     exports com.github.ragudos.kompeter.utilities.logger;
     exports com.github.ragudos.kompeter.utilities.validator;
     exports com.github.ragudos.kompeter.utilities.io;
+    exports com.github.ragudos.kompeter.utilities.io.load;
     exports com.github.ragudos.kompeter.utilities.constants;
     exports com.github.ragudos.kompeter.utilities.cache;
     exports com.github.ragudos.kompeter.utilities.platform;
