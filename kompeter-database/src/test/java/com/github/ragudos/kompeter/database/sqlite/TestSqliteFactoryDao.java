@@ -1,21 +1,28 @@
 package com.github.ragudos.kompeter.database.sqlite;
 
-import java.sql.Connection;
+import com.github.ragudos.kompeter.database.AbstractMigratorFactory;
+import com.github.ragudos.kompeter.database.migrations.Migrator;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestSqliteFactoryDao {
+
     @Test
-    @DisplayName("Test Sqlite database connection")
-    void testSqliteDatabaseConnection() {
+    @DisplayName("Test migration")
+    void testMigration() {
         try {
-            Connection connection = SqliteFactoryDao.createConnection();
-            assert connection != null : "Connection should not be null";
-            assert !connection.isClosed() : "Connection should be open";
-            SqliteFactoryDao.closeConnection(connection);
+            AbstractMigratorFactory factory =
+                    AbstractMigratorFactory.getMigrator(AbstractMigratorFactory.SQLITE);
+            Migrator migrator = factory.getMigrator();
+
+            migrator.migrate();
+
+            Files.delete(Paths.get(SqliteFactoryDao.MAIN_DB_FILE_NAME));
         } catch (Exception e) {
             e.printStackTrace();
-            assert false : "Failed to connect to SQLite database or create tables.";
+            assert false : "Migration failed.";
         }
     }
 }
