@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>kompeter-configuration</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
