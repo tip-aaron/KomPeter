@@ -19,5 +19,5 @@ public abstract class AbstractMigratorFactory {
 
     public abstract Migrator getMigrator();
 
-    public abstract Seeder getSeeder();
+    public abstract Seeder getSeeder(); 
 }
