@@ -16,40 +16,28 @@ import java.util.List;
 public class SqliteInventoryDAO implements InventoryDAO {
     @Override
     public List<InventoryCountDTO> getInventoryCount() {
-    
         return null;
-    
     }
     @Override
     public List<InventoryCountDTO> getInventoryCount(LocalDateTime from) {
-    
         return null;
-    
     }
     @Override
     public List<InventoryCountDTO> getInventoryCount(LocalDateTime from, LocalDateTime to) {
-    
         return null;
-    
     }
     
     
     @Override
     public List<InventoryValueDTO> getInventoryValue() {
-    
         return null;
-    
     }
     @Override
     public List<InventoryValueDTO> getInventoryValue(LocalDateTime from) {
-    
         return null;
-    
     }
     @Override
     public List<InventoryValueDTO> getInventoryValue(LocalDateTime from, LocalDateTime to) {
-    
         return null;
-    
     }
 }

@@ -5,10 +5,6 @@
 package com.github.ragudos.kompeter.database.dao.impl.sqlite;
 
 import com.github.ragudos.kompeter.database.dao.StockDAO;
-import com.github.ragudos.kompeter.database.dto.SalesDTOs.ExpensesDTO;
-import com.github.ragudos.kompeter.database.dto.SalesDTOs.ProfitDTO;
-import com.github.ragudos.kompeter.database.dto.SalesDTOs.RevenueDTO;
-import com.github.ragudos.kompeter.database.dto.SalesDTOs.TopSellingDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.LowStockItemsDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.OldItemsDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.OnHandUnitDTO;
