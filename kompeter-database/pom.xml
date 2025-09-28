@@ -27,7 +27,7 @@
             <artifactId>kompeter-utilities</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-    </dependencies>
+    
 
         
 		<dependency>
@@ -42,7 +42,9 @@
         	<artifactId>kompeter-utilities</artifactId>
         	<version>1.0-SNAPSHOT</version>
         </dependency>
+        
     </dependencies>
+    
     <build>
     	<resources> 
     		<resource>

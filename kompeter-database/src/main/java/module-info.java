@@ -10,7 +10,5 @@ module kompeter.database {
     exports com.github.ragudos.kompeter.database.migrations;
     exports com.github.ragudos.kompeter.database.seeder;
     exports com.github.ragudos.kompeter.database.sqlite;
-	requires java.sql;
-	requires kompeter.utilities;
 
 }

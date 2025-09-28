@@ -32,7 +32,6 @@ public class KompeterDesktopApp {
 
                     mainFrame.setVisible(true);
                 });
-    public static void main(String[] args) {
-        System.out.println("Hello, KomPeteeer!");
+  
     }
 }
