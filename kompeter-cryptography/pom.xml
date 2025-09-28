@@ -11,6 +11,9 @@
 
     <artifactId>kompeter-cryptography</artifactId>
 
+    <version>1.0-SNAPSHOT</version>
+
+
     <dependencies>
         <dependency>
             <groupId>com.github.ragudos.kompeter</groupId>
