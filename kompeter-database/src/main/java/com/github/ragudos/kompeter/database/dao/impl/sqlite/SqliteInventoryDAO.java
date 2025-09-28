@@ -7,7 +7,18 @@ package com.github.ragudos.kompeter.database.dao.impl.sqlite;
 import com.github.ragudos.kompeter.database.dao.InventoryDAO;
 import com.github.ragudos.kompeter.database.dto.InventoryDTOs.InventoryCountDTO;
 import com.github.ragudos.kompeter.database.dto.InventoryDTOs.InventoryValueDTO;
+import com.github.ragudos.kompeter.database.sqlite.SqliteFactoryDao;
+import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 /**
  *
@@ -15,39 +26,68 @@ import java.util.List;
  */
 public class SqliteInventoryDAO implements InventoryDAO {
     @Override
-    public List<InventoryCountDTO> getInventoryCount() {
+    public List<InventoryCountDTO> getInventoryCount() throws SQLException{
         return getInventoryCount(null, null);
     }
     @Override
-    public List<InventoryCountDTO> getInventoryCount(Timestamp from) {
+    public List<InventoryCountDTO> getInventoryCount(Timestamp from) throws SQLException{
         return getInventoryCount(from, null);
     }
     @Override
-    public List<InventoryCountDTO> getInventoryCount(Timestamp from, Timestamp to) {
-        String query;
-        
+    public List<InventoryCountDTO> getInventoryCount(Timestamp from, Timestamp to) throws SQLException{
+        List<InventoryCountDTO> results = new ArrayList<>();
+
+        String sqlFile;
         if (from == null && to == null) {
-            query = "";
-        } else if (from != null && to == null) {
-            query = "";
+            sqlFile = "InventoryCount_All.sql";
+        } else if (from == null) {
+            sqlFile = "InventoryCount_To.sql";
         } else {
-            query = "";
+            sqlFile = "InventoryCount_Range.sql";
         }
-        
-        return null;
+
+        String query;
+        try {
+            query = Files.readString(Paths.get(sqlFile));
+        } catch (IOException e) {
+            throw new SQLException("Error reading SQL file: " + sqlFile, e);
+        }
+
+        try (Connection conn = SqliteFactoryDao.createConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            int paramIndex = 1;
+            if (from != null) stmt.setTimestamp(paramIndex++, from);
+            if (to != null) stmt.setTimestamp(paramIndex, to);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    InventoryCountDTO dto = new InventoryCountDTO(
+                        rs.getTimestamp("date"),
+                        rs.getInt("total_inventory"),
+                        rs.getInt("total_purchased"),
+                        rs.getInt("total_sold")
+                    );
+
+                    // Logs the DTO and still adds it to the list
+                    results.add(KompeterLogger.log(dto));
+                }
+            }
+        }
+        return results;
     }
     
     
     @Override
-    public List<InventoryValueDTO> getInventoryValue() {
+    public List<InventoryValueDTO> getInventoryValue() throws SQLException{
         return getInventoryValue(null, null);
     }
     @Override
-    public List<InventoryValueDTO> getInventoryValue(Timestamp from) {
+    public List<InventoryValueDTO> getInventoryValue(Timestamp from) throws SQLException{
         return getInventoryValue(from, null);
     }
     @Override
-    public List<InventoryValueDTO> getInventoryValue(Timestamp from, Timestamp to) {
+    public List<InventoryValueDTO> getInventoryValue(Timestamp from, Timestamp to) throws SQLException{
         String query;
         
         if (from == null && to == null) {
