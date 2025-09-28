@@ -10,7 +10,7 @@ import com.github.ragudos.kompeter.database.dto.StockDTOs.OldItemsDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.OnHandUnitDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.PurchaseUnitDTO;
 import com.github.ragudos.kompeter.database.dto.StockDTOs.SalesUnitDTO;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -23,11 +23,11 @@ public class SqliteStockDAO implements StockDAO {
         return null;
     }
     @Override
-    public List<PurchaseUnitDTO> getPurchaseUnit(LocalDateTime from) {
+    public List<PurchaseUnitDTO> getPurchaseUnit(Timestamp from) {
         return null;
     }
     @Override
-    public List<PurchaseUnitDTO> getPurchaseUnit(LocalDateTime from, LocalDateTime to) {
+    public List<PurchaseUnitDTO> getPurchaseUnit(Timestamp from, Timestamp to) {
         return null;
     }
     
@@ -37,11 +37,11 @@ public class SqliteStockDAO implements StockDAO {
         return null;
     }
     @Override
-    public List<SalesUnitDTO> getSalesUnit(LocalDateTime from) {
+    public List<SalesUnitDTO> getSalesUnit(Timestamp from) {
         return null;
     }
     @Override
-    public List<SalesUnitDTO> getSalesUnit(LocalDateTime from, LocalDateTime to) {
+    public List<SalesUnitDTO> getSalesUnit(Timestamp from, Timestamp to) {
         return null;
     }
     
@@ -51,11 +51,11 @@ public class SqliteStockDAO implements StockDAO {
         return null;
     }
     @Override
-    public List<OnHandUnitDTO> getOnHandUnit(LocalDateTime from) {
+    public List<OnHandUnitDTO> getOnHandUnit(Timestamp from) {
         return null;
     }
     @Override
-    public List<OnHandUnitDTO> getOnHandUnit(LocalDateTime from, LocalDateTime to) {
+    public List<OnHandUnitDTO> getOnHandUnit(Timestamp from, Timestamp to) {
         return null;
     }
     
@@ -65,11 +65,11 @@ public class SqliteStockDAO implements StockDAO {
         return null;
     }
     @Override
-    public List<LowStockItemsDTO> getLowStockItems(LocalDateTime from) {
+    public List<LowStockItemsDTO> getLowStockItems(Timestamp from) {
         return null;
     }
     @Override
-    public List<LowStockItemsDTO> getLowStockItems(LocalDateTime from, LocalDateTime to) {
+    public List<LowStockItemsDTO> getLowStockItems(Timestamp from, Timestamp to) {
         return null;
     }
     
@@ -79,11 +79,11 @@ public class SqliteStockDAO implements StockDAO {
         return null;
     }
     @Override
-    public List<OldItemsDTO> getOldItems(LocalDateTime from) {
+    public List<OldItemsDTO> getOldItems(Timestamp from) {
         return null;
     }
     @Override
-    public List<OldItemsDTO> getOldItems(LocalDateTime from, LocalDateTime to) {
+    public List<OldItemsDTO> getOldItems(Timestamp from, Timestamp to) {
         return null;
     }
 }

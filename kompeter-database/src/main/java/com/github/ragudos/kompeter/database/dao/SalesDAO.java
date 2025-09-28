@@ -8,7 +8,7 @@ import com.github.ragudos.kompeter.database.dto.SalesDTOs.ExpensesDTO;
 import com.github.ragudos.kompeter.database.dto.SalesDTOs.ProfitDTO;
 import com.github.ragudos.kompeter.database.dto.SalesDTOs.RevenueDTO;
 import com.github.ragudos.kompeter.database.dto.SalesDTOs.TopSellingDTO;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -17,18 +17,18 @@ import java.util.List;
  */
 public interface SalesDAO {
     public List<RevenueDTO> getRevenue();
-    public List<RevenueDTO> getRevenue(LocalDateTime from);
-    public List<RevenueDTO> getRevenue(LocalDateTime from, LocalDateTime to);
+    public List<RevenueDTO> getRevenue(Timestamp from);
+    public List<RevenueDTO> getRevenue(Timestamp from, Timestamp to);
     
     public List<ExpensesDTO> getExpenses();
-    public List<ExpensesDTO> getExpenses(LocalDateTime from);
-    public List<ExpensesDTO> getExpenses(LocalDateTime from, LocalDateTime to);
+    public List<ExpensesDTO> getExpenses(Timestamp from);
+    public List<ExpensesDTO> getExpenses(Timestamp from, Timestamp to);
     
     public List<ProfitDTO> getProfit();
-    public List<ProfitDTO> getProfit(LocalDateTime from);
-    public List<ProfitDTO> getProfit(LocalDateTime from, LocalDateTime to);
+    public List<ProfitDTO> getProfit(Timestamp from);
+    public List<ProfitDTO> getProfit(Timestamp from, Timestamp to);
 
     public List<TopSellingDTO> getTopSellingItems();
-    public List<TopSellingDTO> getTopSellingItems(LocalDateTime from);
-    public List<TopSellingDTO> getTopSellingItems(LocalDateTime from, LocalDateTime to);
+    public List<TopSellingDTO> getTopSellingItems(Timestamp from);
+    public List<TopSellingDTO> getTopSellingItems(Timestamp from, Timestamp to);
 }
