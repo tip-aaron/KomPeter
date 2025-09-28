@@ -4,10 +4,21 @@
  */
 package com.github.ragudos.kompeter.database.dao;
 
+import com.github.ragudos.kompeter.database.dto.InventoryDTOs.InventoryCountDTO;
+import com.github.ragudos.kompeter.database.dto.InventoryDTOs.InventoryValueDTO;
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  *
  * @author Hanz Mapua
  */
-interface InventoryDAO {
+public interface InventoryDAO {
+    public List<InventoryCountDTO> getInventoryCount();
+    public List<InventoryCountDTO> getInventoryCount(LocalDateTime from);
+    public List<InventoryCountDTO> getInventoryCount(LocalDateTime from, LocalDateTime to);
     
+    public List<InventoryValueDTO> getInventoryValue();
+    public List<InventoryValueDTO> getInventoryValue(LocalDateTime from);
+    public List<InventoryValueDTO> getInventoryValue(LocalDateTime from, LocalDateTime to);
 }
