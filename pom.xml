@@ -74,6 +74,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+			<groupId>io.github.classgraph</groupId>
+			<artifactId>classgraph</artifactId>
+			<version>4.8.179</version>
+		</dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -123,6 +130,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+
                 <configuration>
                     <systemPropertyVariables>
                         <app.title>${project.parent.name}</app.title>

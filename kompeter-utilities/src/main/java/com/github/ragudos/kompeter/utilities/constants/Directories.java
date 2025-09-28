@@ -7,6 +7,9 @@ public final class Directories {
     public static final String LOGS_DIRECTORY;
     public static final String CONFIG_DIRECTORY;
 
+    public static final String SQLITE_DIRECTORY;
+
+
     public static final String APP_DATA_DIRECTORY;
 
     /**
@@ -27,6 +30,9 @@ public final class Directories {
             APP_DATA_DIRECTORY = SystemInfo.USER_HOME + File.separator + "etc";
             APP_DIRECTORY = APP_DATA_DIRECTORY + File.separator + Metadata.APP_TITLE;
         }
+
+
+        SQLITE_DIRECTORY = APP_DIRECTORY + File.separator + "sqlite";
 
         LOGS_DIRECTORY = APP_DIRECTORY + File.separator + "logs";
         CONFIG_DIRECTORY = APP_DIRECTORY + File.separator + "config";
