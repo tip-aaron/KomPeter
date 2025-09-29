@@ -3,14 +3,14 @@
 -- payment_methods: 'cash' | 'gcash' | 'bank_transfer'
 
 CREATE TABLE roles (
-  _role_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _role_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   role_name TEXT NOT NULL UNIQUE,
   description TEXT
 );
 
 CREATE TABLE users (
-  _user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _user_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   display_name TEXT NOT NULL UNIQUE,
   first_name TEXT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE accounts (
-  _account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _account_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   _user_id INTEGER NOT NULL,
   password_hash TEXT NOT NULL,
@@ -28,14 +28,17 @@ CREATE TABLE accounts (
 );
 
 CREATE TABLE user_roles (
-  _user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _user_role_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  _user_id INTEGER,
   _role_id INTEGER,
+
+  FOREIGN KEY (_user_id) REFERENCES roles(_user_id),
   FOREIGN KEY (_role_id) REFERENCES roles(_role_id)
 );
 
 CREATE TABLE sessions (
-  _session_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _session_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   _user_id INTEGER NOT NULL,
   session_token TEXT NOT NULL UNIQUE,
@@ -44,28 +47,28 @@ CREATE TABLE sessions (
 );
 
 CREATE TABLE item_categories (
-  _item_category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_category_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL UNIQUE,
   description TEXT
 );
 
 CREATE TABLE item_brands (
-  _item_brand_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_brand_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL UNIQUE,
   description TEXT
 );
 
 CREATE TABLE items (
-  _item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL,
   description TEXT
 );
 
 CREATE TABLE item_category_assignments (
-  _item_category_assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_category_assignment_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _item_id INTEGER,
   _item_category_id INTEGER,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -74,7 +77,7 @@ CREATE TABLE item_category_assignments (
 );
 
 CREATE TABLE item_stocks (
-  _item_stock_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_stock_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _item_id INTEGER NOT NULL,
   _item_brand_id INTEGER,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -86,7 +89,7 @@ CREATE TABLE item_stocks (
 );
 
 CREATE TABLE item_restocks (
-  _item_restock_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _item_restock_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _item_stock_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity_before INTEGER NOT NULL,
@@ -96,7 +99,7 @@ CREATE TABLE item_restocks (
 );
 
 CREATE TABLE suppliers (
-  _supplier_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _supplier_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   name TEXT NOT NULL UNIQUE,
   email TEXT NOT NULL UNIQUE,
@@ -108,7 +111,7 @@ CREATE TABLE suppliers (
 );
 
 CREATE TABLE purchases (
-  _purchase_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _purchase_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _supplier_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   purchase_date TIMESTAMP NOT NULL,
@@ -121,7 +124,7 @@ CREATE TABLE purchases (
 );
 
 CREATE TABLE purchase_payments (
-  _purchase_payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _purchase_payment_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _purchse_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   payment_date TIMESTAMP NOT NULL,
@@ -132,7 +135,7 @@ CREATE TABLE purchase_payments (
 );
 
 CREATE TABLE purchase_item_stocks (
-  _purchase_item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _purchase_item_stock_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _purchase_id INTEGER NOT NULL,
   _item_stock_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -144,7 +147,7 @@ CREATE TABLE purchase_item_stocks (
 );
 
 CREATE TABLE sales (
-  _sale_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _sale_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   sale_date TIMESTAMP NOT NULL,
   sale_code TEXT NOT NULL UNIQUE,
@@ -155,7 +158,7 @@ CREATE TABLE sales (
 );
 
 CREATE TABLE sale_payments (
-  _sale_payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _sale_payment_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _sale_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   payment_date TIMESTAMP NOT NULL,
@@ -166,7 +169,7 @@ CREATE TABLE sale_payments (
 );
 
 CREATE TABLE sale_item_stocks (
-  _sale_item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _sale_item_stock_id INTEGER PRIMARY KEY AUTO_INCREMENT,
   _sale_id INTEGER NOT NULL,
   _item_stock_id INTEGER NOT NULL,
   _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
