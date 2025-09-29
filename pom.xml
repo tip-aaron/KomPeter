@@ -44,7 +44,6 @@
     <modules>
         <module>kompeter-app-desktop</module>
         <module>kompeter-configuration</module>
-        <module>kompeter-core</module>
         <module>kompeter-cryptography</module>
         <module>kompeter-database</module>
         <module>kompeter-inventory</module>
