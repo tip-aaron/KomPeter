@@ -3,8 +3,6 @@ package com.github.ragudos.kompeter.app.desktop;
 import com.github.ragudos.kompeter.app.desktop.exceptions.GlobalUncaughtExceptionHandler;
 import com.github.ragudos.kompeter.app.desktop.frames.MainFrame;
 import com.github.ragudos.kompeter.lookandfeel.KompeterLightFlatLaf;
-import com.github.ragudos.kompeter.utilities.constants.Directories;
-import com.github.ragudos.kompeter.utilities.io.FileUtils;
 import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +20,6 @@ public class KompeterDesktopApp {
         }
 
         Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler());
-
-        FileUtils.createDirectoryIfNotExists(Directories.CONFIG_DIRECTORY);
-        FileUtils.createDirectoryIfNotExists(Directories.LOGS_DIRECTORY);
 
         SwingUtilities.invokeLater(
                 () -> {
