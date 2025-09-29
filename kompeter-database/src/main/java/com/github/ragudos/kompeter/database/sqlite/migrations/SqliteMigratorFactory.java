@@ -6,6 +6,7 @@ import com.github.ragudos.kompeter.database.migrations.SqlMigration;
 import com.github.ragudos.kompeter.database.migrations.SqlMigration.ParsedSqlMigration;
 import com.github.ragudos.kompeter.database.seeder.Seeder;
 import com.github.ragudos.kompeter.database.seeder.SqliteSeeder;
+
 import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
@@ -79,6 +80,7 @@ public class SqliteMigratorFactory extends AbstractMigratorFactory {
             return validQueries;
         }
     }
+
   
     public static String getSeederQuery() {
         // Absolute classpath to the resource included under src/main/resources
@@ -88,12 +90,7 @@ public class SqliteMigratorFactory extends AbstractMigratorFactory {
                 LOGGER.severe("Seeder resource not found on classpath at: " + resourcePath);
                 return null;
             }
-            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to load seeder query", e);
-            return null;
-        }
-    }
+
 
     @Override
     public Migrator getMigrator() {
@@ -104,4 +101,6 @@ public class SqliteMigratorFactory extends AbstractMigratorFactory {
     public Seeder getSeeder() {
         return new SqliteSeeder();
     }
+          }
 }
+

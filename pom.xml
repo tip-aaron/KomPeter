@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>22</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <profiles>
@@ -79,7 +79,6 @@
 			<artifactId>classgraph</artifactId>
 			<version>4.8.179</version>
 		</dependency>
-
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
         <dependency>

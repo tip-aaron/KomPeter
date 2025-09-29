@@ -31,6 +31,7 @@ public class GlobalUncaughtExceptionHandler implements UncaughtExceptionHandler 
 
             fHandler.close();
         } catch (Exception err) {
+
             LOGGER.log(Level.SEVERE, "Failed to save log of uncaught exception: " + err.getMessage());
         }
 
