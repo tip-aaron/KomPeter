@@ -79,9 +79,9 @@ public class SqliteMigratorFactory extends AbstractMigratorFactory {
             return validQueries;
         }
     }
-
+  
     public static String getSeederQuery() {
-        try (InputStream stream = SqliteSeeder.class.getResourceAsStream("seeder.sql")) {
+        try (InputStream stream = SqliteSeeder.class.getResourceAsStream("src/main/resources/com/github/ragudos/kompeter/database/sqlite/seeder/seeder.sqll")) {
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to load seeder query", e);
