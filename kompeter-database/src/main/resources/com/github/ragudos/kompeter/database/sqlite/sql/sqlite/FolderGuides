@@ -1,0 +1,32 @@
+the users folder includes the following tables:
+
+* users
+* roles
+* accounts
+* users_roles
+* sessions
+
+
+the items folder includes the following tables:
+
+* item_categories
+* item_brands
+* items
+* item_category assignments
+* item_stocks
+* item_restocks
+
+the purchase folder includes the following tables:
+
+* suppliers
+* purchases
+* purchase_payments
+* purchase_item_stocks
+
+
+the sales folder includes the following tables:
+
+* sales
+* sales_payments
+* sale_item_restocks
+

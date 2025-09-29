@@ -1,0 +1,1 @@
+SELECT * FROM item_category_assignments WHERE _item_id = ?;
