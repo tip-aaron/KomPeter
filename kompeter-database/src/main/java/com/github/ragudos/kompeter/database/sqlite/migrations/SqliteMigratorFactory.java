@@ -81,7 +81,13 @@ public class SqliteMigratorFactory extends AbstractMigratorFactory {
     }
   
     public static String getSeederQuery() {
-        try (InputStream stream = SqliteSeeder.class.getResourceAsStream("src/main/resources/com/github/ragudos/kompeter/database/sqlite/seeder/seeder.sqll")) {
+        // Absolute classpath to the resource included under src/main/resources
+        final String resourcePath = "/com/github/ragudos/kompeter/database/sqlite/seeder/seeder.sql";
+        try (InputStream stream = SqliteSeeder.class.getResourceAsStream(resourcePath)) {
+            if (stream == null) {
+                LOGGER.severe("Seeder resource not found on classpath at: " + resourcePath);
+                return null;
+            }
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to load seeder query", e);

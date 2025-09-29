@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>kompeter-database</artifactId>
-
+    <name>kompeter-database</name>
     <packaging>jar</packaging>
 
 
@@ -20,14 +20,6 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.50.3.0</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>com.github.ragudos.kompeter</groupId>
-            <artifactId>kompeter-utilities</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    
 
         
 		<dependency>
