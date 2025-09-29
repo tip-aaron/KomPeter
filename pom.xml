@@ -108,20 +108,30 @@
 
     <build>
         <resources>
-            <!-- Filter .properties for dynamic values
-        then exclude them on the next resource build -->
+            <!-- Copy all resources, but allow filtering for properties -->
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
+                    <include>**/*.sql</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.json</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
+
+            <!-- Copy everything else without filtering -->
             <resource>
                 <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>**/*.properties</exclude>
+                    <exclude>**/*.sql</exclude>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>**/*.yml</exclude>
+                    <exclude>**/*.json</exclude>
                 </excludes>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>

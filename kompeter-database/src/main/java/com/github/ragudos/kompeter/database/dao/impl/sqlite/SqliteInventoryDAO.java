@@ -10,10 +10,12 @@ import com.github.ragudos.kompeter.database.dto.InventoryDTOs.InventoryValueDTO;
 import com.github.ragudos.kompeter.database.sqlite.SqliteFactoryDao;
 import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,23 +36,28 @@ public class SqliteInventoryDAO implements InventoryDAO {
         return getInventoryCount(from, null);
     }
     @Override
-    public List<InventoryCountDTO> getInventoryCount(Timestamp from, Timestamp to) throws SQLException{
+    public List<InventoryCountDTO> getInventoryCount(Timestamp from, Timestamp to) throws SQLException {
         List<InventoryCountDTO> results = new ArrayList<>();
 
         String sqlFile;
         if (from == null && to == null) {
-            sqlFile = "InventoryCount_All.sql";
+            sqlFile = "INVENTORY_COUNT_ALL.sql";
         } else if (from == null) {
-            sqlFile = "InventoryCount_To.sql";
+            sqlFile = "INVENTORY_COUNT_TO.sql";
         } else {
-            sqlFile = "InventoryCount_Range.sql";
+            sqlFile = "INVENTORY_COUNT_RANGE.sql";
         }
 
+        String resourcePath = "/com/github/ragudos/kompeter/database/sql/sqlite/select/InventorySQLs/" + sqlFile;
         String query;
-        try {
-            query = Files.readString(Paths.get(sqlFile));
+
+        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                throw new SQLException("SQL resource not found on classpath: " + resourcePath);
+            }
+            query = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new SQLException("Error reading SQL file: " + sqlFile, e);
+            throw new SQLException("Error reading SQL resource: " + resourcePath, e);
         }
 
         try (Connection conn = SqliteFactoryDao.createConnection();
@@ -68,14 +75,14 @@ public class SqliteInventoryDAO implements InventoryDAO {
                         rs.getInt("total_purchased"),
                         rs.getInt("total_sold")
                     );
-
-                    // Logs the DTO and still adds it to the list
                     results.add(KompeterLogger.log(dto));
                 }
             }
         }
+
         return results;
     }
+
     
     
     @Override
