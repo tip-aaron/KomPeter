@@ -33,7 +33,7 @@ public final class NamedPreparedStatement implements AutoCloseable {
                 parsedSql.append('?');
 
                 // Store index for this parameter name
-                fields.computeIfAbsent(name, _ -> new ArrayList<>()).add(index++);
+                fields.computeIfAbsent(name, v -> new ArrayList<>()).add(index++);
                 i = j; // advance past the parameter name
             } else {
                 parsedSql.append(c);

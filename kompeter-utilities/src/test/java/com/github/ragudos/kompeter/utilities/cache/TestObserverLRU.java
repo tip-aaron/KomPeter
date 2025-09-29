@@ -18,7 +18,7 @@ public class TestObserverLRU {
         ObserverLRU<String, String> lruObs = new ObserverLRU<String, String>(2);
         var isCalled = new AtomicBoolean(false);
         Consumer<String> l =
-                (_) -> {
+                (v) -> {
                     isCalled.set(true);
                 };
 
