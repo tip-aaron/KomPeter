@@ -1,0 +1,1 @@
+SELECT * FROM purchases WHERE _item_id = ?;
