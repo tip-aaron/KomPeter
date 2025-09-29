@@ -19,7 +19,7 @@ public final class NamedPreparedStatement implements AutoCloseable {
         int length = sql.length();
         int index = 1; // JDBC parameter index starts at 1
 
-        for (int i = 0; i < length;) {
+        for (int i = 0; i < length; ) {
             char c = sql.charAt(i);
             if (c == ':') {
                 int j = i + 1;

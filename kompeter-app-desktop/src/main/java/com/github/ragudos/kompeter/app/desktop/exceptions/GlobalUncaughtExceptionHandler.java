@@ -11,16 +11,18 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class GlobalUncaughtExceptionHandler implements UncaughtExceptionHandler {
-    private static final Logger LOGGER = KompeterLogger.getLogger(GlobalUncaughtExceptionHandler.class);
+    private static final Logger LOGGER =
+            KompeterLogger.getLogger(GlobalUncaughtExceptionHandler.class);
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         try {
-            FileHandler fHandler = new FileHandler(
-                    Directories.LOGS_DIRECTORY + "/global_uncaight_exception_%u.log",
-                    1024 * 1024,
-                    5,
-                    true);
+            FileHandler fHandler =
+                    new FileHandler(
+                            Directories.LOGS_DIRECTORY + "/global_uncaight_exception_%u.log",
+                            1024 * 1024,
+                            5,
+                            true);
 
             fHandler.setFormatter(new KompeterLogFormatter());
 

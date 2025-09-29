@@ -1,4 +1,3 @@
 package com.github.ragudos.kompeter.database.dao;
 
-public interface ItemCategoryDao {
-}
+public interface ItemCategoryDao {}

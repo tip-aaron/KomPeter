@@ -1,4 +1,5 @@
 package com.github.ragudos.kompeter.database.sqlite.dao;
 
-public class SqliteSupplierDao implements SupplierDao {
-}
+import com.github.ragudos.kompeter.database.dao.SupplierDao;
+
+public class SqliteSupplierDao implements SupplierDao {}
