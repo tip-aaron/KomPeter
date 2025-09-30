@@ -22,11 +22,11 @@ INSERT INTO users (_user_id, display_name, first_name, last_name) VALUES
 
 -- Accounts (5 rows)
 INSERT INTO accounts (_account_id, _user_id, password_hash, password_salt, email) VALUES
-(1, 1, 'hash_peter_admin', 'salt_peter', 'peter.admin@example.com'),
-(2, 2, 'hash_hanz_manager', 'salt_hanz', 'hanz.manager@example.com'),
-(3, 3, 'hash_jerick_cashier', 'salt_jerick', 'jerick.cashier@example.com'),
-(4, 4, 'hash_aaron_clerk', 'salt_aaron', 'aaron.clerk@example.com'),
-(5, 5, 'hash_kurt_auditor', 'salt_kurt', 'kurt.auditor@example.com');
+(1, 1, '5uvOnZhz4SAcX6boOpKHhST84HgcLB3ShFHlK9WpsTI=', 'JssptbrdHjp0sRP9Hup0cw==', 'peter.admin@example.com'),
+(2, 2, '5uvOnZhz4SAcX6boOpKHhST84HgcLB3ShFHlK9WpsTI=', 'JssptbrdHjp0sRP9Hup0cw==', 'hanz.manager@example.com'),
+(3, 3, '5uvOnZhz4SAcX6boOpKHhST84HgcLB3ShFHlK9WpsTI=', 'JssptbrdHjp0sRP9Hup0cw==', 'jerick.cashier@example.com'),
+(4, 4, '5uvOnZhz4SAcX6boOpKHhST84HgcLB3ShFHlK9WpsTI=', 'JssptbrdHjp0sRP9Hup0cw==', 'aaron.clerk@example.com'),
+(5, 5, '5uvOnZhz4SAcX6boOpKHhST84HgcLB3ShFHlK9WpsTI=', 'JssptbrdHjp0sRP9Hup0cw==', 'kurt.auditor@example.com');
 
 -- User Roles (5 rows)
 INSERT INTO user_roles (_user_role_id, _user_id, _role_id) VALUES
