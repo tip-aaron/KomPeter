@@ -35,7 +35,7 @@ CREATE TABLE
     _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     _user_id INTEGER,
     _role_id INTEGER,
-    FOREIGN KEY (_user_id) REFERENCES roles (_user_id),
+    FOREIGN KEY (_user_id) REFERENCES users (_user_id),
     FOREIGN KEY (_role_id) REFERENCES roles (_role_id)
   );
 
@@ -48,6 +48,14 @@ CREATE TABLE
     ip_address TEXT,
     FOREIGN KEY (_user_id) REFERENCES users (_user_id)
   );
+ 
+CREATE TABLE 
+	storage_locations(
+		_storage_location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        name TEXT NOT NULL UNIQUE,
+        description TEXT
+	);
 
 CREATE TABLE
   item_categories (
@@ -90,12 +98,22 @@ CREATE TABLE
     _item_brand_id INTEGER,
     _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     unit_price_php REAL NOT NULL,
-    quantity INTEGER NOT NULL DEFAULT 0,
     minimum_quantity INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (_item_id) REFERENCES items (_item_id),
     FOREIGN KEY (_item_brand_id) REFERENCES item_brands (_item_brand_id)
   );
 
+CREATE TABLE
+	item_stock_storage_locations(
+		_item_stock_storage_location_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        _item_stock_id INTEGER NOT NULL,
+        _storage_location_id INTEGER NOT NULL,
+        _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        quantity INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (_item_stock_id) REFERENCES item_stocks (_item_stock_id),
+    	FOREIGN KEY (_storage_location_id) REFERENCES storage_locations (_storage_location_id)
+	);
+    
 CREATE TABLE
   item_restocks (
     _item_restock_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,6 +124,8 @@ CREATE TABLE
     quantity_added INTEGER NOT NULL,
     FOREIGN KEY (_item_stock_id) REFERENCES item_stocks (_item_stock_id)
   );
+  
+  
 
 CREATE TABLE
   suppliers (
