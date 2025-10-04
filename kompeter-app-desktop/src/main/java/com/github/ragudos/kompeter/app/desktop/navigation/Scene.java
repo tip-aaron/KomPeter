@@ -16,17 +16,23 @@ public interface Scene {
         return this;
     }
 
-    @NotNull String name();
+    @NotNull
+    String name();
 
-    @NotNull JPanel view();
+    @NotNull
+    JPanel view();
 
-    default void onBeforeHide() {}
+    default void onBeforeHide() {
+    }
 
-    default void onBeforeShow() {}
+    default void onBeforeShow() {
+    }
 
-    default void onCannotHide() {}
+    default void onCannotHide() {
+    }
 
-    default void onCannotShow() {}
+    default void onCannotShow() {
+    }
 
     void onCreate();
 

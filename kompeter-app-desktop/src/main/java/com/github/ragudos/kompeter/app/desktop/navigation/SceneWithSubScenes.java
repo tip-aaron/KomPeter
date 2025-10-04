@@ -6,4 +6,7 @@ public interface SceneWithSubScenes extends Scene {
     boolean navigateTo(@NotNull String name);
 
     void navigateToDefault();
+
+    SceneManager sceneManager();
+
 }
