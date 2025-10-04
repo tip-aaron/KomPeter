@@ -1,4 +1,4 @@
-package com.github.ragudos.kompeter.lookandfeel;
+package com.github.ragudos.kompeter.app.desktop.laf;
 
 import com.formdev.flatlaf.FlatLightLaf;
 

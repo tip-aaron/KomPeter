@@ -47,7 +47,6 @@
         <module>kompeter-cryptography</module>
         <module>kompeter-database</module>
         <module>kompeter-inventory</module>
-        <module>kompeter-lookandfeel</module>
         <module>kompeter-monitoring</module>
         <module>kompeter-pointofsale</module>
         <module>kompeter-utilities</module>

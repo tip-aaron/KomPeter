@@ -9,4 +9,5 @@ module kompeter.utilities {
     exports com.github.ragudos.kompeter.utilities.constants;
     exports com.github.ragudos.kompeter.utilities.cache;
     exports com.github.ragudos.kompeter.utilities.platform;
+    exports com.github.ragudos.kompeter.utilities.observer;
 }

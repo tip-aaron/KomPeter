@@ -6,7 +6,7 @@ module kompeter.app.desktop {
     requires kompeter.inventory;
     requires kompeter.monitoring;
     requires kompeter.pointofsale;
-    requires kompeter.lookandfeel;
+    requires com.formdev.flatlaf;
     requires static org.jetbrains.annotations;
 
     exports com.github.ragudos.kompeter.app.desktop;

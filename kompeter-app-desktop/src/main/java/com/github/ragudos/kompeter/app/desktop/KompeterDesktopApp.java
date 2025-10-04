@@ -2,11 +2,11 @@ package com.github.ragudos.kompeter.app.desktop;
 
 import com.github.ragudos.kompeter.app.desktop.exceptions.GlobalUncaughtExceptionHandler;
 import com.github.ragudos.kompeter.app.desktop.frames.MainFrame;
-import com.github.ragudos.kompeter.lookandfeel.KompeterLightFlatLaf;
 import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import com.github.ragudos.kompeter.app.desktop.laf.KompeterLightFlatLaf;
 
 public class KompeterDesktopApp {
     private static final Logger LOGGER = KompeterLogger.getLogger(KompeterDesktopApp.class);
