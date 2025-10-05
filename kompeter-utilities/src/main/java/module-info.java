@@ -1,6 +1,7 @@
 module kompeter.utilities {
     requires transitive java.logging;
     requires static org.jetbrains.annotations;
+	requires java.desktop;
 
     exports com.github.ragudos.kompeter.utilities;
     exports com.github.ragudos.kompeter.utilities.logger;
