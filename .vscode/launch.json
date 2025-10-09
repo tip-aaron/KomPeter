@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "KompeterDesktopApp",
+            "request": "launch",
+            "mainClass": "kompeter.app.desktop/com.github.ragudos.kompeter.app.desktop.KompeterDesktopApp",
+            "projectName": "kompeter-app-desktop"
+        },
+        {
+            "type": "java",
+            "name": "Hashed",
+            "request": "launch",
+            "mainClass": "kompeter.database/com.github.ragudos.kompeter.database.sqlite.Hashed",
+            "projectName": "kompeter-database"
+        },
+        {
+            "type": "java",
+            "name": "TestKompeterLogger",
+            "request": "launch",
+            "mainClass": "kompeter.utilities/com.github.ragudos.kompeter.utilities.logger.TestKompeterLogger",
+            "projectName": "kompeter-utilities"
+        }
+    ]
+}

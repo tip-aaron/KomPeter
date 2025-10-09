@@ -10,4 +10,5 @@ module kompeter.app.desktop {
     requires static org.jetbrains.annotations;
 
     exports com.github.ragudos.kompeter.app.desktop;
+    exports com.github.ragudos.kompeter.app.desktop.helper;
 }
