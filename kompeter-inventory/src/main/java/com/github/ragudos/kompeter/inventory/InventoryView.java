@@ -11,7 +11,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.github.ragudos.kompeter.utilities.helper.Palette; 
 
-public class InventoryView extends JPanel{
+public class InventoryView extends JPanel implements IInventory{
 	private JPanel content;
 	private JPanel header;
 	private JScrollPane tableScrollPane;
@@ -83,10 +83,33 @@ public class InventoryView extends JPanel{
             frame.add(new InventoryView());
             frame.setVisible(true);
         }
+
+    @Override
+    public void addItem(String category, String itemName, int quantity) {
+    }
+
+    @Override
+    public void showItem() {
+        
+    }
+
+    @Override
+    public void deleteItem() {
+    }
+
+    @Override
+    public void updateItem() {
+    }
+
+    @Override
+    public void searchItem() {
+    }
+
+    @Override
+    public void orderByDate() {
+    }
+
+    @Override
+    public void orderByAlphabet() {
+    }
 }
-/*
- * CRUD operations for inventory items
- * 
- * 
- * 
- */
