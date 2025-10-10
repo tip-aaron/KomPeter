@@ -22,7 +22,11 @@ public class AssetManager {
         }
 
         try {
-            return Optional.of(AssetLoader.loadImage(path));
+            Image img = AssetLoader.loadImage(path);
+
+            IMAGES.update(path, img);
+
+            return Optional.of(img);
         } catch (IOException | InterruptedException | IllegalArgumentException err) {
             LOGGER.log(Level.SEVERE, "Cannot load image: " + path, err);
         }

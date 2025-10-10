@@ -11,4 +11,5 @@ module kompeter.utilities {
     exports com.github.ragudos.kompeter.utilities.cache;
     exports com.github.ragudos.kompeter.utilities.platform;
     exports com.github.ragudos.kompeter.utilities.helper;
+    exports com.github.ragudos.kompeter.utilities.observer;
 }

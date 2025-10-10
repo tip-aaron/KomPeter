@@ -30,13 +30,13 @@ public interface Scene {
 
     void onCreate();
 
-    void onDestroy();
+    default void onDestroy() {}
 
-    void onHide();
+    default void onHide() {}
 
-    void onShow();
+    default void onShow() {}
 
     default boolean supportsSubScenes() {
-        return false;
+        return this instanceof SceneWithSubScenes;
     }
 }
