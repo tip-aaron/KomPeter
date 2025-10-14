@@ -1,7 +1,10 @@
 package com.github.ragudos.kompeter.app.desktop.scenes.home.pointofsale.scenes;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.github.ragudos.kompeter.app.desktop.navigation.Scene;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 public final class ShopScene implements Scene {
@@ -24,5 +27,12 @@ public final class ShopScene implements Scene {
     }
 
     @Override
-    public void onCreate() {}
+    public void onCreate() {
+        view.setLayout(new MigLayout("insets 20, fill", "[grow,center]", "[grow,center]"));
+
+        JLabel titleLabel = new JLabel("Shop");
+        titleLabel.putClientProperty(FlatClientProperties.STYLE_CLASS, "h1");
+
+        view.add(titleLabel, "wrap");
+    }
 }
