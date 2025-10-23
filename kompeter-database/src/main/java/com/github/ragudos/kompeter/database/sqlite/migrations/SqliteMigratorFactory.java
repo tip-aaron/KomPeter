@@ -28,7 +28,11 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 public class SqliteMigratorFactory extends AbstractMigratorFactory {
-    private static final Logger LOGGER = KompeterLogger.getLogger(SqliteMigratorFactory.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(SqliteMigratorFactory.class);
+    }
 
     /**
      * Can be refactored but it doesn't really matter.

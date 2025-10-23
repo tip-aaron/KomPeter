@@ -20,7 +20,11 @@ import java.util.logging.Logger;
 import org.sqlite.SQLiteException;
 
 public class SqliteSeeder implements Seeder {
-    private static final Logger LOGGER = KompeterLogger.getLogger(SqliteSeeder.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(SqliteSeeder.class);
+    }
 
     @Override
     public void seed() throws SQLException {

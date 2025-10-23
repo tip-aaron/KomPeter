@@ -65,10 +65,17 @@ public abstract class AbstractSqlQueryLoader {
         }
     }
 
-    private static final Logger LOGGER = KompeterLogger.getLogger(AbstractSqlQueryLoader.class);
-    private static final String SEPARATOR = "/";
-    private static final String SQL_QUERY_DIRECTORY = "sql" + SEPARATOR;
-    private static final String SQL_QUERY_FILE_EXTENSION = ".sql";
+    private static final Logger LOGGER;
+    private static final String SEPARATOR;
+    private static final String SQL_QUERY_DIRECTORY;
+    private static final String SQL_QUERY_FILE_EXTENSION;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(AbstractSqlQueryLoader.class);
+        SEPARATOR = "/";
+        SQL_QUERY_DIRECTORY = "sql" + SEPARATOR;
+        SQL_QUERY_FILE_EXTENSION = ".sql";
+    }
 
     protected LRU<String, String> queryCache;
 

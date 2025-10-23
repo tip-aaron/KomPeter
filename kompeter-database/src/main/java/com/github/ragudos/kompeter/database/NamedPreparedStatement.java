@@ -32,19 +32,25 @@ import java.util.regex.Pattern;
  * It has the DELIMITER {@link NamedPreparedStatement.DELIMITER}
  */
 public final class NamedPreparedStatement implements AutoCloseable {
-    public static final char DELIMITER = ':';
-    private static final Pattern PARAM_PATTERN = Pattern.compile("[A-Za-z0-9_]+");
-    private final Map<String, List<Integer>> fields = new HashMap<>();
+    public static final char DELIMITER;
+    private static final Pattern PARAM_PATTERN;
+    private final Map<String, List<Integer>> fields;
 
     private final String parsedSql;
 
     private final PreparedStatement prepStmt;
+
+    static {
+        DELIMITER = ':';
+        PARAM_PATTERN = Pattern.compile("[A-Za-z0-9_]+");
+    }
 
     public NamedPreparedStatement(final Connection conn, final String sql) throws SQLException {
         this(conn, sql, Statement.NO_GENERATED_KEYS);
     }
 
     public NamedPreparedStatement(final Connection conn, String sql, int autoGenerateKeysFlag) throws SQLException {
+        fields = new HashMap<>();
         final int SQL_QUERY_LENGTH = sql.length();
         StringBuilder parsedSqlBuilder = new StringBuilder();
         int jdbcStartingIndex = 1; // JDBC parameter index starts at 1

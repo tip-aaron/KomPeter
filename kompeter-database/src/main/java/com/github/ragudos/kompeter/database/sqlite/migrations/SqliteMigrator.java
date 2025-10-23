@@ -17,25 +17,32 @@ import com.github.ragudos.kompeter.database.migrations.SqlMigration.ParsedSqlMig
 import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 
 public class SqliteMigrator implements Migrator {
-    private static final Logger LOGGER = KompeterLogger.getLogger(SqliteMigrator.class);
+    private static final Logger LOGGER;
 
-    private static final String QUERY_CREATE_MIGRATION_TABLE_IF_NOT_EXISTS = """
+    private static final String QUERY_CREATE_MIGRATION_TABLE_IF_NOT_EXISTS;
+    private static final String QUERY_CHECK_MIGRATION_EXISTS;
+    private static final String QUERY_INSERT_MIGRATION;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(SqliteMigrator.class);
+        QUERY_CREATE_MIGRATION_TABLE_IF_NOT_EXISTS = """
             CREATE TABLE IF NOT EXISTS migrations (
             	_migration_id INTEGER PRIMARY KEY AUTOINCREMENT,
             	version_number INTEGER NOT NULL CHECK(version_number > 0),
             	name TEXT NOT NULL
             );
             """;
-    private static final String QUERY_CHECK_MIGRATION_EXISTS = """
+        QUERY_CHECK_MIGRATION_EXISTS = """
             SELECT EXISTS (
             	SELECT 1 FROM migrations
             	WHERE version_number = ? AND name = ?
             );
             """;
-    private static final String QUERY_INSERT_MIGRATION = """
+        QUERY_INSERT_MIGRATION = """
             INSERT INTO migrations (version_number, name)
             VALUES (?, ?);
             """;
+    }
 
     private void createMigrationTableIfNotExists() throws SQLException {
         LOGGER.info("Ensuring migration table exists...");

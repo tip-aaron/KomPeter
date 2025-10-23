@@ -118,17 +118,29 @@ public abstract class AbstractSqlFactoryDao {
         }
     }
 
-    protected static final Logger LOGGER = KompeterLogger.getLogger(AbstractSqlFactoryDao.class);
+    protected static final Logger LOGGER;
     public static final int SQLITE = 1;
 
+    static {
+        LOGGER = KompeterLogger.getLogger(AbstractSqlFactoryDao.class);
+    }
+
     // We use LinkedList since we are only going to pop and push onto this
-    protected final List<Connection> pooledConnections = new LinkedList<>();
-    protected final List<Connection> usedConnections = new ArrayList<>();
+    protected final List<Connection> pooledConnections;
+    protected final List<Connection> usedConnections;
 
     // For thread-safety
-    protected final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock(true);
-    protected final Lock readLock = rwLock.readLock();
-    protected final Lock writeLock = rwLock.writeLock();
+    protected final ReentrantReadWriteLock rwLock;
+    protected final Lock readLock;
+    protected final Lock writeLock;
+
+    public AbstractSqlFactoryDao() {
+        pooledConnections = new LinkedList<>();
+        usedConnections = new ArrayList<>();
+        rwLock = new ReentrantReadWriteLock(true);
+        readLock = rwLock.readLock();
+        writeLock = rwLock.writeLock();
+    }
 
     public static @NotNull AbstractSqlFactoryDao getSqlFactoryDao(int databaseType) {
         return switch (databaseType) {

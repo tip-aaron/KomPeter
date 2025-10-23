@@ -16,8 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class AbstractMigratorFactory {
-    protected static final Logger LOGGER = KompeterLogger.getLogger(AbstractMigratorFactory.class);
+    protected static final Logger LOGGER;
     public static final int SQLITE = 1;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(AbstractMigratorFactory.class);
+    }
 
     public static AbstractMigratorFactory getMigrator(int type) {
         return switch (type) {
