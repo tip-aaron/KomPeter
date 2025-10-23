@@ -20,8 +20,12 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public class PropertiesIO {
-    private static final Logger LOGGER = KompeterLogger.getLogger(PropertiesIO.class);
+    private static final Logger LOGGER;
     public static final String PROPERTIES_FILE_EXTENSION = ".properties";
+
+    static {
+        LOGGER = KompeterLogger.getLogger(PropertiesIO.class);
+    }
 
     public static final void loadProperties(
             @NotNull final Class<?> clazz,

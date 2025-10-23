@@ -18,10 +18,13 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class KompeterLogFormatter extends Formatter {
-    private final DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                    .withLocale(Locale.US)
-                    .withZone(ZoneId.systemDefault());
+    private final DateTimeFormatter dateTimeFormatter;
+
+    public KompeterLogFormatter() {
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withLocale(Locale.US)
+                .withZone(ZoneId.systemDefault());
+    }
 
     private void appendException(final StringBuilder sb, final Throwable err) {
         sb.append("\t");

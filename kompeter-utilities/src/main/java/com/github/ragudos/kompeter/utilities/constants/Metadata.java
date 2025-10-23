@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.util.Properties;
 
 public final class Metadata {
-    private static final Properties properties = new Properties();
+    private static final Properties properties;
 
     public static final String APP_TITLE;
     public static final String APP_VERSION;
     public static final String APP_ENV;
 
     static {
+        properties = new Properties();
         try {
             PropertiesIO.loadProperties(Metadata.class, properties, "metadata");
         } catch (IllegalArgumentException e) {

@@ -15,9 +15,15 @@ import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 
 public final class NumberUtils {
-    public static final DecimalFormat formatter = new DecimalFormat("#,###.##");
-    public static final DecimalFormat shortFormatter = new DecimalFormat("0.##");
-    public static final NumberFormat intFormatter = NumberFormat.getIntegerInstance(Locale.US);
+    public static final DecimalFormat formatter;
+    public static final DecimalFormat shortFormatter;
+    public static final NumberFormat intFormatter;
+
+    static {
+        formatter = new DecimalFormat("#,###.##");
+        shortFormatter = new DecimalFormat("0.##");
+        intFormatter = NumberFormat.getIntegerInstance(Locale.US);
+    }
 
     public static @NotNull String formatWithSuffix(double n) {
         var absolutevalue = Math.abs(n);

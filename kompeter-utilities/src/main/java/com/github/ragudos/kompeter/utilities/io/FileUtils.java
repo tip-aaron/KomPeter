@@ -16,7 +16,11 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public final class FileUtils {
-    private static final Logger LOGGER = KompeterLogger.getLogger(FileUtils.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(FileUtils.class);
+    }
 
     public static final void setupConfig() {
         createDirectoryIfNotExists(Directories.LOGS_DIRECTORY);

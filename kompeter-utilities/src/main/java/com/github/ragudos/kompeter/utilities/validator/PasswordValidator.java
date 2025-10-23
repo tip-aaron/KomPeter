@@ -23,11 +23,14 @@ public final class PasswordValidator {
      *   <li>At least one special character.{@code (?=.*? [#?!@$%^&*-])}
      * </ul>
      */
-    public static @NotNull final Pattern STRONG_PASSWORD =
-            Pattern.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+    public static @NotNull final Pattern STRONG_PASSWORD;
 
-    public static @NotNull final String STRONG_PASSWORD_ERROR_MESSAGE =
-            "Password must be 8+ characters with upper, lower, number, and special character.";
+    public static @NotNull final String STRONG_PASSWORD_ERROR_MESSAGE;
+
+    static {
+        STRONG_PASSWORD = Pattern.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+        STRONG_PASSWORD_ERROR_MESSAGE = "Password must be 8+ characters with upper, lower, number, and special character.";
+    }
 
     public static boolean isPasswordValid(
             @NotNull final char[] password, @NotNull final Pattern regex) {

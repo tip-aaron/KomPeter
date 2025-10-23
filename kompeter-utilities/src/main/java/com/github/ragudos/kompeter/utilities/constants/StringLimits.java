@@ -15,7 +15,13 @@ public final class StringLimits {
             @Range(from = 0, to = Integer.MAX_VALUE) int max) {}
     ;
 
-    public static final StringLimit DISPLAY_NAME = new StringLimit(2, 64);
-    public static final StringLimit FIRST_NAME = new StringLimit(2, 64);
-    public static final StringLimit LAST_NAME = new StringLimit(2, 64);
+    public static final StringLimit DISPLAY_NAME;
+    public static final StringLimit FIRST_NAME;
+    public static final StringLimit LAST_NAME;
+
+    static {
+        DISPLAY_NAME = new StringLimit(2, 64);
+        FIRST_NAME = new StringLimit(2, 64);
+        LAST_NAME = new StringLimit(2, 64);
+    }
 }

@@ -11,7 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestKompeterLogger {
-    private static final Logger LOGGER = KompeterLogger.getLogger(TestKompeterLogger.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(TestKompeterLogger.class);
+    }
 
     public static void main(String[] args) {
         // 🔥 Now test different types of logs

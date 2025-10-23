@@ -12,10 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class KompeterLogger {
-    private static final Logger PARENT_LOGGER = Logger.getLogger("com.github.ragudos.kompeter");
-    private static final Handler HANDLER = new KompeterLogHandler();
+    private static final Logger PARENT_LOGGER;
+    private static final Handler HANDLER;
 
     static {
+        PARENT_LOGGER = Logger.getLogger("com.github.ragudos.kompeter");
+        HANDLER = new KompeterLogHandler();
         HANDLER.setFormatter(new KompeterLogFormatter());
         PARENT_LOGGER.setUseParentHandlers(false);
         PARENT_LOGGER.addHandler(HANDLER);
