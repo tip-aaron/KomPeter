@@ -11,7 +11,11 @@ import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import java.util.logging.Logger;
 
 public abstract class AbstractConfig {
-    protected static final Logger LOGGER = KompeterLogger.getLogger(AbstractConfig.class);
+    protected static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(AbstractConfig.class);
+    }
 
     public abstract String getFileDirectory();
 

@@ -17,7 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class SearchHistory {
-    private static final Logger LOGGER = KompeterLogger.getLogger(SearchHistory.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(SearchHistory.class);
+    }
 
     public static String[] getRecentSearches(boolean favorite) {
         String searches =

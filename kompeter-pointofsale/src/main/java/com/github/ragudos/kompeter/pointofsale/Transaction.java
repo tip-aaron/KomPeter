@@ -26,7 +26,11 @@ import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 
 public class Transaction {
-    public static final double VAT_RATE = 0.12;
+    public static final double VAT_RATE;
+
+    static {
+        VAT_RATE = 0.12;
+    }
 
     public static void createTransaction(@NotNull ArrayList<CartItem> items, @NotNull PaymentMethod paymentMethod,
             double cashTendered) throws Exception {

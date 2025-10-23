@@ -34,7 +34,11 @@ import java.time.LocalDateTime;
  */
 public class MonitoringSalesService {
 
-    private static final Logger LOGGER = KompeterLogger.getLogger(MonitoringInventoryService.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(MonitoringInventoryService.class);
+    }
     private final SqliteSalesDao salesDAO;
 
     public MonitoringSalesService(SqliteSalesDao salesDAO) {

@@ -34,7 +34,11 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public final class Authentication {
-    private static final Logger LOGGER = KompeterLogger.getLogger(Authentication.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(Authentication.class);
+    }
 
     public static enum AuthenticationErrors {
         SIGN_UP_MISMATCH_PASSWORD("Passwords do not match"),

@@ -19,10 +19,17 @@ import javax.crypto.spec.PBEKeySpec;
 import org.jetbrains.annotations.NotNull;
 
 public final class Hasher {
-    public static final Logger LOGGER = KompeterLogger.getLogger(Hasher.class);
-    public static final int DEFAULT_WORK_FACTOR_STRENGTH = 65_536;
-    public static final int KEY_LENGTH = 256;
-    public static final String ALGORITHM = "PBKDF2WithHmacSHA256";
+    public static final Logger LOGGER;
+    public static final int DEFAULT_WORK_FACTOR_STRENGTH;
+    public static final int KEY_LENGTH;
+    public static final String ALGORITHM;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(Hasher.class);
+        DEFAULT_WORK_FACTOR_STRENGTH = 65_536;
+        KEY_LENGTH = 256;
+        ALGORITHM = "PBKDF2WithHmacSHA256";
+    }
 
     public static Optional<HashedStringWithSalt> hash(@NotNull final char[] password) {
         return hash(password, SaltFactory.generateSalt());

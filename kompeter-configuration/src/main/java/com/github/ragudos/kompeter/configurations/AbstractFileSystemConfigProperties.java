@@ -15,10 +15,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 public abstract class AbstractFileSystemConfigProperties extends AbstractFileSystemConfig {
-    protected final Properties properties = new Properties();
+    protected final Properties properties;
 
     public AbstractFileSystemConfigProperties() {
         super();
+        properties = new Properties();
         var path = getFullPath();
 
         LOGGER.config("Initializing configuration in file system for path: " + path);

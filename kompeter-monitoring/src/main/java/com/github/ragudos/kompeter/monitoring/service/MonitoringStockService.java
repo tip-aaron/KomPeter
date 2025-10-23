@@ -35,7 +35,11 @@ import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
  */
 public class MonitoringStockService {
 
-    private static final Logger LOGGER = KompeterLogger.getLogger(MonitoringInventoryService.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(MonitoringInventoryService.class);
+    }
 
     public static void main(String[] args) throws IOException, SQLException {
         // find db file

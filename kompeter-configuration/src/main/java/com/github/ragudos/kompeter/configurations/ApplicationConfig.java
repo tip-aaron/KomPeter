@@ -39,7 +39,11 @@ public class ApplicationConfig {
         }
     }
 
-    public static final Logger LOGGER = KompeterLogger.getLogger(ApplicationConfig.class);
+    public static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(ApplicationConfig.class);
+    }
 
     private static ApplicationConfig instance;
 
