@@ -18,7 +18,11 @@ import javax.swing.SwingUtilities;
 import org.jetbrains.annotations.NotNull;
 
 public class SceneNavigator implements Observer<String> {
-    private static final Logger LOGGER = KompeterLogger.getLogger(SceneNavigator.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(SceneNavigator.class);
+    }
     private static SceneNavigator instance;
 
     public static synchronized SceneNavigator getInstance() {

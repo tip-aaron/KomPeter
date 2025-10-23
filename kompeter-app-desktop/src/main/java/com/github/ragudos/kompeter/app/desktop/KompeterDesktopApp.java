@@ -21,7 +21,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class KompeterDesktopApp {
-    private static final Logger LOGGER = KompeterLogger.getLogger(KompeterDesktopApp.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(KompeterDesktopApp.class);
+    }
 
     public static void main(String[] args) {
         FileUtils.setupConfig();

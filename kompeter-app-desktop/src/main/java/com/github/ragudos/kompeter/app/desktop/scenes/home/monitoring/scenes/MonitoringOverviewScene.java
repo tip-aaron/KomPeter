@@ -14,7 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public final class MonitoringOverviewScene implements Scene {
     public static final String SCENE_NAME = "overview";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
+
+    public MonitoringOverviewScene() {
+        view = new JPanel();
+    }
 
     @Override
     public @NotNull String name() {

@@ -32,11 +32,11 @@ import net.miginfocom.swing.MigLayout;
 
 public class MainFooter implements SceneComponent {
     private final JLabel appVersionJLabel;
-    private final JLabel breadcrumbsPathJLabel = new JLabel();
+    private final JLabel breadcrumbsPathJLabel;
     private final JPanel container = new JPanel(
             new MigLayout("gapx 9px,insets 3 16 3 16, al trailing center, height 32!", "[]push[]push[][][]", "fill"));
 
-    private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean initialized;
     private final JLabel javaLabel;
     private final ComponentListener listener = new ComponentAdapter() {
         public void componentResized(java.awt.event.ComponentEvent e) {
@@ -54,7 +54,7 @@ public class MainFooter implements SceneComponent {
             updateComponent(layout, osLabel, showOs, "cell 2 0", 2);
         };
     };
-    private final MemoryBar memoryBar = new MemoryBar();
+    private final MemoryBar memoryBar;
     private final Consumer<String> navigationListenerClass = new Consumer<String>() {
         @Override
         public void accept(String sceneName) {
@@ -64,9 +64,13 @@ public class MainFooter implements SceneComponent {
 
     private final JLabel osLabel;
 
-    private final JPanel view = new JPanel(new MigLayout("flowy, insets 0", "[grow]", "[top, grow 0][grow]"));
+    private final JPanel view;
 
     public MainFooter() {
+        breadcrumbsPathJLabel = new JLabel();
+        initialized = new AtomicBoolean(false);
+        memoryBar = new MemoryBar();
+        view = new JPanel(new MigLayout("flowy, insets 0", "[grow]", "[top, grow 0][grow]"));
         appVersionJLabel = new JLabel(HtmlUtils.wrapInHtml(Metadata.APP_TITLE + ": v" + Metadata.APP_VERSION));
         String javaString = SystemInfo.JAVA_VENDOR + " v" + SystemInfo.JAVA_VERSION;
         javaLabel = new JLabel(HtmlUtils.wrapInHtml(String.format("Java %s", javaString)));

@@ -19,9 +19,14 @@ import org.jetbrains.annotations.NotNull;
 public final class SettingsScene implements SceneWithSubScenes {
     public static final String SCENE_NAME = "settings";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
 
-    private final SceneManager sceneManager = new StaticSceneManager();
+    private final SceneManager sceneManager;
+
+    public SettingsScene() {
+        view = new JPanel();
+        sceneManager = new StaticSceneManager();
+    }
 
     @Override
     public @NotNull String name() {

@@ -39,12 +39,20 @@ public class HomeScene implements SceneWithSubScenes {
 
     public static final String SCENE_NAME = "home";
 
-    private final MainFooter mainFooter = new MainFooter();
+    private final MainFooter mainFooter;
 
-    private final MainHeader mainHeader = new MainHeader();
-    private final MainSidebar mainSidebar = new MainSidebar();
-    private final SceneManager sceneManager = new StaticSceneManager();
-    private final JPanel view = new JPanel(new MigLayout("insets 0 9 0 0", "[grow, fill]", "[grow, fill]"));
+    private final MainHeader mainHeader;
+    private final MainSidebar mainSidebar;
+    private final SceneManager sceneManager;
+    private final JPanel view;
+
+    public HomeScene() {
+        mainFooter = new MainFooter();
+        mainHeader = new MainHeader();
+        mainSidebar = new MainSidebar();
+        sceneManager = new StaticSceneManager();
+        view = new JPanel(new MigLayout("insets 0 9 0 0", "[grow, fill]", "[grow, fill]"));
+    }
 
     @Override
     public String getDefaultScene() {

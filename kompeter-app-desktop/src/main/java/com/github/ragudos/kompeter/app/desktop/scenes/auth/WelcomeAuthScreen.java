@@ -21,10 +21,16 @@ import org.jetbrains.annotations.NotNull;
 public class WelcomeAuthScreen implements Scene {
     public static final String SCENE_NAME = "welcome";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
 
-    private final JButton signInButton = new JButton("Sign In");
-    private final JButton signUpButton = new JButton("Sign Up");
+    private final JButton signInButton;
+    private final JButton signUpButton;
+
+    public WelcomeAuthScreen() {
+        view = new JPanel();
+        signInButton = new JButton("Sign In");
+        signUpButton = new JButton("Sign Up");
+    }
 
     @Override
     public void onCreate() {

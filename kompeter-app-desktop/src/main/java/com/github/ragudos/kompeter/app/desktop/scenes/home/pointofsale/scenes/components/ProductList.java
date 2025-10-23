@@ -54,7 +54,11 @@ import com.github.ragudos.kompeter.utilities.logger.KompeterLogger;
 import net.miginfocom.swing.MigLayout;
 
 public class ProductList implements SceneComponent {
-    public static final double THRESHOLD = 0.7;
+    public static final double THRESHOLD;
+
+    static {
+        THRESHOLD = 0.7;
+    }
 
     private static Logger LOGGER = KompeterLogger.getLogger(ProductList.class);
 

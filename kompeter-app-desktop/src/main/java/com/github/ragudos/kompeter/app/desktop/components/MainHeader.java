@@ -24,7 +24,7 @@ import com.github.ragudos.kompeter.app.desktop.scenes.SceneNames;
 import net.miginfocom.swing.MigLayout;
 
 public class MainHeader implements SceneComponent {
-    private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean initialized;
 
     private final Consumer<String> navigationListenerClassConsumer = new Consumer<String>() {
         @Override
@@ -40,12 +40,16 @@ public class MainHeader implements SceneComponent {
         }
     };
 
-    private final RefreshLine refreshLine = new RefreshLine();
-    private final JLabel sceneTitle = new JLabel();
+    private final RefreshLine refreshLine;
+    private final JLabel sceneTitle;
 
-    private final JPanel view = new JPanel(new MigLayout("insets n 16 n 16, flowy", "[grow, fill]", "[grow]"));
+    private final JPanel view;
 
     public MainHeader() {
+        initialized = new AtomicBoolean(false);
+        refreshLine = new RefreshLine();
+        sceneTitle = new JLabel();
+        view = new JPanel(new MigLayout("insets n 16 n 16, flowy", "[grow, fill]", "[grow]"));
         sceneTitle.putClientProperty(FlatClientProperties.STYLE_CLASS, "h1");
         sceneTitle.setHorizontalAlignment(JLabel.RIGHT);
     }

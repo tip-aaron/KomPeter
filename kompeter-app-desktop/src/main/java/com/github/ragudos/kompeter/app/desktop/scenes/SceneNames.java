@@ -52,7 +52,11 @@ public final class SceneNames {
     }
 
     public static class HomeScenes {
-        public static final String HOME_SCENE = HomeScene.SCENE_NAME;
+        public static final String HOME_SCENE;
+
+        static {
+            HOME_SCENE = HomeScene.SCENE_NAME;
+        }
 
         public static final class InventoryScenes {
             public static final String INVENTORY_SCENE;

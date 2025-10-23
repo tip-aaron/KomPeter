@@ -25,13 +25,19 @@ public class SpinnerProgressUI extends FlatProgressBarUI {
     protected SpinnerRender render;
     private float animateFrame;
     private Animator animator;
-    private final Rectangle iconRect = new Rectangle();
+    private final Rectangle iconRect;
     private float lastAnimator;
     private boolean moreAnimation;
 
     private PropertyChangeListener propertyChangeListener;
-    private final Rectangle textRect = new Rectangle();
-    private final Rectangle viewRect = new Rectangle();
+    private final Rectangle textRect;
+    private final Rectangle viewRect;
+
+    public SpinnerProgressUI() {
+        iconRect = new Rectangle();
+        textRect = new Rectangle();
+        viewRect = new Rectangle();
+    }
 
     @Override
     public Dimension getPreferredSize(JComponent c) {

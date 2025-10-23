@@ -40,33 +40,45 @@ import org.jetbrains.annotations.NotNull;
 public class SignUpAuthScene implements Scene {
     public static final String SCENE_NAME = "sign-up";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
 
-    private final JTextField emailInput =
-            TextFieldFactory.createTextField("Email", JTextField.CENTER);
-    private final JLabel emailInputError = new JLabel();
+    private final JTextField emailInput;
+    private final JLabel emailInputError;
 
-    private final JTextField displayNameInput =
-            TextFieldFactory.createTextField("Display Name", JTextField.CENTER);
-    private final JLabel displayNameInputError = new JLabel();
+    private final JTextField displayNameInput;
+    private final JLabel displayNameInputError;
 
-    private final JTextField firstNameInput =
-            TextFieldFactory.createTextField("First Name", JTextField.CENTER);
-    private final JLabel firstNameInputError = new JLabel();
+    private final JTextField firstNameInput;
+    private final JLabel firstNameInputError;
 
-    private final JTextField lastNameInput =
-            TextFieldFactory.createTextField("Last Name", JTextField.CENTER);
-    private final JLabel lastNameInputError = new JLabel();
+    private final JTextField lastNameInput;
+    private final JLabel lastNameInputError;
 
-    private final JPasswordField passwordInput =
-            TextFieldFactory.createPasswordField("Password", JPasswordField.CENTER);
-    private final JLabel passwordInputError = new JLabel();
+    private final JPasswordField passwordInput;
+    private final JLabel passwordInputError;
 
-    private final JButton submitButton = new JButton("Sign up");
+    private final JButton submitButton;
 
-    private final JButton navigateToLoginButton = new JButton("Already have an account");
+    private final JButton navigateToLoginButton;
 
-    private final AtomicBoolean busy = new AtomicBoolean(false);
+    private final AtomicBoolean busy;
+
+    public SignUpAuthScene() {
+        view = new JPanel();
+        emailInput = TextFieldFactory.createTextField("Email", JTextField.CENTER);
+        emailInputError = new JLabel();
+        displayNameInput = TextFieldFactory.createTextField("Display Name", JTextField.CENTER);
+        displayNameInputError = new JLabel();
+        firstNameInput = TextFieldFactory.createTextField("First Name", JTextField.CENTER);
+        firstNameInputError = new JLabel();
+        lastNameInput = TextFieldFactory.createTextField("Last Name", JTextField.CENTER);
+        lastNameInputError = new JLabel();
+        passwordInput = TextFieldFactory.createPasswordField("Password", JPasswordField.CENTER);
+        passwordInputError = new JLabel();
+        submitButton = new JButton("Sign up");
+        navigateToLoginButton = new JButton("Already have an account");
+        busy = new AtomicBoolean(false);
+    }
 
     private final ActionListener handleSubmitActionListener =
             new ActionListener() {

@@ -32,9 +32,14 @@ public class InventoryScene implements SceneWithSubScenes {
                 ;
             };
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
 
-    private final SceneManager sceneManager = new StaticSceneManager();
+    private final SceneManager sceneManager;
+
+    public InventoryScene() {
+        view = new JPanel();
+        sceneManager = new StaticSceneManager();
+    }
 
     @Override
     public @NotNull String name() {

@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 public class StaticSceneManager implements SceneManager {
     private Logger LOGGER = KompeterLogger.getLogger(StaticSceneManager.class);
 
-    private final HashMap<String, SceneEntry> sceneEntriesCache = new HashMap<>();
-    private final ObserverLRU<String, Scene> sceneCache = new ObserverLRU<>(5);
+    private final HashMap<String, SceneEntry> sceneEntriesCache;
+    private final ObserverLRU<String, Scene> sceneCache;
     private String currentSceneName;
 
     private JPanel view = new JPanel();
@@ -32,6 +32,8 @@ public class StaticSceneManager implements SceneManager {
     private LookAndFeel oldLookAndFeel = UIManager.getLookAndFeel();
 
     public StaticSceneManager() {
+        sceneEntriesCache = new HashMap<>();
+        sceneCache = new ObserverLRU<>(5);
         view.setLayout(cardLayout);
 
         sceneCache.subscribe(this::lruListener);

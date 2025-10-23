@@ -28,9 +28,9 @@ import net.miginfocom.swing.MigLayout;
 public final class ShopScene implements Scene {
     public static final String SCENE_NAME = "shop";
 
-    private final ProductList productList = new ProductList(new AddToCartConsumer());
-    private final ShopHeader shopHeader = new ShopHeader();
-    private final Cart cart = Cart.getInstance();
+    private final ProductList productList;
+    private final ShopHeader shopHeader;
+    private final Cart cart;
     private final Consumer<SearchData> shopHeaderSubscriber = new Consumer<SearchData>() {
         public void accept(SearchData arg0) {
             productList.searchItems(arg0);
@@ -47,6 +47,9 @@ public final class ShopScene implements Scene {
     };
 
     public ShopScene() {
+        productList = new ProductList(new AddToCartConsumer());
+        shopHeader = new ShopHeader();
+        cart = Cart.getInstance();
         onCreate();
     }
 

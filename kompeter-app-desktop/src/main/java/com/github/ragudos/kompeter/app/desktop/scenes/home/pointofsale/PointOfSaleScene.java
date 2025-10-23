@@ -34,9 +34,14 @@ public class PointOfSaleScene implements SceneWithSubScenes {
     };
     public static final String SCENE_NAME = "point_of_sale";
 
-    private final SceneManager sceneManager = new StaticSceneManager();
+    private final SceneManager sceneManager;
 
-    private final JPanel view = new JPanel(new MigLayout("insets 0", "[grow, center]", "[grow, center]"));
+    private final JPanel view;
+
+    public PointOfSaleScene() {
+        sceneManager = new StaticSceneManager();
+        view = new JPanel(new MigLayout("insets 0", "[grow, center]", "[grow, center]"));
+    }
 
     @Override
     public String getDefaultScene() {

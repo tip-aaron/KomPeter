@@ -39,21 +39,30 @@ import org.jetbrains.annotations.NotNull;
 public class SignInAuthScene implements Scene {
     public static final String SCENE_NAME = "sign_in";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
 
     private final JTextField emailInput =
             TextFieldFactory.createTextField("Email", JTextField.CENTER);
-    private final JLabel emailInputError = new JLabel();
+    private final JLabel emailInputError;
 
     private final JPasswordField passwordInput =
             TextFieldFactory.createPasswordField("Password", JPasswordField.CENTER);
-    private final JLabel passwordInputError = new JLabel();
+    private final JLabel passwordInputError;
 
-    private final JButton submitButton = new JButton("Sign in");
+    private final JButton submitButton;
 
-    private final JButton createAccountButton = new JButton("Create an account");
+    private final JButton createAccountButton;
 
-    private final AtomicBoolean busy = new AtomicBoolean(false);
+    private final AtomicBoolean busy;
+
+    public SignInAuthScene() {
+        view = new JPanel();
+        emailInputError = new JLabel();
+        passwordInputError = new JLabel();
+        submitButton = new JButton("Sign in");
+        createAccountButton = new JButton("Create an account");
+        busy = new AtomicBoolean(false);
+    }
 
     private final EnterKeyListener inputEnterKeyListener =
             new EnterKeyListener(

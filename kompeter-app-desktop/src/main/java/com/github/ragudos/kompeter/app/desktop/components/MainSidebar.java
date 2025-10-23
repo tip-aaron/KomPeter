@@ -28,10 +28,10 @@ import org.jetbrains.annotations.NotNull;
 public class MainSidebar implements SceneComponent {
     private final JPanel view;
 
-    private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean initialized;
 
     private ButtonGroup buttonGroup = new ButtonGroup();
-    private final HashMap<String, JButton> buttons = new HashMap<>();
+    private final HashMap<String, JButton> buttons;
     private final Consumer<String> navigationListenerClass = new Consumer<String>() {
         @Override
         public void accept(String sceneName) {
@@ -51,6 +51,8 @@ public class MainSidebar implements SceneComponent {
     };
 
     public MainSidebar() {
+        initialized = new AtomicBoolean(false);
+        buttons = new HashMap<>();
         view = new JPanel();
     }
 

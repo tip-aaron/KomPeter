@@ -28,7 +28,11 @@ import org.jetbrains.annotations.NotNull;
 public final class MainSettingsScene implements Scene {
     public static final String SCENE_NAME = "main";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
+
+    public MainSettingsScene() {
+        view = new JPanel();
+    }
 
     private final JButton logoutButton =
             ButtonFactory.createButton("Sign out", "logout.svg", "", "ghost");

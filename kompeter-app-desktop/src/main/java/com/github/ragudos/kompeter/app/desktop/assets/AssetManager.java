@@ -17,10 +17,16 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public class AssetManager {
-    private static final Logger LOGGER = KompeterLogger.getLogger(AssetManager.class);
+    private static final Logger LOGGER;
 
-    private static final LRU<String, Image> IMAGES = new LRU<>(50);
-    private static final LRU<String, SVGIconUIColor> icons = new LRU<>(50);
+    private static final LRU<String, Image> IMAGES;
+    private static final LRU<String, SVGIconUIColor> icons;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(AssetManager.class);
+        IMAGES = new LRU<>(50);
+        icons = new LRU<>(50);
+    }
     private static final String ICONS_BASE_PATH =
             AssetManager.class.getPackageName().replace('.', '/');
 

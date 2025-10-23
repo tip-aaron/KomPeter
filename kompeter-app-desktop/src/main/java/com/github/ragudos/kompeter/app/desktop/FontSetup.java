@@ -19,7 +19,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class FontSetup {
-    private static final Logger LOGGER = KompeterLogger.getLogger(FontSetup.class);
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = KompeterLogger.getLogger(FontSetup.class);
+    }
 
     public static final void setup() {
         try (ScanResult scanResult =

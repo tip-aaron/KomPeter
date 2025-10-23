@@ -14,7 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public final class EditProfileScene implements Scene {
     public static final String SCENE_NAME = "edit_profile";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
+
+    public EditProfileScene() {
+        view = new JPanel();
+    }
 
     @Override
     public @NotNull String name() {

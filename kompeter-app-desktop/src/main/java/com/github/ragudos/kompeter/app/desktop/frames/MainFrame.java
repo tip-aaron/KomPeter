@@ -25,9 +25,10 @@ import com.github.ragudos.kompeter.database.AbstractSqlFactoryDao;
 import com.github.ragudos.kompeter.utilities.constants.Metadata;
 
 public class MainFrame extends JFrame {
-    private final MainFrameWindowListener windowListener = new MainFrameWindowListener();
+    private final MainFrameWindowListener windowListener;
 
     public MainFrame() {
+        windowListener = new MainFrameWindowListener();
         addWindowListener(windowListener);
 
         setTitle(Metadata.APP_TITLE + " " + Metadata.APP_VERSION);

@@ -14,7 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public final class ProductListScene implements Scene {
     public static final String SCENE_NAME = "product_list";
 
-    private final JPanel view = new JPanel();
+    private final JPanel view;
+
+    public ProductListScene() {
+        view = new JPanel();
+    }
 
     @Override
     public @NotNull String name() {

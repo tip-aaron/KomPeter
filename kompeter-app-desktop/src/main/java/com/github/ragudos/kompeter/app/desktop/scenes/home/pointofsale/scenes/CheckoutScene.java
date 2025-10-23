@@ -39,13 +39,22 @@ public final class CheckoutScene implements Scene {
     private final JPanel body = new JPanel(
             new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), 9, 9));
 
-    private final Cart cart = Cart.getInstance();
-    private final JPanel controlsPanel = new JPanel(new MigLayout("insets 0, flowx, gapx 3px"));
-    private final JPanel header = new JPanel(new MigLayout("insets 9, flowx", "[]push[]push[]", "[grow, fill]"));
-    private final JButton placeOrder = ButtonFactory.createButton("Order", "package-check.svg", "", "ghost");
-    private final JScrollPane scrollPane = new JScrollPane(body);
+    private final Cart cart;
+    private final JPanel controlsPanel;
+    private final JPanel header;
+    private final JButton placeOrder;
+    private final JScrollPane scrollPane;
 
-    private final JLabel totalTitle = new JLabel("");
+    private final JLabel totalTitle;
+
+    public CheckoutScene() {
+        cart = Cart.getInstance();
+        controlsPanel = new JPanel(new MigLayout("insets 0, flowx, gapx 3px"));
+        header = new JPanel(new MigLayout("insets 9, flowx", "[]push[]push[]", "[grow, fill]"));
+        placeOrder = ButtonFactory.createButton("Order", "package-check.svg", "", "ghost");
+        scrollPane = new JScrollPane(body);
+        totalTitle = new JLabel("");
+    }
     private final JPanel view = new JPanel(new MigLayout("insets 0, fill, flowy", "[grow, fill, center]",
             "[top, grow 0, shrink][grow, fill, center]"));
 

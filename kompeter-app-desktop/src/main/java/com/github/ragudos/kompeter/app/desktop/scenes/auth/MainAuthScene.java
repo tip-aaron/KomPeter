@@ -26,10 +26,19 @@ public class MainAuthScene implements SceneWithSubScenes {
     }
 
     public static final String SCENE_NAME = "auth";
-    public static final SceneGuard SCENE_GUARD = new MainAuthSceneGuard();
+    public static final SceneGuard SCENE_GUARD;
 
-    private final JPanel view = new JPanel(new BorderLayout());
-    private final SceneManager sceneManager = new StaticSceneManager();
+    static {
+        SCENE_GUARD = new MainAuthSceneGuard();
+    }
+
+    private final JPanel view;
+    private final SceneManager sceneManager;
+
+    public MainAuthScene() {
+        view = new JPanel(new BorderLayout());
+        sceneManager = new StaticSceneManager();
+    }
 
     @Override
     public void onCreate() {
