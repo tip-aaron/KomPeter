@@ -33,7 +33,7 @@ jobs:
               run: ./mvnw --batch-mode --update-snapshots package
 
             - name: Copy Desktop App JAR to staging directory
-              run: mkdir staging && cp kompeter-app-desktop/target/*.jar staging/
+              run: mkdir staging && cp target/*.jar staging/
 
             - uses: actions/upload-artifact@v4
               with:

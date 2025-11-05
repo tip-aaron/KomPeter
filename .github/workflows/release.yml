@@ -35,6 +35,6 @@ jobs:
     - name: Upload artifact for release
       uses: softprops/action-gh-release@v1
       with:
-        files: kompeter-app-desktop/target/*.jar
+        files: target/*.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,1 +1,0 @@
-SELECT * FROM item_categories;

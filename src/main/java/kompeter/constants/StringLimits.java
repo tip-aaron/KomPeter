@@ -1,0 +1,24 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
+package kompeter.constants;
+
+import org.jetbrains.annotations.Range;
+
+public final class StringLimits {
+    public static final StringLimit DISPLAY_NAME = new StringLimit(1, 64);
+
+    public static final StringLimit FIRST_NAME = new StringLimit(1, 64);
+    public static final StringLimit LAST_NAME = new StringLimit(1, 64);
+    public static final StringLimit PRODUCT_DESCRIPTION = new StringLimit(0, 256);
+
+    public static final StringLimit PRODUCT_NAME = new StringLimit(1, 256);
+
+    public static final record StringLimit(@Range(from = 0, to = Integer.MAX_VALUE) int min,
+            @Range(from = 0, to = Integer.MAX_VALUE) int max) {
+    }
+}
