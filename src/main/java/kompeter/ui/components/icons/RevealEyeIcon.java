@@ -28,7 +28,7 @@ public class RevealEyeIcon implements AnimatedIcon {
     private final int space;
 
     public RevealEyeIcon() {
-        this(new SVGIconUIColor("eye.svg", 1f, "TextField.placeholderForeground"), 5);
+        this(new SVGIconUIColor("eye.svg", 1.25f, "TextField.placeholderForeground"), 5);
     }
 
     public RevealEyeIcon(@NotNull final SVGIconUIColor icon, final int space) {
@@ -75,7 +75,7 @@ public class RevealEyeIcon implements AnimatedIcon {
             final Shape shape = new Line2D.Float(startX, startY, startX + (endX - startX) * animatedValue,
                     startY + (endY - startY) * animatedValue);
 
-            drawLine(g2, shape, UIManager.getColor(icon.getColorKey()), 1.5f);
+            drawLine(g2, shape, UIManager.getColor(icon.getColorKey()), 2f);
         }
 
         g2.dispose();

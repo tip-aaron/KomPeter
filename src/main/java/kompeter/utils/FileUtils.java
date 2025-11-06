@@ -27,7 +27,7 @@ public final class FileUtils {
 
         final Path res = Files.copy(s, t.resolve(s.getFileName()), StandardCopyOption.REPLACE_EXISTING);
 
-        LOGGER.fine(String.format("Copied file %s to %s", s.toString(), t.toString()));
+        LOGGER.info(String.format("Copied file %s to %s", s.toString(), t.toString()));
 
         return res;
     }
@@ -40,8 +40,8 @@ public final class FileUtils {
                 return;
             }
 
-            Files.createDirectory(path, null);
-            LOGGER.fine(String.format("Created directory %s", path.toString()));
+            Files.createDirectory(path);
+            LOGGER.info(String.format("Created directory %s", path.toString()));
         } catch (final SecurityException | UnsupportedOperationException | IOException err) {
             LOGGER.severe(err.getMessage());
         }
@@ -55,8 +55,8 @@ public final class FileUtils {
                 return;
             }
 
-            Files.createFile(path, null);
-            LOGGER.fine(String.format("Created file %s", path.toString()));
+            Files.createFile(path);
+            LOGGER.info(String.format("Created file %s", path.toString()));
         } catch (final SecurityException | UnsupportedOperationException | IOException err) {
             LOGGER.severe(err.getMessage());
         }

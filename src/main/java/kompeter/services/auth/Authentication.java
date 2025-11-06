@@ -121,7 +121,7 @@ public final class Authentication {
             LOGGER.info("No stored session token. Going to authentication page.");
 
             return AuthenticationStatus.builder().message("Please login again.")
-                    .statusType(AuthenticationStatus.StatusType.ERROR).build();
+                    .statusType(AuthenticationStatus.StatusType.SUCCESS).build();
         }
 
         final ADaoFactory factory = ADaoFactory.getDaoFactory(ADaoFactory.SQLITE);
@@ -135,7 +135,7 @@ public final class Authentication {
                 LOGGER.warning("Trying to login from stored session, but it's invalid or expired.");
 
                 return AuthenticationStatus.builder().message("Please login again.")
-                        .statusType(AuthenticationStatus.StatusType.ERROR).build();
+                        .statusType(AuthenticationStatus.StatusType.SUCCESS).build();
             }
 
             final Session session = maybeSession.get();
@@ -181,7 +181,7 @@ public final class Authentication {
         }
     }
 
-    public AuthenticationStatus signUp(final String displayName, final String firstName, final String lastName,
+    public static AuthenticationStatus signUp(final String displayName, final String firstName, final String lastName,
             final String email, final char[] password) {
         final ADaoFactory factory = ADaoFactory.getDaoFactory(ADaoFactory.SQLITE);
         final UserDao userDao = factory.getUserDao();

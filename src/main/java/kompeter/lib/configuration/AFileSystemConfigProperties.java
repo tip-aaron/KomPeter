@@ -20,15 +20,16 @@ public abstract class AFileSystemConfigProperties extends AFileSystemConfig {
     public AFileSystemConfigProperties() {
         final var path = getFullPath();
 
-        System.out.println("Initializing configuration in file system for path: " + path);
+        LOGGER.info(String.format("Initializing configuration in file system for path: %s", path));
 
         try {
             PropertiesIO.loadPropertiesFromFileSystem(path, properties, FileLoadLeniency.CREATE_FILE_IF_MISSING);
-            System.out.println("Successfully loaded configuration from file system for path: " + path);
+            LOGGER.info(String.format("Successfully loaded configuration from file system for path: %s", path));
         } catch (final IOException e) {
-            System.err.println("Failed to load properties file: " + getFileName() + "\n" + e);
+            LOGGER.warning(String.format("Failed to load properties file at %s: %s", getFileName(), e.getMessage()));
         } catch (final IllegalArgumentException e) {
-            System.err.println("getFileName() or getFilePath() returned null or empty string. \n" + e);
+            LOGGER.warning(
+                    String.format("getFileName() or getFilePath() returned null or empty string: %s", e.getMessage()));
         }
     }
 
@@ -42,7 +43,7 @@ public abstract class AFileSystemConfigProperties extends AFileSystemConfig {
         try {
             PropertiesIO.savePropertiesInFileSystem(properties, getFullPath(), getHeaderComment());
         } catch (final Exception e) {
-            System.err.println("Failed to save properties after bulk remove. Reverting changes.\n" + e);
+            LOGGER.severe("Failed to save properties after bulk remove. Reverting changes.\n" + e);
 
             for (var i = 0; i < keys.length; i++) {
                 properties.setProperty((String) keys[i], (String) prevVals[i]);
@@ -73,7 +74,7 @@ public abstract class AFileSystemConfigProperties extends AFileSystemConfig {
         try {
             PropertiesIO.savePropertiesInFileSystem(properties, getFullPath(), getHeaderComment());
         } catch (final Exception e) {
-            System.err.println("Failed to save properties after remove. Reverting changes. \n" + e);
+            LOGGER.severe("Failed to save properties after remove. Reverting changes. \n" + e);
             properties.setProperty((String) key, (String) prevVal);
             throw e;
         }
@@ -88,7 +89,7 @@ public abstract class AFileSystemConfigProperties extends AFileSystemConfig {
         try {
             PropertiesIO.savePropertiesInFileSystem(properties, getFullPath(), getHeaderComment());
         } catch (final Exception e) {
-            System.err.println("Failed to save properties after set property. Reverting changes. \n" + e);
+            LOGGER.severe("Failed to save properties after set property. Reverting changes. \n" + e);
             properties.setProperty(key, (String) prevVal);
             throw e;
         }

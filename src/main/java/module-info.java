@@ -18,4 +18,5 @@ module kompeter {
     requires static org.jetbrains.annotations;
 
     exports kompeter;
+    exports kompeter.ui.frames;
 }

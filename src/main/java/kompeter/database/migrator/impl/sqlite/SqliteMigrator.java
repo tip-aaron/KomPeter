@@ -48,9 +48,12 @@ public class SqliteMigrator implements IMigrator {
         final ADaoFactory factory = ADaoFactory.getDaoFactory(ADaoFactory.SQLITE);
         final MigrationQuery[] queries = getMigrationQueries();
 
+        LOGGER.info("Starting migrations...");
+
         try (Connection conn = factory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(QUERY_CREATE_MIGRATION)) {
             stmt.executeUpdate();
+            LOGGER.info("Successfully created migrations table");
         }
 
         try (Connection conn = factory.getConnection();) {
@@ -58,15 +61,17 @@ public class SqliteMigrator implements IMigrator {
                 conn.setAutoCommit(false);
 
                 for (final MigrationQuery query : queries) {
-                    final PreparedStatement existsStmt = conn.prepareStatement(QUERY_CHECK_EXISTENCE);
+                    try (final PreparedStatement existsStmt = conn.prepareStatement(QUERY_CHECK_EXISTENCE)) {
+                        existsStmt.setInt(1, query.getVersion());
+                        existsStmt.setString(2, query.getName());
 
-                    existsStmt.setInt(1, query.getVersion());
-                    existsStmt.setString(2, query.getName());
+                        final ResultSet rs = existsStmt.executeQuery();
 
-                    final ResultSet rs = existsStmt.executeQuery();
+                        if (rs.next() && rs.getBoolean(1)) {
+                            LOGGER.info(String.format("Migration v%d exists. Skipping...", query.getVersion()));
 
-                    if (rs.next() && rs.getBoolean(1)) {
-                        continue;
+                            continue;
+                        }
                     }
 
                     for (String sqlQuery : splitStatements(query.getQuery())) {
@@ -76,19 +81,25 @@ public class SqliteMigrator implements IMigrator {
                             continue;
                         }
 
-                        final PreparedStatement sqlQueryStmt = conn.prepareStatement(sqlQuery);
-                        sqlQueryStmt.execute();
+                        try (final PreparedStatement sqlQueryStmt = conn.prepareStatement(sqlQuery)) {
+                            sqlQueryStmt.execute();
+                            LOGGER.info(
+                                    String.format("Successful SQL Migration run: \n======\n%s\n======\n", sqlQuery));
+                        }
+
                     }
 
-                    final PreparedStatement insertStmt = conn.prepareStatement(QUERY_INSERT);
+                    try (final PreparedStatement insertStmt = conn.prepareStatement(QUERY_INSERT)) {
+                        insertStmt.setInt(1, query.getVersion());
+                        insertStmt.setString(2, query.getName());
 
-                    insertStmt.setInt(1, query.getVersion());
-                    insertStmt.setString(2, query.getName());
-
-                    insertStmt.executeUpdate();
+                        insertStmt.executeUpdate();
+                        LOGGER.info(String.format("Migration v%d has been successfully done!", query.getVersion()));
+                    }
                 }
 
                 conn.commit();
+                LOGGER.info("Migration complete");
             } catch (final SQLException err) {
                 try {
                     conn.rollback();
@@ -122,7 +133,7 @@ public class SqliteMigrator implements IMigrator {
             if (trimmed.endsWith(currentDelimiter)) {
                 final String stmt = trimmed.substring(0, trimmed.length() - currentDelimiter.length()).trim();
 
-                if (!stmts.isEmpty()) {
+                if (!stmt.isEmpty()) {
                     stmts.add(stmt);
                 }
 
@@ -140,8 +151,7 @@ public class SqliteMigrator implements IMigrator {
     @Override
     public MigrationQuery[] getMigrationQueries() throws IOException {
         try (final ScanResult scanRes = new ClassGraph()
-                .acceptModules(IMigrator.class.getModule().getName())
-                .acceptPaths("META-INF/migrations")
+                .acceptPackages("kompeter.database.migrations")
                 .scan()) {
             final List<MigrationQuery> queries = new ArrayList<>();
             final Pattern fileNamePattern = Pattern.compile("^V(\\d+)_(.+)\\.(\\w+)$");

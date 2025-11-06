@@ -23,7 +23,7 @@ public abstract class AQueryLoader {
     public abstract String getDatabaseName();
 
     public String getQuery(final SqlQueryData data) throws FileNotFoundException, IOException {
-        final String path = String.format("sql/%s/%s/%s/%s.sql", getDatabaseName(), data.getQueryType(),
+        final String path = String.format("../sql/%s/%s/%s/%s.sql", getDatabaseName(), data.getQueryType(),
                 data.getTableName(), data.getFileName());
 
         try (final InputStream stream = AQueryLoader.class.getResourceAsStream(path)) {
