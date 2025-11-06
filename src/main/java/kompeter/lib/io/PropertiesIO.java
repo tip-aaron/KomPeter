@@ -13,10 +13,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
+import kompeter.lib.logger.KompeterLogger;
+
 public class PropertiesIO {
+    static final Logger LOGGER = KompeterLogger.getLogger(PropertiesIO.class);
     public static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
     public static final void loadProperties(@NotNull final Class<?> clazz, @NotNull final Properties properties,
@@ -55,17 +59,17 @@ public class PropertiesIO {
             } else {
                 switch (leniency) {
                     case MANDATORY -> {
-                        throw new FileNotFoundException("Properties file not found: " + filePath);
+                        throw new FileNotFoundException(String.format("Properties file not found: %s", filePath));
                     }
                     case LOG_MISSING -> {
-                        System.err.println("Properties file not found: " + filePath);
+                        LOGGER.severe(String.format("Properties file not found: %s", filePath));
                     }
                     case CREATE_FILE_IF_MISSING -> {
                         // DO nothing since we cannot write to a resource file
                         // as we don't know the path of the clazz on runtime.
                     }
                     case ALLOW_MISSING -> {
-                        System.out.println("Properties file not found: " + filePath);
+                        LOGGER.info(String.format("Properties file not found: %s", filePath));
                     }
                 }
             }
@@ -129,16 +133,16 @@ public class PropertiesIO {
         } catch (final FileNotFoundException e) {
             switch (leniency) {
                 case MANDATORY -> {
-                    throw new FileNotFoundException("Properties file not found: " + filePath);
+                    throw e;
                 }
                 case LOG_MISSING -> {
-                    System.err.println("Properties file not found: " + filePath);
+                    LOGGER.severe(e.getMessage());
                 }
                 case CREATE_FILE_IF_MISSING -> {
                     new File(filePath).createNewFile();
                 }
                 case ALLOW_MISSING -> {
-                    System.out.println("Properties file not found: " + filePath);
+                    LOGGER.warning(e.getMessage());
                 }
             }
         }
@@ -160,10 +164,8 @@ public class PropertiesIO {
 
         try (var outputStream = new FileOutputStream(filePath)) {
             properties.store(outputStream, comment);
-        } catch (final SecurityException e) {
-            System.err.println("Denied access to file: " + filePath);
-        } catch (final ClassCastException e) {
-            System.err.println(e);
+        } catch (final SecurityException | IOException e) {
+            LOGGER.warning(e.getMessage());
         }
     }
 

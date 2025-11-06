@@ -47,7 +47,7 @@ public class ApplicationConfig {
         return value == null ? "" : value;
     }
 
-    public class FileSystemApplicationConfig extends AbstractFileSystemConfigProperties {
+    public class FileSystemApplicationConfig extends AFileSystemConfigProperties {
         public FileSystemApplicationConfig() {
         }
 
@@ -57,7 +57,7 @@ public class ApplicationConfig {
         }
     }
 
-    public class ReadonlyApplicationConfig extends AbstractResourceConfigProperties {
+    public class ReadonlyApplicationConfig extends AResourceConfigProperties {
         public ReadonlyApplicationConfig() {
         }
 
@@ -67,7 +67,7 @@ public class ApplicationConfig {
         }
 
         @Override
-        public Class<? extends AbstractResourceConfig> getResourceClass() {
+        public Class<? extends AResourceConfig> getResourceClass() {
             return ReadonlyApplicationConfig.class;
         }
     }

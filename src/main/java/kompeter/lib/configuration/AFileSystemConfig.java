@@ -11,7 +11,7 @@ import java.io.File;
 
 import kompeter.constants.Directories;
 
-public abstract class AbstractFileSystemConfig extends AbstractConfig {
+public abstract class AFileSystemConfig extends AConfig {
     @Override
     public String getFileDirectory() {
         return Directories.CONFIG + File.separator;

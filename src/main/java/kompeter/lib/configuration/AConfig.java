@@ -7,7 +7,7 @@
 */
 package kompeter.lib.configuration;
 
-public abstract class AbstractConfig {
+public abstract class AConfig {
     public abstract String getFileDirectory();
 
     public abstract String getFileExtension();

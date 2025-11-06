@@ -7,11 +7,11 @@
 */
 package kompeter.lib.configuration;
 
-public abstract class AbstractResourceConfig extends AbstractConfig {
+public abstract class AResourceConfig extends AConfig {
     @Override
     public String getFileDirectory() {
         return "";
     }
 
-    public abstract Class<? extends AbstractResourceConfig> getResourceClass();
+    public abstract Class<? extends AResourceConfig> getResourceClass();
 }

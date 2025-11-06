@@ -63,14 +63,14 @@ CREATE TABLE IF NOT EXISTS products (
     _product_brand_id INTEGER,
     name TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL DEFAULT '',
+    display_image TEXT NOT NULL DEFAULT '',
     markup_rate REAL NOT NULL,
-    -- with markup rate already
-    price REAL NOT NULL,
+    -- with markup rate already & without vat
+    net_price REAL NOT NULL,
     -- with vat
     average_cost REAL NOT NULL,
     average_cost_vat_rate REAL NOT NULL,
     quantity_in_hand INTEGER NOT NULL DEFAULT 0,
-    display_image TEXT NOT NULL DEFAULT '',
     is_active BOOLEAN DEFAULT false,
     is_deleted BOOLEAN DEFAULT false,
     FOREIGN KEY (_product_category_id) REFERENCES product_categories (_product_category_id) ON DELETE
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS sale_discounts (
 CREATE TABLE IF NOT EXISTS sale_lines (
     _sale_id INTEGER NOT NULL,
     _product_id INTEGER NOT NULL,
-    price REAL NOT NULL,
+    net_price REAL NOT NULL,
     quantity INTEGER NOT NULL,
     UNIQUE (_sale_id, _product_id),
     PRIMARY KEY (_sale_id, _product_id),
@@ -157,24 +157,9 @@ CREATE TABLE IF NOT EXISTS product_price_histories (
     _product_id INTEGER NOT NULL,
     from_date TIMESTAMP NOT NULL,
     markup_rate REAL NOT NULL,
-    price REAL NOT NULL,
+    -- with markup rate and without vat
+    net_price REAL NOT NULL,
     FOREIGN KEY (_product_id) REFERENCES products (_product_id) ON DELETE CASCADE
-);
--- ========================================================= --
--- =====                                             ======= --
--- =====                  VIRTUAL                    ======= --
--- =====                                             ======= --
--- ========================================================= --
-CREATE VIRTUAL TABLE IF NOT EXISTS product_names_search USING fts5(_product_id, product_name);
-CREATE VIRTUAL TABLE IF NOT EXISTS product_sales_search USING fts5(
-    _sale_id,
-    _product_id,
-    product_name
-);
-CREATE VIRTUAL TABLE IF NOT EXISTS product_purchases_search USING fts5(
-    _purchase_order_id,
-    _product_id,
-    product_name
 );
 -- ========================================================= --
 -- =====                                             ======= --
@@ -200,8 +185,8 @@ SELECT s._sale_id,
     c.name AS customer_name,
     COUNT(sl._product_id) AS total_products,
     SUM(sl.quantity) AS total_quantity,
-    SUM(sl.price) AS gross_price,
-    SUM(sd.amount) AS discount_amount
+    SUM(sl.net_price) AS total_net_price,
+    SUM(sd.amount) AS total_discount
 FROM sales s
     INNER JOIN sale_lines sl ON s._sale_id = sl._sale_id
     INNER JOIN customers c ON c._customer_id = s._customer_id

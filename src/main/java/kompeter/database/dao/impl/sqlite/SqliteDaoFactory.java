@@ -14,6 +14,14 @@ import java.sql.SQLException;
 
 import kompeter.constants.Directories;
 import kompeter.database.dao.ADaoFactory;
+import kompeter.database.dao.impl.sqlite.product.SqliteProductDao;
+import kompeter.database.dao.impl.sqlite.users.SqliteAccountDao;
+import kompeter.database.dao.impl.sqlite.users.SqliteSessionDao;
+import kompeter.database.dao.impl.sqlite.users.SqliteUserDao;
+import kompeter.database.dao.products.ProductDao;
+import kompeter.database.dao.users.AccountDao;
+import kompeter.database.dao.users.SessionDao;
+import kompeter.database.dao.users.UserDao;
 
 public class SqliteDaoFactory extends ADaoFactory {
     private static SqliteDaoFactory instance;
@@ -41,5 +49,25 @@ public class SqliteDaoFactory extends ADaoFactory {
         }
 
         return DriverManager.getConnection(MAIN_DB_URL);
+    }
+
+    @Override
+    public AccountDao getAccountDao() {
+        return new SqliteAccountDao();
+    }
+
+    @Override
+    public ProductDao getProductDao() {
+        return new SqliteProductDao();
+    }
+
+    @Override
+    public SessionDao getSessionDao() {
+        return new SqliteSessionDao();
+    }
+
+    @Override
+    public UserDao getUserDao() {
+        return new SqliteUserDao();
     }
 }

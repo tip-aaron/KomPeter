@@ -13,10 +13,10 @@ import java.util.Properties;
 import kompeter.lib.io.FileLoadLeniency;
 import kompeter.lib.io.PropertiesIO;
 
-public abstract class AbstractResourceConfigProperties extends AbstractResourceConfig {
+public abstract class AResourceConfigProperties extends AResourceConfig {
     protected Properties properties;
 
-    public AbstractResourceConfigProperties() {
+    public AResourceConfigProperties() {
         final var classNameString = getResourceClass().getName();
 
         System.out.println("Initializing configuration in resource for path: " + getFileDirectory() + getFileName()

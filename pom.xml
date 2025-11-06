@@ -175,8 +175,21 @@
         </excludes>
       </resource>
     </resources>
-    <pluginManagement>
-      <plugins>
+    <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.14.1</version>
+          <configuration>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.42</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
@@ -217,6 +230,9 @@
             </execution>
           </executions>
         </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>

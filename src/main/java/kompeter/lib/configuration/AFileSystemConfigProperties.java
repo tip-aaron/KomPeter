@@ -14,10 +14,10 @@ import java.util.Properties;
 import kompeter.lib.io.FileLoadLeniency;
 import kompeter.lib.io.PropertiesIO;
 
-public abstract class AbstractFileSystemConfigProperties extends AbstractFileSystemConfig {
+public abstract class AFileSystemConfigProperties extends AFileSystemConfig {
     protected final Properties properties = new Properties();
 
-    public AbstractFileSystemConfigProperties() {
+    public AFileSystemConfigProperties() {
         final var path = getFullPath();
 
         System.out.println("Initializing configuration in file system for path: " + path);
