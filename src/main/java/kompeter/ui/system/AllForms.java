@@ -25,6 +25,10 @@ public class AllForms {
     }
 
     public static void clear() {
+        getInstance().formsMap.forEach((key, val) -> {
+            val.formClose();
+            val.formDestroy();
+        });
         getInstance().formsMap.clear();
     }
 

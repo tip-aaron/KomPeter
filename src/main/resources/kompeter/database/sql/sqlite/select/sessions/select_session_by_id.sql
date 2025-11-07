@@ -8,7 +8,14 @@ SELECT s_session_id,
     u.last_name,
     (u.first_name || ' ' || u.last_name) AS full_name,
     u.display_image,
-    GROUP_CONCAT(r.name, ',') AS roles,
+    json_group_array(
+        json_object(
+            '_roleId',
+            r._role_id,
+            'name',
+            r.name
+        )
+    ),
     a.email
 FROM sessions s
     INNER JOIN users u ON u._user_id = s._user_id

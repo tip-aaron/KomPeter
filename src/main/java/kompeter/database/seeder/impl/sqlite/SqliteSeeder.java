@@ -1,10 +1,3 @@
-/*
-*
-* MIT License
-* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
-* (C) 2025
-*
-*/
 package kompeter.database.seeder.impl.sqlite;
 
 import java.io.FileNotFoundException;
@@ -29,11 +22,14 @@ public class SqliteSeeder implements ISeeder {
 
     @Override
     public void seed() throws IOException, SQLException {
-        final String[] queries = Arrays.stream(getSeederQuery().split(";")).filter((str) -> !str.isBlank())
-                .map((s) -> s.trim()).toArray(String[]::new);
+        final String[] queries = Arrays.stream(getSeederQuery().split(";"))
+                .filter((str) -> !str.isBlank())
+                .map((s) -> s.trim())
+                .toArray(String[]::new);
         final ADaoFactory factory = ADaoFactory.getDaoFactory(ADaoFactory.SQLITE);
 
-        try (Connection conn = factory.getConnection(); Statement stmt = conn.createStatement();) {
+        try (Connection conn = factory.getConnection();
+                Statement stmt = conn.createStatement();) {
             conn.setAutoCommit(false);
 
             for (int i = 0; i < queries.length; ++i) {

@@ -7,6 +7,8 @@ module kompeter {
     requires com.formdev.flatlaf.extras;
     requires com.miglayout.swing;
     requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
     requires org.apache.commons.lang3;
     requires org.apache.commons.text;
     requires org.apache.pdfbox;

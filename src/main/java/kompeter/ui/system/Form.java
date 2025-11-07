@@ -33,12 +33,22 @@ public class Form extends JPanel {
         }
     }
 
+    /** Cleanup listeners */
+    public void formClose() {
+    }
+
+    /** Cleanup everything */
+    public void formDestroy() {
+    }
+
     public void formInit() {
     }
 
+    /** Reinitialize listeners */
     public void formOpen() {
     }
 
+    /** Reload data */
     public void formRefresh() {
     }
 

@@ -36,17 +36,15 @@ import raven.modal.component.DropShadowBorder;
 public class FormAuthLogin extends Form {
     private JLabel emailError;
     private JTextField emailTextField;
-    private final AtomicBoolean isBusy;
+    private EnterKeyListener enterKeyListener;
+    private AtomicBoolean isBusy;
     private JButton loginButton;
+    private LoginButtonActionListener loginButtonActionListener;
     private JLabel passwordError;
+
     private JPasswordField passwordTextField;
     private JButton registerButton;
-
-    public FormAuthLogin() {
-        isBusy = new AtomicBoolean(false);
-
-        init();
-    }
+    private RegisterButtonActionListener registerButtonActionListener;
 
     private void applyShadowBorder(final JPanel panel) {
         if (panel != null) {
@@ -119,15 +117,14 @@ public class FormAuthLogin extends Form {
         container.add(contentContainer);
 
         add(container);
-
-        emailTextField.addKeyListener(new EnterKeyListener());
-        passwordTextField.addKeyListener(new EnterKeyListener());
-        loginButton.addActionListener(new LoginButtonActionListener(this));
-        registerButton.addActionListener(new RegisterButtonActionListener());
     }
 
     private void init() {
         setLayout(new MigLayout("al center center"));
+
+        enterKeyListener = new EnterKeyListener();
+        loginButtonActionListener = new LoginButtonActionListener(this);
+        registerButtonActionListener = new RegisterButtonActionListener();
 
         createLogin();
     }
@@ -162,6 +159,29 @@ public class FormAuthLogin extends Form {
     @Override
     public void formAfterOpen() {
         emailTextField.requestFocusInWindow();
+    }
+
+    @Override
+    public void formClose() {
+        emailTextField.removeKeyListener(enterKeyListener);
+        passwordTextField.removeKeyListener(enterKeyListener);
+        loginButton.removeActionListener(loginButtonActionListener);
+        registerButton.removeActionListener(registerButtonActionListener);
+    }
+
+    @Override
+    public void formInit() {
+        isBusy = new AtomicBoolean(false);
+
+        init();
+    }
+
+    @Override
+    public void formOpen() {
+        emailTextField.addKeyListener(enterKeyListener);
+        passwordTextField.addKeyListener(enterKeyListener);
+        loginButton.addActionListener(loginButtonActionListener);
+        registerButton.addActionListener(registerButtonActionListener);
     }
 
     private class EnterKeyListener extends KeyAdapter {

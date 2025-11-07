@@ -9,9 +9,21 @@ package kompeter.lib.helper;
 
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 
+import kompeter.database.dto.users.Role;
+
 public final class Filter {
     private static final JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
     public static final double STRING_THRESHOLD_SIMILARITY = 0.5;
+
+    public static boolean isInArray(final String str, final Role[] strArr) {
+        for (final Role string : strArr) {
+            if (str.equals(string.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static boolean isInArray(final String str, final String[] strArr) {
         for (final String string : strArr) {

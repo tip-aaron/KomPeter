@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import kompeter.database.dao.ADaoFactory;
@@ -27,12 +28,15 @@ public class ProductDisplayList {
     private String[] brandFilters;
     private String[] categoryFilters;
     private String nameFilter;
-    private ArrayList<CartProduct> products;
+    private final AtomicReference<ArrayList<CartProduct>> products;
 
     private final PropertyChangeSupport propertyChangeSupport;
 
     public ProductDisplayList() {
-        products = null;
+        brandFilters = new String[]{};
+        categoryFilters = new String[]{};
+        nameFilter = "";
+        products = new AtomicReference<>(new ArrayList<>());
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
@@ -41,26 +45,41 @@ public class ProductDisplayList {
         final ProductDao productDao = factory.getProductDao();
 
         try (Connection conn = factory.getConnection()) {
-            products = productDao.getAllCartProducts(conn, nameFilter, categoryFilters, brandFilters);
+            final Object copy = products.getAcquire().clone();
+
+            products.set(productDao.getAllCartProducts(conn, nameFilter, categoryFilters, brandFilters));
+            propertyChangeSupport.firePropertyChange("products", copy, products.getAcquire());
         } catch (SQLException | IOException err) {
             LOGGER.severe(
                     String.format("Trying to load products in ProductList, but met with error: %s", err.getMessage()));
         }
     }
 
-    public void setBrandFilters(final String[] brandFilters) {
+    public void setBrandFilters(String[] brandFilters) {
+        if (brandFilters == null) {
+            brandFilters = new String[]{};
+        }
+
         propertyChangeSupport.firePropertyChange("brandFilters", this.brandFilters, brandFilters);
         this.brandFilters = brandFilters;
         reloadProducts();
     }
 
-    public void setCategoryFilters(final String[] categoryFilters) {
+    public void setCategoryFilters(String[] categoryFilters) {
+        if (categoryFilters == null) {
+            categoryFilters = new String[]{};
+        }
+
         propertyChangeSupport.firePropertyChange("categoryFilters", this.categoryFilters, categoryFilters);
         this.categoryFilters = categoryFilters;
         reloadProducts();
     }
 
-    public void setNameFilter(final String nameFilter) {
+    public void setNameFilter(String nameFilter) {
+        if (nameFilter == null) {
+            nameFilter = "";
+        }
+
         propertyChangeSupport.firePropertyChange("nameFilter", this.nameFilter, nameFilter);
         this.nameFilter = nameFilter;
         reloadProducts();

@@ -21,7 +21,7 @@ public class User {
     String fullName;
     final int id;
     String lastName;
-    String[] roles;
+    Role[] roles;
 
     public boolean isAdmin() {
         return Filter.isInArray("admin", roles);

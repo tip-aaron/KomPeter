@@ -47,13 +47,15 @@ public class FormAuthRegister extends Form {
     private JPanel contentContainer;
 
     private final AtomicInteger currentStep;
-
     private JLabel displayNameError;
     private JLabel displayNameLabel;
     private JTextField displayNameTextField;
+
     private JLabel emailError;
+
     private JLabel emailLabel;
     private JTextField emailTextField;
+    private EnterKeyListener enterKeyListener;
     private JLabel firstNameError;
     private JLabel firstNameLabel;
     private JTextField firstNameTextField;
@@ -62,12 +64,15 @@ public class FormAuthRegister extends Form {
     private JLabel lastNameLabel;
     private JTextField lastNameTextField;
     private JButton loginButton;
+    private LoginButtonActionListener loginButtonActionListener;
     private SlidePane paneSlider;
     private JLabel passwordError;
     private JLabel passwordLabel;
     private JPasswordField passwordTextField;
     private JButton previousStepButton;
+    private PreviousStepButtonListener previousStepButtonListener;
     private JButton registerButton;
+    private RegisterButtonActionListener registerButtonActionListener;
     private JPanel step1Panel;
     private JPanel step2Panel;
     private JPanel step3Panel;
@@ -220,19 +225,15 @@ public class FormAuthRegister extends Form {
 
         container.add(contentContainer);
         add(container);
-
-        firstNameTextField.addKeyListener(new EnterKeyListener());
-        lastNameTextField.addKeyListener(new EnterKeyListener());
-        displayNameTextField.addKeyListener(new EnterKeyListener());
-        emailTextField.addKeyListener(new EnterKeyListener());
-        passwordTextField.addKeyListener(new EnterKeyListener());
-        previousStepButton.addActionListener(new PreviousStepButtonListener(this));
-        loginButton.addActionListener(new LoginButtonActionListener());
-        registerButton.addActionListener(new RegisterButtonActionListener(this));
     }
 
     private void init() {
         setLayout(new MigLayout("al center center"));
+
+        enterKeyListener = new EnterKeyListener();
+        previousStepButtonListener = new PreviousStepButtonListener(this);
+        loginButtonActionListener = new LoginButtonActionListener();
+        registerButtonActionListener = new RegisterButtonActionListener(this);
 
         createRegister();
     }
@@ -313,6 +314,30 @@ public class FormAuthRegister extends Form {
     @Override
     public void formAfterOpen() {
         firstNameTextField.requestFocusInWindow();
+    }
+
+    @Override
+    public void formClose() {
+        firstNameTextField.removeKeyListener(enterKeyListener);
+        lastNameTextField.removeKeyListener(enterKeyListener);
+        displayNameTextField.removeKeyListener(enterKeyListener);
+        emailTextField.removeKeyListener(enterKeyListener);
+        passwordTextField.removeKeyListener(enterKeyListener);
+        previousStepButton.removeActionListener(previousStepButtonListener);
+        loginButton.removeActionListener(loginButtonActionListener);
+        registerButton.removeActionListener(registerButtonActionListener);
+    }
+
+    @Override
+    public void formOpen() {
+        firstNameTextField.addKeyListener(enterKeyListener);
+        lastNameTextField.addKeyListener(enterKeyListener);
+        displayNameTextField.addKeyListener(enterKeyListener);
+        emailTextField.addKeyListener(enterKeyListener);
+        passwordTextField.addKeyListener(enterKeyListener);
+        previousStepButton.addActionListener(previousStepButtonListener);
+        loginButton.addActionListener(loginButtonActionListener);
+        registerButton.addActionListener(registerButtonActionListener);
     }
 
     private class EnterKeyListener extends KeyAdapter {

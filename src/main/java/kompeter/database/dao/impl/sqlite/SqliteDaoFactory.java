@@ -14,12 +14,28 @@ import java.sql.SQLException;
 
 import kompeter.constants.Directories;
 import kompeter.database.dao.ADaoFactory;
+import kompeter.database.dao.impl.sqlite.product.SqliteProductBrandDao;
+import kompeter.database.dao.impl.sqlite.product.SqliteProductCategoryDao;
 import kompeter.database.dao.impl.sqlite.product.SqliteProductDao;
+import kompeter.database.dao.impl.sqlite.purchase_orders.SqlitePurchaseOrderDao;
+import kompeter.database.dao.impl.sqlite.purchase_orders.SqlitePurchaseOrderLineDao;
+import kompeter.database.dao.impl.sqlite.sales.SqliteSaleDao;
+import kompeter.database.dao.impl.sqlite.sales.SqliteSaleDiscountDao;
+import kompeter.database.dao.impl.sqlite.sales.SqliteSaleLineDao;
 import kompeter.database.dao.impl.sqlite.users.SqliteAccountDao;
+import kompeter.database.dao.impl.sqlite.users.SqliteRoleDao;
 import kompeter.database.dao.impl.sqlite.users.SqliteSessionDao;
 import kompeter.database.dao.impl.sqlite.users.SqliteUserDao;
+import kompeter.database.dao.products.ProductBrandDao;
+import kompeter.database.dao.products.ProductCategoryDao;
 import kompeter.database.dao.products.ProductDao;
+import kompeter.database.dao.purchase_orders.PurchaseOrderDao;
+import kompeter.database.dao.purchase_orders.PurchaseOrderLineDao;
+import kompeter.database.dao.sales.SaleDao;
+import kompeter.database.dao.sales.SaleDiscountDao;
+import kompeter.database.dao.sales.SaleLineDao;
 import kompeter.database.dao.users.AccountDao;
+import kompeter.database.dao.users.RoleDao;
 import kompeter.database.dao.users.SessionDao;
 import kompeter.database.dao.users.UserDao;
 
@@ -62,6 +78,11 @@ public class SqliteDaoFactory extends ADaoFactory {
     }
 
     @Override
+    public RoleDao getRoleDao() {
+        return new SqliteRoleDao();
+    }
+
+    @Override
     public SessionDao getSessionDao() {
         return new SqliteSessionDao();
     }
@@ -69,5 +90,40 @@ public class SqliteDaoFactory extends ADaoFactory {
     @Override
     public UserDao getUserDao() {
         return new SqliteUserDao();
+    }
+
+    @Override
+    public PurchaseOrderDao getPurchaseOrderDao() {
+        return new SqlitePurchaseOrderDao();
+    }
+
+    @Override
+    public PurchaseOrderLineDao getPurchaseOrderLineDao() {
+        return new SqlitePurchaseOrderLineDao();
+    }
+
+    @Override
+    public SaleDao getSaleDao() {
+        return new SqliteSaleDao();
+    }
+
+    @Override
+    public SaleLineDao getSaleLineDao() {
+        return new SqliteSaleLineDao();
+    }
+
+    @Override
+    public SaleDiscountDao getSaleDiscountDao() {
+        return new SqliteSaleDiscountDao();
+    }
+
+    @Override
+    public ProductBrandDao getProductBrandDao() {
+        return new SqliteProductBrandDao();
+    }
+
+    @Override
+    public ProductCategoryDao getProductCategoryDao() {
+        return new SqliteProductCategoryDao();
     }
 }

@@ -12,8 +12,16 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import kompeter.database.dao.impl.sqlite.SqliteDaoFactory;
+import kompeter.database.dao.products.ProductBrandDao;
+import kompeter.database.dao.products.ProductCategoryDao;
 import kompeter.database.dao.products.ProductDao;
+import kompeter.database.dao.purchase_orders.PurchaseOrderDao;
+import kompeter.database.dao.purchase_orders.PurchaseOrderLineDao;
+import kompeter.database.dao.sales.SaleDao;
+import kompeter.database.dao.sales.SaleDiscountDao;
+import kompeter.database.dao.sales.SaleLineDao;
 import kompeter.database.dao.users.AccountDao;
+import kompeter.database.dao.users.RoleDao;
 import kompeter.database.dao.users.SessionDao;
 import kompeter.database.dao.users.UserDao;
 import kompeter.lib.logger.KompeterLogger;
@@ -40,7 +48,24 @@ public abstract class ADaoFactory {
 
     public abstract UserDao getUserDao();
 
+    public abstract RoleDao getRoleDao();
+
     public abstract AccountDao getAccountDao();
 
     public abstract SessionDao getSessionDao();
+
+    public abstract PurchaseOrderDao getPurchaseOrderDao();
+
+    public abstract PurchaseOrderLineDao getPurchaseOrderLineDao();
+
+    public abstract SaleDao getSaleDao();
+
+    public abstract SaleLineDao getSaleLineDao();
+
+    public abstract SaleDiscountDao getSaleDiscountDao();
+
+    public abstract ProductBrandDao getProductBrandDao();
+
+    public abstract ProductCategoryDao getProductCategoryDao();
+
 }

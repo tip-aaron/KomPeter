@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS products (
     -- with vat
     average_cost REAL NOT NULL,
     average_cost_vat_rate REAL NOT NULL,
+    minimum_quantity INTEGER NOT NULL DEFAULT 0,
     quantity_in_hand INTEGER NOT NULL DEFAULT 0,
     is_active BOOLEAN DEFAULT false,
     is_deleted BOOLEAN DEFAULT false,
@@ -140,18 +141,6 @@ CREATE TABLE IF NOT EXISTS sale_lines (
 -- =====                   AUDIT                     ======= --
 -- =====                                             ======= --
 -- ========================================================= --
-CREATE TABLE IF NOT EXISTS product_adjustments (
-    _product_adjustment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    _product_id INTEGER NOT NULL,
-    _adjuster_id INTEGER,
-    -- add user id, could provide ids for different systems that uses our app, but that's o ut of our scope
-    adjustment_type TEXT NOT NULL CHECK (adjustment_type IN ('system', 'user')),
-    quantiy_after INTEGER NOT NULL,
-    quantity_before INTEGER NOT NULL,
-    quantity_added INTEGER NOT NULL,
-    FOREIGN KEY (_adjuster_id) REFERENCES users (_user_id) ON DELETE
-    SET NULL
-);
 CREATE TABLE IF NOT EXISTS product_price_histories (
     _product_price_history_id INTEGER PRIMARY KEY AUTOINCREMENT,
     _product_id INTEGER NOT NULL,
@@ -173,7 +162,7 @@ SELECT po._purchase_order_id,
     po.vat_rate,
     COUNT(pol._product_id) AS total_products,
     SUM(pol.quantity) AS total_quantity,
-    SUM(pol.unit_price) AS total_cost
+    SUM(pol.unit_price * pol.quantity) AS total_cost
 FROM purchase_orders po
     INNER JOIN purchase_order_lines pol ON po._purchase_order_id = pol._purchase_order_id
 GROUP BY po._purchase_order_id;
@@ -185,10 +174,17 @@ SELECT s._sale_id,
     c.name AS customer_name,
     COUNT(sl._product_id) AS total_products,
     SUM(sl.quantity) AS total_quantity,
-    SUM(sl.net_price) AS total_net_price,
-    SUM(sd.amount) AS total_discount
+    SUM(sl.net_price * sl.quantity) AS gross_total_net_price,
+    COALESCE(SUM(sd.amount), 0) AS total_discount,
+    (
+        SUM(sl.net_price * sl.quantity) - COALESCE(SUM(sd.amount), 0)
+    ) AS total_net_price
 FROM sales s
     INNER JOIN sale_lines sl ON s._sale_id = sl._sale_id
     INNER JOIN customers c ON c._customer_id = s._customer_id
+    INNER JOIN sale_discounts sd ON s._sale_id = sd._sale_id
 GROUP BY s._sale_id,
-    c._customer_id;
+    c.name,
+    s.sale_code,
+    s.sale_date,
+    s.vat_rate;

@@ -15,7 +15,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kompeter.database.dao.users.SessionDao;
+import kompeter.database.dto.users.Role;
 import kompeter.database.dto.users.Session;
 import kompeter.database.dto.users.User;
 import kompeter.database.loader.AQueryLoader.SqlQueryData;
@@ -66,16 +70,21 @@ public class SqliteSessionDao implements SessionDao {
 
             final ResultSet rs = stmt.executeQuery();
 
-            return rs.next()
-                    ? Optional.of(Session.builder().id(rs.getInt("_session_id"))
-                            .createdAt(rs.getTimestamp("_created_at")).expiresAt(rs.getTimestamp("expires_at"))
-                            .sessionToken("session_token")
-                            .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
-                                    .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
-                                    .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
-                                    .roles(rs.getString("roles").split(",")).email(rs.getString("email")).build())
-                            .build())
-                    : Optional.empty();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+
+            final ObjectMapper mapper = new ObjectMapper();
+            final Role[] roles = mapper.readValue(rs.getString("roles"), new TypeReference<Role[]>() {
+            });
+
+            return Optional.of(Session.builder().id(rs.getInt("_session_id")).createdAt(rs.getTimestamp("_created_at"))
+                    .expiresAt(rs.getTimestamp("expires_at")).sessionToken("session_token")
+                    .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
+                            .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
+                            .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
+                            .roles(roles).email(rs.getString("email")).build())
+                    .build());
         }
     }
 
@@ -90,16 +99,21 @@ public class SqliteSessionDao implements SessionDao {
 
             final ResultSet rs = stmt.executeQuery();
 
-            return rs.next()
-                    ? Optional.of(Session.builder().id(rs.getInt("_session_id"))
-                            .createdAt(rs.getTimestamp("_created_at")).expiresAt(rs.getTimestamp("expires_at"))
-                            .sessionToken("session_token")
-                            .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
-                                    .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
-                                    .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
-                                    .roles(rs.getString("roles").split(",")).email(rs.getString("email")).build())
-                            .build())
-                    : Optional.empty();
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+
+            final ObjectMapper mapper = new ObjectMapper();
+            final Role[] roles = mapper.readValue(rs.getString("roles"), new TypeReference<Role[]>() {
+            });
+
+            return Optional.of(Session.builder().id(rs.getInt("_session_id")).createdAt(rs.getTimestamp("_created_at"))
+                    .expiresAt(rs.getTimestamp("expires_at")).sessionToken("session_token")
+                    .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
+                            .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
+                            .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
+                            .roles(roles).email(rs.getString("email")).build())
+                    .build());
         }
     }
 

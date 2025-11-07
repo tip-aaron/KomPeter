@@ -21,6 +21,12 @@ import kompeter.ui.system.FormManager;
 import net.miginfocom.swing.MigLayout;
 
 public class FormAuthWelcome extends Form {
+    private JButton signInButton;
+    private SignInButtonActionListener signInButtonActionListener;
+
+    private JButton signUpButton;
+    private SignUpButtonActionListener signUpButtonActionListener;
+
     public FormAuthWelcome() {
         init();
     }
@@ -37,8 +43,8 @@ public class FormAuthWelcome extends Form {
         titleContainer.add(subtitle);
 
         final JPanel buttonContainer = new JPanel(new MigLayout("gapx 48px, al center center"));
-        final JButton signInButton = new JButton("Sign in");
-        final JButton signUpButton = new JButton("Sign up");
+        signInButton = new JButton("Sign in");
+        signUpButton = new JButton("Sign up");
 
         signInButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         signInButton.putClientProperty(FlatClientProperties.BUTTON_TYPE_ROUND_RECT, true);
@@ -48,9 +54,6 @@ public class FormAuthWelcome extends Form {
         buttonContainer.add(signInButton);
         buttonContainer.add(signUpButton);
 
-        signInButton.addActionListener(new SignInButtonActionListener());
-        signUpButton.addActionListener(new SignUpButtonActionListener());
-
         add(titleContainer, "growx");
         add(buttonContainer, "growx");
     }
@@ -58,7 +61,22 @@ public class FormAuthWelcome extends Form {
     private void init() {
         setLayout(new MigLayout("flowy, gapy 18px, al center center"));
 
+        signInButtonActionListener = new SignInButtonActionListener();
+        signUpButtonActionListener = new SignUpButtonActionListener();
+
         createWelcome();
+    }
+
+    @Override
+    public void formClose() {
+        signInButton.removeActionListener(signInButtonActionListener);
+        signUpButton.removeActionListener(signUpButtonActionListener);
+    }
+
+    @Override
+    public void formOpen() {
+        signInButton.addActionListener(signInButtonActionListener);
+        signUpButton.addActionListener(signUpButtonActionListener);
     }
 
     private class SignInButtonActionListener implements ActionListener {

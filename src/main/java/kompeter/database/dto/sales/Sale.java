@@ -25,7 +25,7 @@ public class Sale {
     final SaleLine[] saleLines;
     final BigDecimal vatRate;
 
-    public BigDecimal getDiscount() {
+    public BigDecimal getTotalDiscount() {
         BigDecimal discount = BigDecimal.ZERO;
 
         for (final SaleDiscount saleDiscount : saleDiscounts) {
@@ -35,17 +35,21 @@ public class Sale {
         return discount;
     }
 
-    public BigDecimal getNetPrice() {
+    public BigDecimal getTotalNetPrice() {
         BigDecimal netPrice = BigDecimal.ZERO;
 
         for (final SaleLine saleLine : saleLines) {
             netPrice = netPrice.add(saleLine.getNetPrice());
         }
 
-        return netPrice.subtract(getDiscount());
+        return netPrice.subtract(getTotalDiscount());
     }
 
     public BigDecimal getTotalPrice() {
-        return getNetPrice().multiply(vatRate);
+        return getTotalNetPrice().add(getTotalVatPrice());
+    }
+
+    public BigDecimal getTotalVatPrice() {
+        return getTotalNetPrice().multiply(vatRate.add(BigDecimal.ONE));
     }
 }

@@ -8,7 +8,6 @@
 package kompeter.ui.system;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import kompeter.services.auth.SessionManager;
 import kompeter.ui.forms.FormProfile;
@@ -108,25 +107,39 @@ public class FormManager {
 
     public static void refresh() {
         if (!FORMS.current().isEmpty()) {
-            SwingUtilities.invokeLater(() -> {
-                FORMS.current().get().formRefresh();
-            });
-
+            FORMS.current().get().formRefresh();
             mainForm.refresh();
         }
     }
 
     public static void showAuthForm(final Form form) {
         if (AUTH_FORMS.current().isEmpty() || form != AUTH_FORMS.current().get()) {
+            Form prevForm = null;
+
+            if (AUTH_FORMS.current().isPresent()) {
+                AUTH_FORMS.current().get().formBeforeClose();
+                prevForm = AUTH_FORMS.current().get();
+            }
+
             AUTH_FORMS.add(form);
             form.formCheck();
             form.formOpen();
             mainAuthForm.setForm(form);
             form.formAfterOpen();
+
+            if (prevForm != null) {
+                prevForm.formClose();
+            }
         }
     }
 
     public static void showForm(final Form form) {
+        Form prevForm = null;
+
+        if (FORMS.current().isPresent()) {
+            prevForm = FORMS.current().get();
+        }
+
         if (FORMS.recentAction() == RecentAction.REDO || FORMS.recentAction() == RecentAction.UNDO) {
             if (FORMS.recentAction() == RecentAction.REDO) {
                 FORMS.redo();
@@ -138,6 +151,11 @@ public class FormManager {
             form.formCheck();
             form.formOpen();
             mainForm.setForm(form);
+            form.formAfterOpen();
+
+            if (prevForm != null) {
+                prevForm.formClose();
+            }
 
             return;
         }
@@ -149,6 +167,10 @@ public class FormManager {
             mainForm.setForm(form);
             mainForm.refresh();
             form.formAfterOpen();
+
+            if (prevForm != null) {
+                prevForm.formClose();
+            }
         }
     }
 

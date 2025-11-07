@@ -7,5 +7,8 @@
 */
 package kompeter.services.pointofsale;
 
+import java.math.BigDecimal;
+
 public final class Transaction {
+    public static final BigDecimal VAT_RATE = new BigDecimal("0.12");
 }

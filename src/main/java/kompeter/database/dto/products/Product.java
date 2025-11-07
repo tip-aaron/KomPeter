@@ -10,6 +10,7 @@ package kompeter.database.dto.products;
 import java.math.BigDecimal;
 
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 
 @Data
@@ -19,13 +20,20 @@ public class Product {
     private final BigDecimal avgCostVatRate;
     private ProductBrand brand;
     private ProductCategory category;
-    private String description;
+    @Default
+    private String description = "";
     private String displayImage;
     private final int id;
-    private boolean isActive;
-    private boolean isDeleted;
+    @Default
+    private boolean isActive = false;
+    @Default
+    private boolean isDeleted = false;
     private BigDecimal markupRate;
     private String name;
-    private BigDecimal netPrice;
-    private int quantityInHand;
+    @Default
+    private BigDecimal netPrice = BigDecimal.ZERO;
+    @Default
+    private int minimumQuantity = 0;
+    @Default
+    private int quantityInHand = 0;
 }
