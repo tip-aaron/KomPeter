@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.database.seeder;
 
 import java.io.FileNotFoundException;
@@ -5,7 +12,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public interface ISeeder {
-    public String getSeederQuery() throws FileNotFoundException, IOException;
+    String getSeederQuery() throws FileNotFoundException, IOException;
 
-    public void seed() throws IOException, SQLException;
+    void seed() throws IOException, SQLException;
 }

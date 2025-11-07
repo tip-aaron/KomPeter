@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.database.dao.purchase_orders;
 
 import java.io.IOException;
@@ -6,14 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface PurchaseOrderLineDao {
-    public int createPurchaseOrderLine(
-            Connection conn,
-            int productId,
-            int purchaseOrderId,
-            int quantity,
-            BigDecimal unitPrice) throws SQLException, IOException;
+    int createPurchaseOrderLine(Connection conn, int productId, int purchaseOrderId, int quantity, BigDecimal unitPrice)
+            throws SQLException, IOException;
 
-    public int getCountOfPurchaseOrdersOfProduct(
-            Connection conn,
-            int productId) throws SQLException, IOException;
+    int getCountOfPurchaseOrdersOfProduct(Connection conn, int productId) throws SQLException, IOException;
 }

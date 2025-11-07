@@ -19,7 +19,18 @@ import kompeter.database.dto.products.CartProduct;
 import kompeter.database.dto.products.Product;
 
 public interface ProductDao {
+    void addQuantity(Connection conn, int productId, int toAdd) throws SQLException, IOException;
+
+    void changeSellingPrice(Connection conn, int productId, BigDecimal newPrice, BigDecimal avgCost,
+            BigDecimal avgCostVatRate) throws SQLException, IOException;
+
     int createProduct(Connection conn, Product product) throws SQLException, IOException;
+
+    void decQuantity(Connection conn, int productId, int toDec) throws SQLException, IOException;
+
+    boolean exists(Connection conn, String name) throws SQLException, IOException;
+
+    boolean exists(Connection conn, int productId) throws SQLException, IOException;
 
     ArrayList<CartProduct> getAllCartProducts(Connection conn, String nameFilter, String[] categoryFilters,
             String[] brandFilters) throws IOException, SQLException;
@@ -29,16 +40,5 @@ public interface ProductDao {
 
     Optional<AverageCost> getAvgCost(Connection conn, int productId) throws SQLException, IOException;
 
-    void changeSellingPrice(Connection conn, int productId, BigDecimal newPrice,
-            BigDecimal avgCost, BigDecimal avgCostVatRate) throws SQLException, IOException;
-
-    void addQuantity(Connection conn, int productId, int toAdd) throws SQLException, IOException;
-
-    void decQuantity(Connection conn, int productId, int toDec) throws SQLException, IOException;
-
     Optional<BigDecimal> getMarkupRate(Connection conn, int productId) throws SQLException, IOException;
-
-    boolean exists(Connection conn, int productId) throws SQLException, IOException;
-
-    boolean exists(Connection conn, String name) throws SQLException, IOException;
 }

@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.database.dao.purchase_orders;
 
 import java.io.IOException;
@@ -11,14 +18,10 @@ import kompeter.database.dto.purchases.PurchaseOrder;
 import kompeter.database.dto.purchases.PurchaseOrderView;
 
 public interface PurchaseOrderDao {
-    public int createPurchaseOrder(
-            Connection conn,
-            String purchaseCode,
-            Timestamp purchaseDate,
-            int supplierId,
+    int createPurchaseOrder(Connection conn, String purchaseCode, Timestamp purchaseDate, int supplierId,
             BigDecimal vatRate) throws SQLException, IOException;
 
-    public ArrayList<PurchaseOrder> getAllPurchaseOrders(Connection conn) throws SQLException, IOException;
+    ArrayList<PurchaseOrderView> getAllPurchaseOrderViews(Connection conn) throws SQLException, IOException;
 
-    public ArrayList<PurchaseOrderView> getAllPurchaseOrderViews(Connection conn) throws SQLException, IOException;
+    ArrayList<PurchaseOrder> getAllPurchaseOrders(Connection conn) throws SQLException, IOException;
 }

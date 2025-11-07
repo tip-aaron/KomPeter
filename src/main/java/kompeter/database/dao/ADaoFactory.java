@@ -67,5 +67,4 @@ public abstract class ADaoFactory {
     public abstract ProductBrandDao getProductBrandDao();
 
     public abstract ProductCategoryDao getProductCategoryDao();
-
 }

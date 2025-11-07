@@ -73,23 +73,18 @@ public class SqliteDaoFactory extends ADaoFactory {
     }
 
     @Override
+    public ProductBrandDao getProductBrandDao() {
+        return new SqliteProductBrandDao();
+    }
+
+    @Override
+    public ProductCategoryDao getProductCategoryDao() {
+        return new SqliteProductCategoryDao();
+    }
+
+    @Override
     public ProductDao getProductDao() {
         return new SqliteProductDao();
-    }
-
-    @Override
-    public RoleDao getRoleDao() {
-        return new SqliteRoleDao();
-    }
-
-    @Override
-    public SessionDao getSessionDao() {
-        return new SqliteSessionDao();
-    }
-
-    @Override
-    public UserDao getUserDao() {
-        return new SqliteUserDao();
     }
 
     @Override
@@ -103,13 +98,13 @@ public class SqliteDaoFactory extends ADaoFactory {
     }
 
     @Override
-    public SaleDao getSaleDao() {
-        return new SqliteSaleDao();
+    public RoleDao getRoleDao() {
+        return new SqliteRoleDao();
     }
 
     @Override
-    public SaleLineDao getSaleLineDao() {
-        return new SqliteSaleLineDao();
+    public SaleDao getSaleDao() {
+        return new SqliteSaleDao();
     }
 
     @Override
@@ -118,12 +113,17 @@ public class SqliteDaoFactory extends ADaoFactory {
     }
 
     @Override
-    public ProductBrandDao getProductBrandDao() {
-        return new SqliteProductBrandDao();
+    public SaleLineDao getSaleLineDao() {
+        return new SqliteSaleLineDao();
     }
 
     @Override
-    public ProductCategoryDao getProductCategoryDao() {
-        return new SqliteProductCategoryDao();
+    public SessionDao getSessionDao() {
+        return new SqliteSessionDao();
+    }
+
+    @Override
+    public UserDao getUserDao() {
+        return new SqliteUserDao();
     }
 }

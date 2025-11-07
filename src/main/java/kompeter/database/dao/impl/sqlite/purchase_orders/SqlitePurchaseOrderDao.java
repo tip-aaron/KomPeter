@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.database.dao.impl.sqlite.purchase_orders;
 
 import java.io.IOException;
@@ -25,11 +32,9 @@ import kompeter.database.statement.NamedPreparedStatement;
 public class SqlitePurchaseOrderDao implements PurchaseOrderDao {
     @Override
     public int createPurchaseOrder(final Connection conn, final String purchaseCode, final Timestamp purchaseDate,
-            final int supplierId,
-            final BigDecimal vatRate) throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("create_purchase_order")
-                        .tableName("purchase_orders").queryType(SqlQueryType.INSERT).build());
+            final int supplierId, final BigDecimal vatRate) throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("create_purchase_order").tableName("purchase_orders").queryType(SqlQueryType.INSERT).build());
 
         try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt("_supplier_id", supplierId);
@@ -48,25 +53,19 @@ public class SqlitePurchaseOrderDao implements PurchaseOrderDao {
     @Override
     public ArrayList<PurchaseOrderView> getAllPurchaseOrderViews(final Connection conn)
             throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
-                .fileName("select_all_purchase_orders_view").tableName("purchase_orders").queryType(SqlQueryType.SELECT)
-                .build());
+        final String query = SqliteQueryLoader.getInstance()
+                .getQuery(SqlQueryData.builder().fileName("select_all_purchase_orders_view")
+                        .tableName("purchase_orders").queryType(SqlQueryType.SELECT).build());
 
         try (Statement stmt = conn.createStatement()) {
             final ResultSet rs = stmt.executeQuery(query);
             final ArrayList<PurchaseOrderView> res = new ArrayList<>();
 
             while (rs.next()) {
-                res.add(
-                        PurchaseOrderView
-                                .builder()._purchaseOrderId(rs.getInt("_purchase_order_id"))
-                                .purchaseCode(rs.getString("purchase_code"))
-                                .purchaseDate(rs.getTimestamp("purchase_date"))
-                                .totalCost(rs.getBigDecimal("total_cost"))
-                                .totalProducts(rs.getInt("total_products"))
-                                .totalQuantity(rs.getInt("total_quantity"))
-                                .vatRate(rs.getBigDecimal("vat_rate"))
-                                .build());
+                res.add(PurchaseOrderView.builder()._purchaseOrderId(rs.getInt("_purchase_order_id"))
+                        .purchaseCode(rs.getString("purchase_code")).purchaseDate(rs.getTimestamp("purchase_date"))
+                        .totalCost(rs.getBigDecimal("total_cost")).totalProducts(rs.getInt("total_products"))
+                        .totalQuantity(rs.getInt("total_quantity")).vatRate(rs.getBigDecimal("vat_rate")).build());
             }
 
             return res;
@@ -75,9 +74,9 @@ public class SqlitePurchaseOrderDao implements PurchaseOrderDao {
 
     @Override
     public ArrayList<PurchaseOrder> getAllPurchaseOrders(final Connection conn) throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
-                .fileName("select_all_purchase_orders").tableName("purchase_orders").queryType(SqlQueryType.SELECT)
-                .build());
+        final String query = SqliteQueryLoader.getInstance()
+                .getQuery(SqlQueryData.builder().fileName("select_all_purchase_orders").tableName("purchase_orders")
+                        .queryType(SqlQueryType.SELECT).build());
 
         try (Statement stmt = conn.createStatement()) {
             final ResultSet rs = stmt.executeQuery(query);
@@ -91,8 +90,7 @@ public class SqlitePurchaseOrderDao implements PurchaseOrderDao {
                 final Supplier supplier = Supplier.builder().id(rs.getInt("_supplier_id"))
                         .name(rs.getString("supplier_name")).build();
 
-                res.add(PurchaseOrder.builder().id(rs.getInt("_purchase_order_id")).lines(poLines)
-                        .supplier(supplier)
+                res.add(PurchaseOrder.builder().id(rs.getInt("_purchase_order_id")).lines(poLines).supplier(supplier)
                         .vatRate(rs.getBigDecimal("vat_rate")).purchaseCode(rs.getString("purchase_code"))
                         .purchaseDate(rs.getTimestamp("purchase_date")).build());
             }

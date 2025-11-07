@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.services.inventory;
 
 import java.io.IOException;
@@ -20,22 +27,15 @@ import kompeter.database.dto.purchases.PurchaseOrderLineData;
 import kompeter.lib.logger.KompeterLogger;
 
 public class Purchase {
-    private final static Logger LOGGER = KompeterLogger.getLogger(Purchase.class);
+    private static final Logger LOGGER = KompeterLogger.getLogger(Purchase.class);
 
-    public static void addPurchase(
-            final String purchaseCode,
-            final Supplier supplier,
-            final BigDecimal vatRate,
+    public static void addPurchase(final String purchaseCode, final Supplier supplier, final BigDecimal vatRate,
             final PurchaseOrderLineData[] data) {
         addPurchase(purchaseCode, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)), supplier, vatRate, data);
     }
 
-    public static void addPurchase(
-            final String purchaseCode,
-            final Timestamp purchaseDate,
-            final Supplier supplier,
-            final BigDecimal vatRate,
-            final PurchaseOrderLineData[] data) {
+    public static void addPurchase(final String purchaseCode, final Timestamp purchaseDate, final Supplier supplier,
+            final BigDecimal vatRate, final PurchaseOrderLineData[] data) {
         LOGGER.info("Adding a purchase order");
 
         final ADaoFactory factory = ADaoFactory.getDaoFactory(ADaoFactory.SQLITE);
@@ -47,9 +47,9 @@ public class Purchase {
             LOGGER.info("Checking whether all lines for purchase order are valid products");
             for (final PurchaseOrderLineData d : data) {
                 if (!productDao.exists(conn, d.getProductId())) {
-                    throw new SQLException(String.format(
-                            "Product %d doesn't exist in the database, but we are trying to add it in purchase orders",
-                            d.getProductId()));
+                    throw new SQLException(
+                            String.format("Product %d doesn't exist in the database, but we are trying to add it in"
+                                    + " purchase orders", d.getProductId()));
                 }
             }
             LOGGER.info("All products are valid. Proceeding with the operation.");
@@ -60,12 +60,10 @@ public class Purchase {
                 LOGGER.info("Querying the database for purchase order insertion...");
 
                 final int purchaseOrderId = purchaseOrderDao.createPurchaseOrder(conn, purchaseCode, purchaseDate,
-                        supplier.getId(),
-                        vatRate);
+                        supplier.getId(), vatRate);
 
                 if (purchaseOrderId == -1) {
-                    throw new SQLException(
-                            "Failure to create purchase order id");
+                    throw new SQLException("Failure to create purchase order id");
                 }
 
                 LOGGER.info(String.format("Added purhcase order. Its id is %d", purchaseOrderId));
@@ -93,10 +91,7 @@ public class Purchase {
                         avgVatRate = vatRate;
                     } else {
                         LOGGER.info(String.format("Fetching previous average cost of product %d", d.getProductId()));
-                        /**
-                         * (Old avg x old n + new entry) / old n + 1
-                         */
-
+                        /** (Old avg x old n + new entry) / old n + 1 */
                         final Optional<AverageCost> maybeAverageCost = productDao.getAvgCost(conn, d.getProductId());
 
                         if (maybeAverageCost.isEmpty()) {
@@ -107,13 +102,9 @@ public class Purchase {
 
                         final AverageCost averageCost = maybeAverageCost.get();
 
-                        avgCost = averageCost.getAvgCost()
-                                .multiply(new BigDecimal(countOfLines))
-                                .add(totalCost)
+                        avgCost = averageCost.getAvgCost().multiply(new BigDecimal(countOfLines)).add(totalCost)
                                 .divide(new BigDecimal(countOfLines + 1));
-                        avgVatRate = averageCost.getAvgVatRate()
-                                .multiply(new BigDecimal(countOfLines))
-                                .add(vatRate)
+                        avgVatRate = averageCost.getAvgVatRate().multiply(new BigDecimal(countOfLines)).add(vatRate)
                                 .divide(new BigDecimal(countOfLines + 1));
 
                         LOGGER.info(String.format("Recalculated avg cost for product %d: \n%s\n%s", d.getProductId(),
@@ -134,11 +125,11 @@ public class Purchase {
                     final BigDecimal newPrice = netAvgCost.multiply(markupRate.add(BigDecimal.ONE));
 
                     LOGGER.info(String.format(
-                            "Changing price of product %d to %s with a net avg cost of %s and markup rate of %s",
+                            "Changing price of product %d to %s with a net avg cost of %s and markup rate of" + " %s",
                             d.getProductId(), newPrice.toString(), netAvgCost.toString(), markupRate.toString()));
                     productDao.changeSellingPrice(conn, d.getProductId(), newPrice, avgCost, avgVatRate);
-                    purchaseOrderLineDao.createPurchaseOrderLine(conn,
-                            d.getProductId(), purchaseOrderId, d.getQuantity(), d.getUnitPrice());
+                    purchaseOrderLineDao.createPurchaseOrderLine(conn, d.getProductId(), purchaseOrderId,
+                            d.getQuantity(), d.getUnitPrice());
 
                     LOGGER.info(String.format("Added product id %d to purchase order lines", d.getProductId()));
                 }

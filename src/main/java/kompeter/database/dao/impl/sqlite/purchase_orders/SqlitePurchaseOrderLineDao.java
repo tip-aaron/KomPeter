@@ -1,3 +1,10 @@
+/*
+*
+* MIT License
+* Authors: Aaron Ragudos, Peter Dela Cruz, Hanz Mapua, Jerick Remo
+* (C) 2025
+*
+*/
 package kompeter.database.dao.impl.sqlite.purchase_orders;
 
 import java.io.IOException;
@@ -17,8 +24,7 @@ import kompeter.database.statement.NamedPreparedStatement;
 public class SqlitePurchaseOrderLineDao implements PurchaseOrderLineDao {
     @Override
     public int createPurchaseOrderLine(final Connection conn, final int productId, final int purchaseOrderId,
-            final int quantity,
-            final BigDecimal unitPrice) throws SQLException, IOException {
+            final int quantity, final BigDecimal unitPrice) throws SQLException, IOException {
         final String query = SqliteQueryLoader.getInstance()
                 .getQuery(SqlQueryData.builder().fileName("create_purchase_order_line")
                         .tableName("purchase_order_lines").queryType(SqlQueryType.INSERT).build());
@@ -52,5 +58,4 @@ public class SqlitePurchaseOrderLineDao implements PurchaseOrderLineDao {
             return rs.next() ? rs.getInt(1) : -1;
         }
     }
-
 }

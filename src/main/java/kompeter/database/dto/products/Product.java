@@ -29,11 +29,11 @@ public class Product {
     @Default
     private boolean isDeleted = false;
     private BigDecimal markupRate;
+    @Default
+    private int minimumQuantity = 0;
     private String name;
     @Default
     private BigDecimal netPrice = BigDecimal.ZERO;
-    @Default
-    private int minimumQuantity = 0;
     @Default
     private int quantityInHand = 0;
 }

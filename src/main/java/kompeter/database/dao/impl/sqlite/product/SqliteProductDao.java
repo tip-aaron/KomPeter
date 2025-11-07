@@ -31,6 +31,36 @@ import kompeter.lib.helper.Filter;
 
 public class SqliteProductDao implements ProductDao {
     @Override
+    public void addQuantity(final Connection conn, final int productId, final int toAdd)
+            throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder().fileName("add_quantity")
+                .tableName("products").queryType(SqlQueryType.UPDATE).build());
+
+        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
+            stmt.setInt("_product_id", productId);
+            stmt.setInt("quantity_to_add", toAdd);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public void changeSellingPrice(final Connection conn, final int productId, final BigDecimal newPrice,
+            final BigDecimal avgCost, final BigDecimal avgCostVatRate) throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("change_selling_price").tableName("products").queryType(SqlQueryType.UPDATE).build());
+
+        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
+            stmt.setBigDecimal("net_price", newPrice);
+            stmt.setBigDecimal("average_cost", avgCost);
+            stmt.setBigDecimal("average_cost_vat_rate", avgCostVatRate);
+            stmt.setInt("_product_id", productId);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
     public int createProduct(final Connection conn, final Product product) throws SQLException, IOException {
         final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder().fileName("create_product")
                 .tableName("products").queryType(SqlQueryType.INSERT).build());
@@ -55,6 +85,48 @@ public class SqliteProductDao implements ProductDao {
             final ResultSet rs = stmt.getPreparedStatement().getGeneratedKeys();
 
             return rs.next() ? rs.getInt(1) : -1;
+        }
+    }
+
+    @Override
+    public void decQuantity(final Connection conn, final int productId, final int toDec)
+            throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder().fileName("dec_quantity")
+                .tableName("products").queryType(SqlQueryType.UPDATE).build());
+
+        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
+            stmt.setInt("_product_id", productId);
+            stmt.setInt("quantity_to_dec", toDec);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public boolean exists(final Connection conn, final String name) throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("select_exists_by_name").tableName("products").queryType(SqlQueryType.SELECT).build());
+
+        try (final PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, name);
+
+            final ResultSet rs = stmt.executeQuery();
+
+            return rs.next() && rs.getInt(1) != 0;
+        }
+    }
+
+    @Override
+    public boolean exists(final Connection conn, final int productId) throws SQLException, IOException {
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("select_exists_by_id").tableName("products").queryType(SqlQueryType.SELECT).build());
+
+        try (final PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, productId);
+
+            final ResultSet rs = stmt.executeQuery();
+
+            return rs.next() && rs.getInt(1) != 0;
         }
     }
 
@@ -117,9 +189,8 @@ public class SqliteProductDao implements ProductDao {
                         .displayImage(rs.getString("display_image")).markupRate(rs.getBigDecimal("markup_rate"))
                         .netPrice(rs.getBigDecimal("net_price")).avgCost(rs.getBigDecimal("average_cost"))
                         .avgCostVatRate(rs.getBigDecimal("average_cost_vat_rate"))
-                        .minimumQuantity(rs.getInt("minimum_quantity"))
-                        .quantityInHand(rs.getInt("quantity_in_hand")).isActive(rs.getBoolean("is_active"))
-                        .isDeleted(rs.getBoolean("is_deleted")).build();
+                        .minimumQuantity(rs.getInt("minimum_quantity")).quantityInHand(rs.getInt("quantity_in_hand"))
+                        .isActive(rs.getBoolean("is_active")).isDeleted(rs.getBoolean("is_deleted")).build();
 
                 products.add(product);
             }
@@ -131,17 +202,16 @@ public class SqliteProductDao implements ProductDao {
     @Override
     public Optional<AverageCost> getAvgCost(final Connection conn, final int productId)
             throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("select_average_cost")
-                        .tableName("products").queryType(SqlQueryType.SELECT).build());
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("select_average_cost").tableName("products").queryType(SqlQueryType.SELECT).build());
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, productId);
 
             final ResultSet rs = stmt.executeQuery();
 
-            return rs.next() ? Optional.of(
-                    AverageCost.builder().avgCost(rs.getBigDecimal("average_cost"))
+            return rs.next()
+                    ? Optional.of(AverageCost.builder().avgCost(rs.getBigDecimal("average_cost"))
                             .avgVatRate(rs.getBigDecimal("average_cost_vat_rate")).build())
                     : Optional.empty();
         }
@@ -150,96 +220,15 @@ public class SqliteProductDao implements ProductDao {
     @Override
     public Optional<BigDecimal> getMarkupRate(final Connection conn, final int productId)
             throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("select_markup_rate")
-                        .tableName("products").queryType(SqlQueryType.SELECT).build());
+        final String query = SqliteQueryLoader.getInstance().getQuery(SqlQueryData.builder()
+                .fileName("select_markup_rate").tableName("products").queryType(SqlQueryType.SELECT).build());
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, productId);
 
             final ResultSet rs = stmt.executeQuery();
 
-            return rs.next() ? Optional.of(rs.getBigDecimal("markup_rate"))
-                    : Optional.empty();
-        }
-    }
-
-    @Override
-    public void changeSellingPrice(final Connection conn, final int productId, final BigDecimal newPrice,
-            final BigDecimal avgCost,
-            final BigDecimal avgCostVatRate)
-            throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("change_selling_price")
-                        .tableName("products").queryType(SqlQueryType.UPDATE).build());
-
-        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
-            stmt.setBigDecimal("net_price", newPrice);
-            stmt.setBigDecimal("average_cost", avgCost);
-            stmt.setBigDecimal("average_cost_vat_rate", avgCostVatRate);
-            stmt.setInt("_product_id", productId);
-
-            stmt.executeUpdate();
-        }
-    }
-
-    @Override
-    public void addQuantity(final Connection conn, final int productId, final int toAdd)
-            throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("add_quantity")
-                        .tableName("products").queryType(SqlQueryType.UPDATE).build());
-
-        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
-            stmt.setInt("_product_id", productId);
-            stmt.setInt("quantity_to_add", toAdd);
-
-            stmt.executeUpdate();
-        }
-    }
-
-    @Override
-    public void decQuantity(final Connection conn, final int productId, final int toDec)
-            throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("dec_quantity")
-                        .tableName("products").queryType(SqlQueryType.UPDATE).build());
-
-        try (NamedPreparedStatement stmt = new NamedPreparedStatement(conn, query)) {
-            stmt.setInt("_product_id", productId);
-            stmt.setInt("quantity_to_dec", toDec);
-
-            stmt.executeUpdate();
-        }
-    }
-
-    @Override
-    public boolean exists(final Connection conn, final String name) throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("select_exists_by_name")
-                        .tableName("products").queryType(SqlQueryType.SELECT).build());
-
-        try (final PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, name);
-
-            final ResultSet rs = stmt.executeQuery();
-
-            return rs.next() && rs.getInt(1) != 0;
-        }
-    }
-
-    @Override
-    public boolean exists(final Connection conn, final int productId) throws SQLException, IOException {
-        final String query = SqliteQueryLoader.getInstance()
-                .getQuery(SqlQueryData.builder().fileName("select_exists_by_id")
-                        .tableName("products").queryType(SqlQueryType.SELECT).build());
-
-        try (final PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, productId);
-
-            final ResultSet rs = stmt.executeQuery();
-
-            return rs.next() && rs.getInt(1) != 0;
+            return rs.next() ? Optional.of(rs.getBigDecimal("markup_rate")) : Optional.empty();
         }
     }
 }
