@@ -8,16 +8,18 @@
 package kompeter.services.pointofsale;
 
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import kompeter.database.dao.ADaoFactory;
 import kompeter.database.dao.products.ProductDao;
 import kompeter.database.dto.products.CartProduct;
+import kompeter.lib.helper.Filter;
 import kompeter.lib.logger.KompeterLogger;
 import lombok.Getter;
 
@@ -28,7 +30,13 @@ public class CartProductDisplayList {
     private String[] brandFilters;
     private String[] categoryFilters;
     private String nameFilter;
+    /**
+     * 
+     * The displayed products
+     * 
+     */
     private final AtomicReference<ArrayList<CartProduct>> products;
+    private final AtomicReference<ArrayList<CartProduct>> masterProducts;
 
     private final PropertyChangeSupport propertyChangeSupport;
 
@@ -36,8 +44,58 @@ public class CartProductDisplayList {
         brandFilters = new String[] {};
         categoryFilters = new String[] {};
         nameFilter = "";
+        masterProducts = new AtomicReference<>(new ArrayList<>());
         products = new AtomicReference<>(new ArrayList<>());
         propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    private CartProduct findProductById(final int id, final List<CartProduct> list) {
+        for (final CartProduct p : list) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * if there are items stored in the cart, it may be possible to lose its
+     * reference when
+     * searching as we rebuild the list of products, so we reconciliate them.
+     * 
+     * For now, we just have a display and a master list
+     */
+    private void reconciliate(final ArrayList<CartProduct> newProducts) {
+        final ArrayList<CartProduct> masterProducts = this.masterProducts.getAcquire();
+
+        for (final CartProduct newProduct : newProducts) {
+            final CartProduct existing = findProductById(newProduct.getId(), masterProducts);
+
+            if (existing != null) {
+                existing.updateFrom(newProduct);
+            } else {
+                masterProducts.add(newProduct);
+            }
+        }
+    }
+
+    private void applySearch() {
+        final ArrayList<CartProduct> products = this.products.getAcquire();
+        final Object copy = products.clone();
+
+        products.clear();
+
+        for (final CartProduct cartProduct : masterProducts.getAcquire()) {
+            final boolean nameBool = nameFilter.length() == 0
+                    || Filter.stringMatches(nameFilter, cartProduct.getName());
+
+            if (nameBool) {
+                products.add(cartProduct);
+            }
+        }
+
+        propertyChangeSupport.firePropertyChange("products", copy, products);
     }
 
     public void reloadProducts() {
@@ -46,11 +104,25 @@ public class CartProductDisplayList {
 
         try (Connection conn = factory.getConnection()) {
             final Object copy = products.getAcquire().clone();
+            final ArrayList<CartProduct> sample = new ArrayList<>();
 
-            products.set(productDao.getAllCartProducts(conn, nameFilter, categoryFilters,
-                    brandFilters));
-            propertyChangeSupport.firePropertyChange("products", copy, products.getAcquire());
-        } catch (SQLException | IOException err) {
+            sample.add(CartProduct.builder()
+                    .id(1).name("Aaron").netPrice(new BigDecimal("1000")).quantityInHand(20)
+                    .build());
+
+            sample.add(CartProduct.builder()
+                    .id(2).name("Hatdog").netPrice(new BigDecimal("2000")).quantityInHand(20)
+                    .build());
+
+            sample.add(CartProduct.builder()
+                    .id(3).name("Hatchuu").netPrice(new BigDecimal("1000")).quantityInHand(10)
+                    .build());
+
+            // reconciliate(productDao.getAllCartProducts(conn));
+            reconciliate(sample);
+            propertyChangeSupport.firePropertyChange("masterProducts", copy, products.getAcquire());
+            applySearch();
+        } catch (final SQLException /* | IOException */ err) {
             LOGGER.severe(
                     String.format("Trying to load products in ProductList, but met with error: %s", err.getMessage()));
         }
@@ -63,7 +135,7 @@ public class CartProductDisplayList {
 
         propertyChangeSupport.firePropertyChange("brandFilters", this.brandFilters, brandFilters);
         this.brandFilters = brandFilters;
-        reloadProducts();
+        applySearch();
     }
 
     public void setCategoryFilters(String[] categoryFilters) {
@@ -73,7 +145,7 @@ public class CartProductDisplayList {
 
         propertyChangeSupport.firePropertyChange("categoryFilters", this.categoryFilters, categoryFilters);
         this.categoryFilters = categoryFilters;
-        reloadProducts();
+        applySearch();
     }
 
     public void setNameFilter(String nameFilter) {
@@ -83,6 +155,6 @@ public class CartProductDisplayList {
 
         propertyChangeSupport.firePropertyChange("nameFilter", this.nameFilter, nameFilter);
         this.nameFilter = nameFilter;
-        reloadProducts();
+        applySearch();
     }
 }

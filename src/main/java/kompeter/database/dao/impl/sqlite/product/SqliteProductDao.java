@@ -27,7 +27,6 @@ import kompeter.database.loader.AQueryLoader.SqlQueryData;
 import kompeter.database.loader.AQueryLoader.SqlQueryType;
 import kompeter.database.loader.sqlite.SqliteQueryLoader;
 import kompeter.database.statement.NamedPreparedStatement;
-import kompeter.lib.helper.Filter;
 
 public class SqliteProductDao implements ProductDao {
     @Override
@@ -131,8 +130,7 @@ public class SqliteProductDao implements ProductDao {
     }
 
     @Override
-    public ArrayList<CartProduct> getAllCartProducts(final Connection conn, final String nameFilter,
-            final String[] categoryFilters, final String[] brandFilters) throws IOException, SQLException {
+    public ArrayList<CartProduct> getAllCartProducts(final Connection conn) throws IOException, SQLException {
         try (final Statement stmt = conn.createStatement()) {
             final ArrayList<CartProduct> products = new ArrayList<>();
 
@@ -142,13 +140,6 @@ public class SqliteProductDao implements ProductDao {
 
             while (rs.next()) {
                 final String name = rs.getString("name");
-                final String categoryName = rs.getString("category_name");
-                final String brandName = rs.getString("brand_name");
-
-                if (!Filter.stringMatches(nameFilter, name) || !Filter.isInArray(categoryName, categoryFilters)
-                        || !Filter.isInArray(brandName, brandFilters)) {
-                    continue;
-                }
 
                 final CartProduct product = CartProduct.builder().id(rs.getInt("_product_id")).name(name)
                         .displayImage(rs.getString("display_image")).netPrice(rs.getBigDecimal("net_price"))
@@ -162,8 +153,7 @@ public class SqliteProductDao implements ProductDao {
     }
 
     @Override
-    public ArrayList<Product> getAllProducts(final Connection conn, final String nameFilter,
-            final String[] categoryFilters, final String[] brandFilters) throws SQLException, IOException {
+    public ArrayList<Product> getAllProducts(final Connection conn) throws SQLException, IOException {
         try (final Statement stmt = conn.createStatement()) {
             final ArrayList<Product> products = new ArrayList<>();
 
@@ -174,12 +164,6 @@ public class SqliteProductDao implements ProductDao {
                 final String name = rs.getString("name");
                 final String categoryName = rs.getString("category_name");
                 final String brandName = rs.getString("brand_name");
-
-                if (!Filter.stringMatches(nameFilter, name) || !Filter.isInArray(categoryName, categoryFilters)
-                        || !Filter.isInArray(brandName, brandFilters)) {
-                    continue;
-                }
-
                 final ProductCategory productCategory = ProductCategory.builder().name(categoryName)
                         .id(rs.getInt("_product_category_id")).build();
                 final ProductBrand productBrand = ProductBrand.builder().name(brandName)

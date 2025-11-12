@@ -32,11 +32,9 @@ public interface ProductDao {
 
     boolean exists(Connection conn, int productId) throws SQLException, IOException;
 
-    ArrayList<CartProduct> getAllCartProducts(Connection conn, String nameFilter, String[] categoryFilters,
-            String[] brandFilters) throws IOException, SQLException;
+    ArrayList<CartProduct> getAllCartProducts(Connection conn) throws IOException, SQLException;
 
-    ArrayList<Product> getAllProducts(Connection conn, String nameFilter, String[] categoryFilters,
-            String[] brandFilters) throws SQLException, IOException;
+    ArrayList<Product> getAllProducts(Connection conn) throws SQLException, IOException;
 
     Optional<AverageCost> getAvgCost(Connection conn, int productId) throws SQLException, IOException;
 

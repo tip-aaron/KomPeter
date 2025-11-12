@@ -44,7 +44,7 @@ public class ProductList {
         try (Connection conn = factory.getConnection()) {
             final Object copy = products.getAcquire().clone();
 
-            products.set(productDao.getAllProducts(conn, nameFilter, categoryFilters, brandFilters));
+            products.set(productDao.getAllProducts(conn));
 
             propertyChangeSupport.firePropertyChange("products", copy, products.getAcquire());
         } catch (SQLException | IOException err) {

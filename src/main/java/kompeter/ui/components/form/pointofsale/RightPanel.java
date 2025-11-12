@@ -85,6 +85,10 @@ public class RightPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("clear_cart")) {
+            if (cart.isEmpty()) {
+                return;
+            }
+
             final int res = JOptionPane.showConfirmDialog(App.getRootFrame(),
                     "Are you sure you want to clear the cart? This will remove all inserted discounts and products in the cart.");
 

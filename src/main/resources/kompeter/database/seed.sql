@@ -91,5 +91,6 @@ VALUES ('Logitech'),
     ('Cooler Master'),
     ('HyperX'),
     ('Dell');
+INSERT INTO products (name,  description) VALUES
 INSERT INTO db_settings (is_seeded)
 VALUES (true);

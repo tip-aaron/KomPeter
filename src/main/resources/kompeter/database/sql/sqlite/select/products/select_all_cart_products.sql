@@ -3,4 +3,6 @@ SELECT _product_id,
     display_image,
     net_price,
     quantity_in_hand
-FROM products;
+FROM products
+WHERE is_active = TRUE AND
+is_deleted = FALSE;

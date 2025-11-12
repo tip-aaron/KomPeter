@@ -22,19 +22,19 @@ public class CartProduct {
     private static Logger LOGGER = KompeterLogger.getLogger(CartProduct.class);
 
     @Getter
-    private final String displayImage;
+    private String displayImage;
     @Getter
     private final int id;
     @Getter
-    private final String name;
+    private String name;
     @Getter
-    private final BigDecimal netPrice;
+    private BigDecimal netPrice;
     @Getter
     private final PropertyChangeSupport propertyChangeSupport;
     private final AtomicInteger quantityInCart;
 
     @Getter
-    private final int quantityInHand;
+    private int quantityInHand;
 
     @Builder
     public CartProduct(final int id, final String name, final String displayImage, final BigDecimal netPrice,
@@ -47,6 +47,31 @@ public class CartProduct {
         this.quantityInCart = new AtomicInteger(0);
 
         propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    /**
+     * Useful for reconciliations from search functionalities
+     * 
+     * @param another
+     */
+    public void updateFrom(final CartProduct another) {
+        if (this.getId() != another.getId()) {
+            throw new IllegalArgumentException("Another must be of the same type when calling updateFrom");
+        }
+
+        propertyChangeSupport.firePropertyChange("netPrice", this.netPrice, another.getNetPrice());
+        propertyChangeSupport.firePropertyChange("quantityInHand", this.quantityInHand, another.getQuantityInHand());
+        propertyChangeSupport.firePropertyChange("displayImage", this.displayImage, another.getDisplayImage());
+        propertyChangeSupport.firePropertyChange("name", this.name, another.getName());
+
+        this.quantityInHand = another.getQuantityInHand();
+        this.netPrice = another.netPrice;
+        this.displayImage = another.displayImage;
+        this.name = another.name;
+    }
+
+    public boolean isInCart() {
+        return quantityInCart.getAcquire() != 0;
     }
 
     public int getAvailableQuantity() {

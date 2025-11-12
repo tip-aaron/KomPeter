@@ -7,6 +7,8 @@
 */
 package kompeter.ui.forms;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Logger;
 
 import javax.swing.JLabel;
@@ -26,9 +28,10 @@ import kompeter.ui.components.form.pointofsale.RightPanel;
 import kompeter.ui.system.Form;
 import kompeter.ui.utils.HtmlUtils;
 import kompeter.ui.workers.pointofsale.LoadProductsWorker;
+import kompeter.ui.workers.pointofsale.RenderProductsWorker;
 import net.miginfocom.swing.MigLayout;
 
-public class FormPosShop extends Form {
+public class FormPosShop extends Form implements PropertyChangeListener {
     private static final Logger LOGGER = KompeterLogger.getLogger(FormPosShop.class);
     private Cart cart;
     private LeftPanel leftPanel;
@@ -46,6 +49,19 @@ public class FormPosShop extends Form {
         LoadProductsWorker.builder().cart(cart).productDisplayList(productDisplayList).container(leftPanel)
                 .loadingPanel(new LoadingPanel()).build()
                 .execute();
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("products")) {
+            RenderProductsWorker.builder()
+                    .cart(cart)
+                    .container(leftPanel)
+                    .loadingPanel(new LoadingPanel())
+                    .productDisplayList(productDisplayList)
+                    .build()
+                    .execute();
+        }
     }
 
     @Override
@@ -95,6 +111,7 @@ public class FormPosShop extends Form {
         LOGGER.info("Closing FormPosShop...");
         leftPanel.close();
         rightPanel.close();
+        productDisplayList.getPropertyChangeSupport().removePropertyChangeListener(this);
     }
 
     @Override
@@ -141,6 +158,8 @@ public class FormPosShop extends Form {
         LOGGER.info("Opening FormPosShop...");
         rightPanel.open();
         leftPanel.open();
+
+        productDisplayList.getPropertyChangeSupport().addPropertyChangeListener(this);
     }
 
     @Override
