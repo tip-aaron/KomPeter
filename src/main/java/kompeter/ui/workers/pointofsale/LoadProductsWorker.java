@@ -45,9 +45,10 @@ public class LoadProductsWorker extends SwingWorker<Void, WorkerData> {
     @Override
     protected Void doInBackground() throws Exception {
         SwingUtilities.invokeLater(() -> {
-            container.getContentContainer().add(loadingPanel);
-            container.getContentContainer().repaint();
-            container.getContentContainer().revalidate();
+            container.getContent().removeAll();
+            container.getContent().add(loadingPanel);
+            container.getContent().repaint();
+            container.getContent().revalidate();
         });
 
         productDisplayList.reloadProducts();
@@ -57,18 +58,22 @@ public class LoadProductsWorker extends SwingWorker<Void, WorkerData> {
         for (final CartProduct cartProduct : cartProducts) {
             String imagePath = cartProduct.getDisplayImage();
 
-            if (imagePath.isEmpty()) {
-                imagePath = "/kompeter/ui/assets/ui/placeholder.png";
+            if (imagePath == null || imagePath.isEmpty()) {
+                imagePath = "/kompeter/ui/assets/images/placeholder.png";
             }
 
             final BufferedImage image = AssetLoader.loadImage(imagePath, true);
             final ImagePanel imagePanel = new ImagePanel(image, true);
 
-            imagePanel.setMinimumSize(new Dimension(125, 125));
-            imagePanel.setMaximumSize(new Dimension(125, 125));
-            imagePanel.setScaleMode(ScaleMode.CONTAIN);
+            SwingUtilities.invokeLater(() -> {
+                imagePanel.setMinimumSize(new Dimension(150, 150));
+                imagePanel.setMaximumSize(new Dimension(150, 150));
+                imagePanel.setScaleMode(ScaleMode.CONTAIN);
+            });
 
-            publish(WorkerData.builder().cartProduct(cartProduct).image(imagePanel).build());
+            final WorkerData workerData = WorkerData.builder().cartProduct(cartProduct).image(imagePanel).build();
+
+            publish(workerData);
         }
 
         return null;
@@ -76,23 +81,28 @@ public class LoadProductsWorker extends SwingWorker<Void, WorkerData> {
 
     @Override
     protected void done() {
-        container.getContentContainer().remove(loadingPanel);
+        container.getContent().remove(loadingPanel);
 
         if (productDisplayList.getProducts().getAcquire().size() == 0) {
-            container.getContentContainer().add(new NoResultsPanel());
+            container.getContent().add(new NoResultsPanel());
         }
+
+        container.repaint();
+        container.revalidate();
     }
 
     @Override
     protected void process(final List<WorkerData> chunks) {
-        container.getContentContainer().remove(loadingPanel);
+        container.getContent().remove(loadingPanel);
 
         for (final WorkerData workerData : chunks) {
-            container.getContent().add(new ProductCard(cart, workerData.getCartProduct(), workerData.getImage()));
+            final ProductCard card = new ProductCard(cart, workerData.getCartProduct(), workerData.getImage());
+
+            container.getContent().add(card);
         }
 
-        container.getContentContainer().add(loadingPanel);
-        container.getContentContainer().repaint();
-        container.getContentContainer().revalidate();
+        container.getContent().add(loadingPanel);
+        container.getContent().repaint();
+        container.getContent().revalidate();
     }
 }

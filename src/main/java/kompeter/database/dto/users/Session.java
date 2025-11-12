@@ -8,6 +8,8 @@
 package kompeter.database.dto.users;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,6 @@ public class Session {
     final User user;
 
     public boolean isExpired() {
-        return expiresAt.before(createdAt);
+        return expiresAt.before(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
     }
 }

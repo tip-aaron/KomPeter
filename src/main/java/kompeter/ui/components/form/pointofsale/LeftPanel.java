@@ -9,6 +9,7 @@ package kompeter.ui.components.form.pointofsale;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import kompeter.lib.helper.Debouncer;
+import kompeter.lib.logger.KompeterLogger;
 import kompeter.services.pointofsale.CartProductDisplayList;
 import kompeter.ui.components.icons.SVGIconUIColor;
 import kompeter.ui.components.scroller.ScrollerFactory;
@@ -30,10 +32,11 @@ import net.miginfocom.swing.MigLayout;
 @Getter
 public class LeftPanel extends JPanel implements DocumentListener {
     private final JPanel content;
-    private final JPanel contentContainer;
     private final JPanel headerContainer;
     private final JTextField searchTextField;
     private final Debouncer debouncer;
+    private final JScrollPane scroller;
+    private static final Logger LOGGER = KompeterLogger.getLogger(LeftPanel.class);
 
     private final CartProductDisplayList productDisplayList;
 
@@ -53,16 +56,15 @@ public class LeftPanel extends JPanel implements DocumentListener {
     }
 
     public LeftPanel(final CartProductDisplayList productDisplayList) {
-        setLayout(new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]"));
+        setLayout(new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]", "[top][grow, fill, top]"));
 
         this.productDisplayList = productDisplayList;
 
         debouncer = new Debouncer(250);
         headerContainer = new JPanel(new MigLayout("insets 0, flowx", "[grow, fill]18px[]"));
         searchTextField = new JTextField();
-        content = new JPanel(new ResponsiveLayout(JustifyContent.START, new Dimension(150, -1), 12, 12));
-        contentContainer = new JPanel(new MigLayout("insets 0 0 0 4, flowx, wrap", "[grow, fill, center]"));
-        final JScrollPane scroller = ScrollerFactory.createScrollPane(contentContainer);
+        content = new JPanel(new ResponsiveLayout(JustifyContent.START, new Dimension(190, -1), 6, 6));
+        scroller = ScrollerFactory.createScrollPane(content);
 
         searchTextField.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         searchTextField.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON,
@@ -70,7 +72,6 @@ public class LeftPanel extends JPanel implements DocumentListener {
         searchTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search products...");
         searchTextField.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         searchTextField.setToolTipText("Search an item by name");
-        contentContainer.add(content);
 
         headerContainer.add(searchTextField);
 
@@ -81,7 +82,7 @@ public class LeftPanel extends JPanel implements DocumentListener {
     private void reAddProductCardListeners() {
         for (final Component c : content.getComponents()) {
             if (c instanceof final ProductCard pc) {
-                pc.addMouseListener(pc.getMouseListener());
+                pc.addListeners();
             }
         }
     }
@@ -89,12 +90,13 @@ public class LeftPanel extends JPanel implements DocumentListener {
     private void removeProductCardListeners() {
         for (final Component c : content.getComponents()) {
             if (c instanceof final ProductCard pc) {
-                pc.removeMouseListener(pc.getMouseListener());
+                pc.removeListeners();
             }
         }
     }
 
     public void close() {
+        LOGGER.info("Closing left panel...");
         removeProductCardListeners();
         searchTextField.getDocument().removeDocumentListener(this);
         debouncer.cancel();
@@ -110,8 +112,8 @@ public class LeftPanel extends JPanel implements DocumentListener {
     }
 
     public void open() {
+        LOGGER.info("Opening left panel...");
         searchTextField.getDocument().addDocumentListener(this);
-        search();
         reAddProductCardListeners();
     }
 }

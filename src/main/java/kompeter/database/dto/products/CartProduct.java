@@ -57,6 +57,10 @@ public class CartProduct {
         return quantityInCart.getAcquire();
     }
 
+    public BigDecimal getTotalNetPrice() {
+        return netPrice.multiply(new BigDecimal(quantityInCart.getAcquire()));
+    }
+
     public void setQuantityInCart(final int quantityInCart) {
         if (quantityInCart > quantityInHand || quantityInCart < 0) {
             LOGGER.warning(

@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 public class NoResultsPanel extends JPanel {
+    public final JLabel label;
+
     public NoResultsPanel() {
-        setLayout(new MigLayout("insets 6", "[grow, fill, center]"));
+        setLayout(new MigLayout("insets 0", "[grow, fill, center]"));
 
-        final JLabel label = new JLabel("No results found :(");
-
-        label.setHorizontalAlignment(JLabel.CENTER);
+        label = new JLabel("No results found :(");
 
         add(label, "growx");
     }

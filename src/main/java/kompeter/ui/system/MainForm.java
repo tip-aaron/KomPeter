@@ -70,9 +70,9 @@ public class MainForm extends JPanel {
     }
 
     private void init() {
-        setLayout(new MigLayout("fillx,wrap,insets 0,gap 0", "[fill]", "[][][fill,grow][]"));
-        add(createHeader());
-        add(createMain());
+        setLayout(new MigLayout("fillx,wrap,insets 0,gap 0", "[fill]", "[][fill,grow]"));
+        add(createHeader(), "growx");
+        add(createMain(), "grow");
     }
 
     public void refresh() {

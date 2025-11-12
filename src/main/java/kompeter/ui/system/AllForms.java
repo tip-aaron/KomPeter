@@ -45,6 +45,7 @@ public class AllForms {
             final Form form = cls.getDeclaredConstructor().newInstance();
             getInstance().formsMap.put(cls, form);
             formInit(form);
+
             return form;
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException
                 | IllegalAccessException e) {

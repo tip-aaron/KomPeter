@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 public class LoadingPanel extends JPanel {
+    public final JLabel label;
+
     public LoadingPanel() {
         setLayout(new MigLayout("insets 6", "[grow, fill, center]"));
 
-        final JLabel label = new JLabel("Loading...");
-
-        label.setHorizontalAlignment(JLabel.CENTER);
+        label = new JLabel("Loading...");
 
         add(label, "growx");
     }

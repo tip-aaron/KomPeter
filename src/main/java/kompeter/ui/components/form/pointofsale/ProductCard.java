@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -37,7 +40,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.modal.component.DropShadowBorder;
 
 @Getter
-public class ProductCard extends JPanel {
+public class ProductCard extends JPanel implements PropertyChangeListener {
     private final Cart cart;
     private final CartProduct data;
     private final MouseAdapter mouseListener;
@@ -49,7 +52,7 @@ public class ProductCard extends JPanel {
 
         setLayout(new BorderLayout());
 
-        final JPanel wrapper = new JPanel(new MigLayout("flowx, wr ap, insets 0", "[grow, fill, center]"));
+        final JPanel wrapper = new JPanel(new MigLayout("flowx, wrap, insets 0", "[grow, fill, center]"));
         final JLabel name = new JLabel(HtmlUtils.wrapInHtml(String.format("<p align='center'>%s", data.getName())));
         final JLabel price = new JLabel(HtmlUtils
                 .wrapInHtml(String.format("<p align='center'>%s", NumberUtils.formatCurrencyPh(data.getNetPrice()))));
@@ -58,16 +61,33 @@ public class ProductCard extends JPanel {
         name.setHorizontalAlignment(JLabel.CENTER);
 
         price.setHorizontalAlignment(JLabel.CENTER);
+        price.putClientProperty(FlatClientProperties.STYLE, "font:-1;");
 
-        wrapper.add(thumbnail, "grow");
-        wrapper.add(name, "growx, gaptop 4px");
-        wrapper.add(price, "growx, gaptop 2px");
+        wrapper.add(thumbnail);
+        wrapper.add(name, "growx, gapy 4px");
+        wrapper.add(price, "growx, gapy 2px");
 
         add(wrapper);
 
         setToolTipText(HtmlUtils.wrapInHtml(String.format(
                 "<p>Click this card to add <strong>%s</strong> to the cart. <br><p><em>Available:" + " %s</em>",
-                data.getName(), data.getQuantityInHand())));
+                data.getName(), data.getAvailableQuantity())));
+
+        // for initialization, since this won't be added on creation of this card,
+        // remove just in case
+        removeListeners();
+        addListeners();
+    }
+
+    public void removeListeners() {
+        removeMouseListener(mouseListener);
+        data.getPropertyChangeSupport().removePropertyChangeListener(this);
+    }
+
+    public void addListeners() {
+        addMouseListener(mouseListener);
+        data.getPropertyChangeSupport().addPropertyChangeListener(this);
+
     }
 
     @Override
@@ -124,18 +144,30 @@ public class ProductCard extends JPanel {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if (e.getActionCommand().equals("cancel")) {
-                dispose();
-
-                return;
+            if (e.getActionCommand().equals("confirm")) {
+                if (cart.exists(data.getId())) {
+                    cart.addQty(data.getId(), (Integer) quantitySpinner.getValue());
+                } else {
+                    data.setQuantityInCart((Integer) quantitySpinner.getValue());
+                    cart.addProduct(data);
+                }
             }
 
-            if (cart.exists(data.getId())) {
-                cart.addQty(data.getId(), (Integer) quantitySpinner.getValue());
-            } else {
-                cart.addProduct(data);
-            }
+            dispose();
         }
+    }
+
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        SwingUtilities.invokeLater(() -> {
+            // update toolbar when value of data changes
+            if (evt.getPropertyName().equals("quantityInCart")) {
+                setToolTipText(HtmlUtils.wrapInHtml(String.format(
+                        "<p>Click this card to add <strong>%s</strong> to the cart. <br><p><em>Available:" + " %s</em>",
+                        data.getName(), data.getAvailableQuantity())));
+
+            }
+        });
     }
 
     class ProductCardMouseListener extends MouseAdapter {

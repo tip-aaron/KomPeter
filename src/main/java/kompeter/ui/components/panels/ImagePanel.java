@@ -157,7 +157,7 @@ public class ImagePanel extends JPanel {
                 final int rgb = src.getRGB(x, y);
                 final Color c = new Color(rgb, true);
 
-                if (c.getRed() > 240 && c.getGreen() > 240 && c.getBlue() > 240) {
+                if (c.getRed() > 255 && c.getGreen() > 255 && c.getBlue() > 255) {
                     dest.setRGB(x, y, 0x00FFFFFF); // fully transparent
                 } else {
                     dest.setRGB(x, y, rgb);

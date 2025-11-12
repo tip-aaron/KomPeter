@@ -7,8 +7,10 @@
 */
 package kompeter.ui.components.form.pointofsale;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -46,6 +48,7 @@ import kompeter.ui.utils.HtmlUtils;
 import kompeter.utils.NumberUtils;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
+import raven.modal.component.DropShadowBorder;
 
 @Getter
 public class RightPanel extends JPanel implements ActionListener {
@@ -58,20 +61,21 @@ public class RightPanel extends JPanel implements ActionListener {
     private final JButton clearCartBtn;
 
     public RightPanel(final Cart cart) {
-        setLayout(new MigLayout("insets 4, flowx", "[grow, fill, center]"));
+        setLayout(new MigLayout("insets 4, flowx", "[grow, fill, center]", "[grow, fill, top][bottom]"));
 
         this.cart = cart;
 
         cartPanel = new CartPanel();
-
         clearCartBtn = new JButton("Clear Cart", new SVGIconUIColor("x.svg", 1f, "foreground.muted"));
         checkoutBtn = new JButton("Checkout", new SVGIconUIColor("check.svg", 1f, "foreground.primary"));
-
         clearCartBtn.putClientProperty(FlatClientProperties.STYLE_CLASS, "muted");
         checkoutBtn.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
 
         clearCartBtn.setToolTipText("Remove all items in cart");
         checkoutBtn.setToolTipText("Confirm the order and proceed to checkout");
+
+        clearCartBtn.setActionCommand("clear_cart");
+        checkoutBtn.setActionCommand("checkout");
 
         add(cartPanel, "wrap, grow");
         add(clearCartBtn, "growx, split 2");
@@ -81,19 +85,43 @@ public class RightPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getActionCommand().equals("clear_cart")) {
+            final int res = JOptionPane.showConfirmDialog(App.getRootFrame(),
+                    "Are you sure you want to clear the cart? This will remove all inserted discounts and products in the cart.");
+
+            if (res != JOptionPane.YES_OPTION) {
+                return;
+            }
+
             LOGGER.info("Clearing cart...");
 
-            cart.clearDiscounts();
             cart.clearProducts();
 
             LOGGER.info("Cleared cart");
         } else if (e.getActionCommand().equals("checkout")) {
+            if (cart.getTotalDiscountedNetPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(App.getRootFrame(),
+                        "Sorry. Having a discounted net price <= 0 is not allowed. Either add an item to the cart or remove a discount.",
+                        "Non-Positive Values is Invalid", JOptionPane.ERROR_MESSAGE);
+
+                return;
+            }
+
             LOGGER.info("Checking out...");
+
+            try {
+            } finally {
+            }
+
             LOGGER.info("Checked out...");
         }
     }
 
     public void close() {
+        LOGGER.info("Closing Right Panel...");
+
+        clearCartBtn.removeActionListener(this);
+        checkoutBtn.removeActionListener(this);
+
         cartPanel.close();
     }
 
@@ -102,6 +130,9 @@ public class RightPanel extends JPanel implements ActionListener {
     }
 
     public void open() {
+        LOGGER.info("Opening Right Panel...");
+        clearCartBtn.addActionListener(this);
+        checkoutBtn.addActionListener(this);
         cartPanel.open();
     }
 
@@ -153,32 +184,40 @@ public class RightPanel extends JPanel implements ActionListener {
 
             add(cancelButton, "split 2, gapy 16px");
             add(confirmButton, "gapx 4px");
+
+            pack();
+            setLocationRelativeTo(App.getRootFrame());
         }
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            if (e.getActionCommand().equals("cancel")) {
-                dispose();
-            } else if (e.getActionCommand().equals("confirm")) {
+            if (e.getActionCommand().equals("confirm")) {
                 final BigDecimal val = (BigDecimal) amount.getValue();
 
                 if (cart.getTotalNetPrice().subtract(val).compareTo(BigDecimal.ZERO) < 0) {
-                    SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(App.getRootFrame(),
-                                String.format(
-                                        "The discount amount added will make the total net price go below %s. This"
-                                                + " is not allowed",
-                                        BigDecimal.ZERO.toString()),
-                                "Invalid Request", JOptionPane.ERROR_MESSAGE);
-                    });
+                    JOptionPane.showMessageDialog(App.getRootFrame(),
+                            String.format(
+                                    "The discount amount added will make the total net price go below %s. This"
+                                            + " is not allowed",
+                                    BigDecimal.ZERO.toString()),
+                            "Invalid Request", JOptionPane.ERROR_MESSAGE);
+
+                    return;
+                }
+
+                if (val.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(App.getRootFrame(),
+                            "Please only add a discount with a monetary value > 0", "Non-Positive Value is Not Allowed",
+                            JOptionPane.ERROR_MESSAGE);
 
                     return;
                 }
 
                 cart.addDiscount(Discount.builder().discountType(discountType.getText()).amount(val).build());
 
-                dispose();
             }
+
+            dispose();
         }
     }
 
@@ -200,36 +239,50 @@ public class RightPanel extends JPanel implements ActionListener {
         private final JToolBar toolBar;
         private final JLabel totalDiscountPrice;
         private final JLabel totalNetPrice;
+        private final JLabel totalDiscountedNetPrice;
 
         private final JLabel totalPrice;
         private final JLabel totalQuantity;
         private final JLabel totalVatPrice;
 
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setBorder(new DropShadowBorder(new Insets(2, 4, 8, 4), 1, 16));
+        }
+
         public CartPanel() {
+            setLayout(new BorderLayout());
+
+            final JPanel wrapper = new JPanel(
+                    new MigLayout("insets 6, flowx, wrap", "[grow, fill, center]", "[][grow, fill, top][]"));
             cartListener = new CartListener();
-            content = new JPanel(new MigLayout("insets 5, flowx, wrap", "[grow, fill, center]"));
+            content = new JPanel(
+                    new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]"));
             noResultsPanel = new NoResultsPanel();
             scroller = ScrollerFactory.createScrollPane(noResultsPanel);
-            header = new JPanel(new MigLayout("insets 2, flowx, wrap", "[grow, fill, center]"));
-            footer = new JPanel(new MigLayout("insets 2, flowx, wrap 2", "[left][right]"));
+            header = new JPanel(new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]"));
+            footer = new JPanel(new MigLayout("insets 4, flowx, wrap 2", "[left, grow][right, grow]"));
             final JLabel qtyLabel = new JLabel("Total Quantity: ");
             final JLabel netPriceLabel = new JLabel("Total Net Price: ");
             final JLabel vatPriceLabel = new JLabel(
-                    String.format("Tax (%s): ", Transaction.VAT_RATE.add(BigDecimal.ONE).toString()));
+                    String.format("Tax (%s%s): ", Transaction.VAT_RATE.multiply(new BigDecimal(100)).toString(), "%"));
             final JLabel discPriceLabel = new JLabel("Total Discounts: ");
             final JLabel totalPriceLabel = new JLabel("Total Price: ");
-            totalQuantity = new JLabel("");
-            totalNetPrice = new JLabel("");
-            totalVatPrice = new JLabel("");
-            totalDiscountPrice = new JLabel("");
-            totalPrice = new JLabel("");
+            final JLabel totalDiscountedNetPriceLabel = new JLabel("Discounted Net Price:");
+            totalQuantity = new JLabel("--");
+            totalNetPrice = new JLabel("--.--");
+            totalVatPrice = new JLabel("--.--");
+            totalDiscountPrice = new JLabel("--.--");
+            totalPrice = new JLabel("--.--");
+            totalDiscountedNetPrice = new JLabel("--.--");
 
             toolBar = new JToolBar();
             addDiscountBtn = new JButton("Add Discount", new SVGIconUIColor("plus.svg", 0.5f, "foreground.background"));
             removeDiscountBtn = new JButton("Remove Discount",
                     new SVGIconUIColor("minus.svg", 0.5f, "foreground.background"));
 
-            setLayout(new MigLayout("insets 0, flowx, wrap", "[grow, fill, center]"));
+            noResultsPanel.label.setText("No items in cart yet :(");
 
             addDiscountBtn.setActionCommand("add_discount");
             removeDiscountBtn.setActionCommand("remove_discount");
@@ -246,11 +299,13 @@ public class RightPanel extends JPanel implements ActionListener {
 
             qtyLabel.setHorizontalAlignment(JLabel.LEFT);
             netPriceLabel.setHorizontalAlignment(JLabel.LEFT);
+            totalDiscountedNetPriceLabel.setHorizontalAlignment(JLabel.LEFT);
             vatPriceLabel.setHorizontalAlignment(JLabel.LEFT);
             discPriceLabel.setHorizontalAlignment(JLabel.LEFT);
             totalPriceLabel.setHorizontalAlignment(JLabel.LEFT);
 
             totalQuantity.setHorizontalAlignment(JLabel.RIGHT);
+            totalDiscountedNetPrice.setHorizontalAlignment(JLabel.RIGHT);
             totalNetPrice.setHorizontalAlignment(JLabel.RIGHT);
             totalVatPrice.setHorizontalAlignment(JLabel.RIGHT);
             totalDiscountPrice.setHorizontalAlignment(JLabel.RIGHT);
@@ -264,6 +319,8 @@ public class RightPanel extends JPanel implements ActionListener {
             totalVatPrice.putClientProperty(FlatClientProperties.STYLE, "font: -2;");
             discPriceLabel.putClientProperty(FlatClientProperties.STYLE, "font: -2;");
             totalDiscountPrice.putClientProperty(FlatClientProperties.STYLE, "font: -2;");
+            totalDiscountedNetPrice.putClientProperty(FlatClientProperties.STYLE, "font: -2;");
+            totalDiscountedNetPriceLabel.putClientProperty(FlatClientProperties.STYLE, "font: -2;");
 
             totalPriceLabel.putClientProperty(FlatClientProperties.STYLE, "font: -1 semibold;");
             totalPrice.putClientProperty(FlatClientProperties.STYLE, "font: -1 semibold;");
@@ -284,15 +341,19 @@ public class RightPanel extends JPanel implements ActionListener {
             footer.add(totalVatPrice);
             footer.add(discPriceLabel);
             footer.add(totalDiscountPrice);
+            footer.add(totalDiscountedNetPriceLabel);
+            footer.add(totalDiscountedNetPrice);
 
             footer.add(new JSeparator(JSeparator.HORIZONTAL), "growx, span 2");
 
             footer.add(totalPriceLabel);
             footer.add(totalPrice);
 
-            add(header, "growx");
-            add(scroller, "gaptop 1px, grow");
-            add(footer, "gaptop 1px, growx");
+            wrapper.add(header, "growx");
+            wrapper.add(scroller, "gapy 1px, grow");
+            wrapper.add(footer, "gapy 1px, growx");
+
+            add(wrapper, BorderLayout.CENTER);
         }
 
         void close() {
@@ -334,6 +395,7 @@ public class RightPanel extends JPanel implements ActionListener {
                 totalDiscountPrice.setText("--.--");
                 totalNetPrice.setText("--.--");
                 totalVatPrice.setText("--.--");
+                totalDiscountedNetPrice.setText("--.--");
                 totalPrice.setText("--.--");
 
                 return;
@@ -343,6 +405,7 @@ public class RightPanel extends JPanel implements ActionListener {
             totalPrice.setText(NumberUtils.formatCurrencyPh(cart.getTotalPrice(Transaction.VAT_RATE)));
             totalQuantity.setText(String.format("%d", cart.getTotalQuantity()));
             totalVatPrice.setText(NumberUtils.formatCurrencyPh(cart.getTotalVatPrice(Transaction.VAT_RATE)));
+            totalDiscountedNetPrice.setText(NumberUtils.formatCurrencyPh(cart.getTotalDiscountedNetPrice()));
             totalDiscountPrice.setText(NumberUtils.formatCurrencyPh(cart.getTotalDiscountPrice()));
         }
 
@@ -350,19 +413,25 @@ public class RightPanel extends JPanel implements ActionListener {
         public void actionPerformed(final ActionEvent e) {
             if (e.getActionCommand().equals("add_discount")) {
                 if (cart.getTotalNetPrice().compareTo(BigDecimal.ZERO) <= 0) {
-                    SwingUtilities.invokeLater(() -> {
-                        JOptionPane
-                                .showMessageDialog(App.getRootFrame(),
-                                        String.format("Current net price is %s. Cannot add more discounts.",
-                                                BigDecimal.ZERO.toString()),
-                                        "Invalid Request", JOptionPane.ERROR_MESSAGE);
-                    });
+                    JOptionPane
+                            .showMessageDialog(App.getRootFrame(),
+                                    String.format("Current net price is %s. Cannot add more discounts.",
+                                            BigDecimal.ZERO.toString()),
+                                    "Invalid Request", JOptionPane.ERROR_MESSAGE);
 
                     return;
                 }
 
                 new AddDiscountDialog().setVisible(true);
             } else if (e.getActionCommand().equals("remove_discount")) {
+                if (cart.getDiscounts().getAcquire().size() == 0) {
+                    JOptionPane
+                            .showMessageDialog(App.getRootFrame(),
+                                    "Please add a discount before removing one",
+                                    "Invalid Request", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 new RemoveDiscountDialog().setVisible(true);
             }
         }
@@ -389,14 +458,15 @@ public class RightPanel extends JPanel implements ActionListener {
                                 }
                             }
 
+                            cart.clearDiscounts();
                             content.removeAll();
                             updateTotalLabels();
 
-                            content.repaint();
-                            content.revalidate();
                             scroller.setViewportView(noResultsPanel);
-                            scroller.repaint();
-                            scroller.revalidate();
+                            repaint();
+                            revalidate();
+
+                            // added a product
                         } else if (oldList.size() < list.size()) {
                             if (oldList.isEmpty()) {
                                 scroller.setViewportView(content);
@@ -407,9 +477,11 @@ public class RightPanel extends JPanel implements ActionListener {
 
                             final CartProduct product = (CartProduct) list.getLast();
 
-                            content.add(new CartItemCard(cart, product));
-                            content.repaint();
-                            content.revalidate();
+                            updateTotalLabels();
+
+                            content.add(new CartItemCard(cart, product, () -> updateTotalLabels()), "growx");
+                            repaint();
+                            revalidate();
 
                             LOGGER.info(String.format("Added new product to cart: %s\nNew List size: %d", product,
                                     list.size()));
@@ -442,8 +514,8 @@ public class RightPanel extends JPanel implements ActionListener {
                                 content.remove(cic);
                             }
 
-                            content.repaint();
-                            content.revalidate();
+                            repaint();
+                            revalidate();
 
                             LOGGER.info(String.format("Removed product from cart: %s\nNew List size: %d", toBeRemoved,
                                     list.size()));
@@ -522,6 +594,9 @@ public class RightPanel extends JPanel implements ActionListener {
 
             add(cancelButton, "split 2, gapy 16px");
             add(confirmButton, "gapx 4px");
+
+            pack();
+            setLocationRelativeTo(App.getRootFrame());
         }
 
         @Override

@@ -17,7 +17,9 @@ import java.util.logging.Logger;
 import kompeter.database.dto.products.CartProduct;
 import kompeter.lib.logger.KompeterLogger;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class Cart {
     private static final Logger LOGGER = KompeterLogger.getLogger(Cart.class);
@@ -30,6 +32,10 @@ public class Cart {
         products = new AtomicReference<>(new ArrayList<>());
         discounts = new AtomicReference<>(new ArrayList<>());
         propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    public boolean isEmpty() {
+        return products.getAcquire().size() == 0 && discounts.getAcquire().size() == 0;
     }
 
     public void addDiscount(final Discount discount) {
@@ -132,14 +138,18 @@ public class Cart {
         BigDecimal netPrice = BigDecimal.ZERO;
 
         for (final CartProduct product : products.getAcquire()) {
-            netPrice = netPrice.add(product.getNetPrice());
+            netPrice = netPrice.add(product.getTotalNetPrice());
         }
 
-        return netPrice.subtract(getTotalDiscountPrice());
+        return netPrice;
+    }
+
+    public BigDecimal getTotalDiscountedNetPrice() {
+        return getTotalNetPrice().subtract(getTotalDiscountPrice());
     }
 
     public BigDecimal getTotalPrice(final BigDecimal vatRate) {
-        return getTotalNetPrice().add(getTotalVatPrice(vatRate));
+        return getTotalDiscountedNetPrice().add(getTotalVatPrice(vatRate));
     }
 
     public int getTotalQuantity() {
@@ -153,7 +163,7 @@ public class Cart {
     }
 
     public BigDecimal getTotalVatPrice(final BigDecimal vatRate) {
-        return getTotalNetPrice().multiply(vatRate.add(BigDecimal.ONE));
+        return getTotalDiscountedNetPrice().multiply(vatRate.add(BigDecimal.ONE));
     }
 
     public void removeDiscount(final Discount discount) {

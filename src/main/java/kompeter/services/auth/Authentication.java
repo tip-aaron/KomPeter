@@ -26,6 +26,7 @@ import kompeter.database.dto.users.Session;
 import kompeter.lib.configuration.ApplicationConfig;
 import kompeter.lib.cryptography.HashedStringWithSalt;
 import kompeter.lib.cryptography.Hasher;
+import kompeter.lib.cryptography.PurchaseCodeGenerator;
 import kompeter.lib.cryptography.Salt;
 import kompeter.lib.logger.KompeterLogger;
 import kompeter.utils.CharacterUtils;
@@ -78,7 +79,8 @@ public final class Authentication {
             conn.setAutoCommit(false);
 
             try {
-                final int sessionId = sessionDao.createSession(conn, userId, email);
+                final int sessionId = sessionDao.createSession(conn, userId,
+                        PurchaseCodeGenerator.generateSecureHexToken());
 
                 if (sessionId == -1) {
                     LOGGER.severe(
@@ -121,7 +123,7 @@ public final class Authentication {
         if (sessionToken == null || sessionToken.isEmpty()) {
             LOGGER.info("No stored session token. Going to authentication page.");
 
-            return AuthenticationStatus.builder().message("Please login again.")
+            return AuthenticationStatus.builder().message("Welcome!")
                     .statusType(AuthenticationStatus.StatusType.SUCCESS).build();
         }
 
@@ -146,7 +148,7 @@ public final class Authentication {
                 ApplicationConfig.getInstance().getConfig().remove(PropertyKey.Session.UID);
 
                 return AuthenticationStatus.builder().message("Please login again.")
-                        .statusType(AuthenticationStatus.StatusType.ERROR).build();
+                        .statusType(AuthenticationStatus.StatusType.SUCCESS).build();
             }
 
             SessionManager.getInstance().setSession(session);

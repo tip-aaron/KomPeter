@@ -46,5 +46,8 @@ public class SplashScreen extends JWindow {
         add(container);
 
         setVisible(true);
+
+        pack();
+        setLocationRelativeTo(null);
     }
 }

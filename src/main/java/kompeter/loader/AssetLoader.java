@@ -37,13 +37,16 @@ public final class AssetLoader {
         final String p = isAbs ? path : BASE_IMAGE_RESOURCE_PATH + path;
 
         try {
+            LOGGER.info("Loading image... " + p);
             BufferedImage resImage = loadResourceImage(p);
 
             if (resImage == null) {
+                LOGGER.info("Didn't find image in resources, finding in FS: " + p);
                 resImage = loadFileSystemImage(p);
             }
 
             if (resImage == null) {
+                LOGGER.info("Didn't find image in fs, defaulting to placeholder");
                 resImage = loadResourceImage(BASE_IMAGE_RESOURCE_PATH + "placeholder.png");
             }
 

@@ -46,25 +46,31 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
     private final JPanel qtyPanel;
     private final SVGIconUIColor trashIcon;
 
-    public CartItemCard(final Cart cart, final CartProduct data) {
+    private final Runnable updateCartLabels;
+    private final JLabel netPrice;
+
+    public CartItemCard(final Cart cart, final CartProduct data, final Runnable updateCartLabels) {
         this.cart = cart;
         this.data = data;
+
+        this.updateCartLabels = updateCartLabels;
 
         setLayout(new MigLayout("insets 0, flowx", "[grow, fill, center]"));
 
         final JLabel name = new JLabel(HtmlUtils.wrapInHtml(data.getName()));
-        final JLabel netPrice = new JLabel(
-                HtmlUtils.wrapInHtml(String.format("Net price: %s", NumberUtils.formatCurrencyPh(data.getNetPrice()))));
-        qtyPanel = new JPanel(new MigLayout("insets 2, flowx, gapx 2, al center center"));
+        netPrice = new JLabel(
+                HtmlUtils.wrapInHtml(
+                        String.format("Net price: %s", NumberUtils.formatCurrencyPh(data.getTotalNetPrice()))));
+        qtyPanel = new JPanel(new MigLayout("insets 2, flowx, gapx 4, al center center", "[left][center][right]"));
         qty = new JLabel(String.format("%d", data.getQuantityInCart()));
         decIcon = new SVGIconUIColor("minus.svg", 0.75f, "foreground.background");
         trashIcon = new SVGIconUIColor("trash.svg", 0.75f, "foreground.background");
         decBtn = new JButton(data.getQuantityInCart() == 1 ? trashIcon : decIcon);
         incBtn = new JButton(new SVGIconUIColor("plus.svg", 0.75f, "foreground.background"));
 
-        netPrice.putClientProperty(FlatClientProperties.STYLE, "foreground:$Label.disabledForeground;font:-1;");
+        netPrice.putClientProperty(FlatClientProperties.STYLE, "foreground:$TextField.placeholderForeground;font:-1;");
 
-        qtyPanel.putClientProperty(FlatClientProperties.STYLE, "arc:999;background:tint($Panel.background,20%);");
+        qtyPanel.putClientProperty(FlatClientProperties.STYLE, "arc:999;background:tint($Panel.background,25%);");
         decBtn.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
         incBtn.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
 
@@ -83,8 +89,8 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
         qtyPanel.add(qty);
         qtyPanel.add(incBtn);
 
-        add(name, "wrap");
-        add(netPrice, "split 2, pushx");
+        add(name, "wrap, growx");
+        add(netPrice, "split 2, pushx, growx");
         add(qtyPanel, "gapleft 8px");
 
         removeListeners();
@@ -129,6 +135,9 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
             if (evt.getPropertyName().equals("quantityInCart") && evt.getNewValue() instanceof final Integer newQty
                     && evt.getOldValue() instanceof final Integer oldQty) {
                 qty.setText(String.format("%d", newQty));
+                netPrice.setText(HtmlUtils
+                        .wrapInHtml(
+                                String.format("Net price: %s", NumberUtils.formatCurrencyPh(data.getTotalNetPrice()))));
                 LOGGER.info(
                         String.format("Changed quantity of %s in cart from %d to %d", data.getName(), oldQty, newQty));
 
@@ -137,6 +146,8 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
                 } else if (decBtn.getIcon() != decIcon) {
                     decBtn.setIcon(decIcon);
                 }
+
+                updateCartLabels.run();
             }
         });
     }
