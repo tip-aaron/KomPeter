@@ -80,7 +80,7 @@ public class SqliteSessionDao implements SessionDao {
 
             return Optional.of(Session.builder().id(rs.getInt("_session_id")).createdAt(rs.getTimestamp("_created_at"))
                     .expiresAt(rs.getTimestamp("expires_at")).sessionToken("session_token")
-                    .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
+                    .user(User.builder().id(rs.getInt("_user_id")).displayName(rs.getString("display_name"))
                             .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
                             .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
                             .roles(roles).email(rs.getString("email")).build())
@@ -109,7 +109,7 @@ public class SqliteSessionDao implements SessionDao {
 
             return Optional.of(Session.builder().id(rs.getInt("_session_id")).createdAt(rs.getTimestamp("_created_at"))
                     .expiresAt(rs.getTimestamp("expires_at")).sessionToken("session_token")
-                    .user(User.builder().id(rs.getInt("user_id")).displayName(rs.getString("display_name"))
+                    .user(User.builder().id(rs.getInt("_user_id")).displayName(rs.getString("display_name"))
                             .firstName(rs.getString("first_name")).lastName(rs.getString("last_name"))
                             .fullName(rs.getString("full_name")).displayImage(rs.getString("display_image"))
                             .roles(roles).email(rs.getString("email")).build())

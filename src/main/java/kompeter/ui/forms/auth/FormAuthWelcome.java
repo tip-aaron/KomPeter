@@ -82,14 +82,20 @@ public class FormAuthWelcome extends Form {
     private class SignInButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            FormManager.showAuthForm(new FormAuthLogin());
+            final Form form = new FormAuthLogin();
+
+            form.formInit();
+            FormManager.showAuthForm(form);
         }
     }
 
     private class SignUpButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            FormManager.showAuthForm(new FormAuthRegister());
+            final Form form = new FormAuthRegister();
+
+            form.formInit();
+            FormManager.showAuthForm(form);
         }
     }
 }

@@ -7,6 +7,12 @@
 -- =====                  SCHEMAS                    ======= --
 -- =====                                             ======= --
 -- ========================================================= --
+-- for seeding
+CREATE TABLE IF NOT EXISTS db_settings (
+    _db_settings_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    is_seeded BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 CREATE TABLE IF NOT EXISTS roles (
     _role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     _created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

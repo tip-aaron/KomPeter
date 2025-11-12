@@ -90,6 +90,10 @@ public class FormManager {
         getMainForm().setForm(AllForms.getForm(FormProfile.class));
         getMainAuthForm().setForm(getWelcome());
 
+        getWelcome().formInit();
+        getWelcome().formCheck();
+        getWelcome().formOpen();
+
         FORMS.clear();
         AllForms.clear();
 

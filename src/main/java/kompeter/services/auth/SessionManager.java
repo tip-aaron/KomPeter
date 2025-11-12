@@ -26,16 +26,20 @@ public class SessionManager {
         return instance;
     }
 
-    private PropertyChangeSupport propertyChangeSupport;
+    private final PropertyChangeSupport propertyChangeSupport;
 
     private Session session;
+
+    private SessionManager() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
     public void removeSession() {
         propertyChangeSupport.firePropertyChange("session", session, null);
         session = null;
     }
 
-    public void setSession(@NotNull Session session) throws IllegalArgumentException, IllegalStateException {
+    public void setSession(@NotNull final Session session) throws IllegalArgumentException, IllegalStateException {
         if (session == null) {
             throw new IllegalArgumentException("Session cannot be null.");
         }

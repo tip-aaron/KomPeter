@@ -1,4 +1,4 @@
-SELECT s_session_id,
+SELECT s._session_id,
     s._created_at,
     s.expires_at,
     s.session_token,
@@ -15,7 +15,7 @@ SELECT s_session_id,
             'name',
             r.name
         )
-    ),
+    ) AS roles,
     a.email
 FROM sessions s
     INNER JOIN users u ON u._user_id = s._user_id

@@ -19,7 +19,7 @@ import javax.swing.event.DocumentListener;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import kompeter.lib.helper.Debouncer;
-import kompeter.services.pointofsale.ProductDisplayList;
+import kompeter.services.pointofsale.CartProductDisplayList;
 import kompeter.ui.components.icons.SVGIconUIColor;
 import kompeter.ui.components.scroller.ScrollerFactory;
 import kompeter.ui.layout.ResponsiveLayout;
@@ -35,7 +35,7 @@ public class LeftPanel extends JPanel implements DocumentListener {
     private final JTextField searchTextField;
     private final Debouncer debouncer;
 
-    private final ProductDisplayList productDisplayList;
+    private final CartProductDisplayList productDisplayList;
 
     @Override
     public void changedUpdate(final DocumentEvent e) {
@@ -52,7 +52,7 @@ public class LeftPanel extends JPanel implements DocumentListener {
         search();
     }
 
-    public LeftPanel(final ProductDisplayList productDisplayList) {
+    public LeftPanel(final CartProductDisplayList productDisplayList) {
         setLayout(new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]"));
 
         this.productDisplayList = productDisplayList;

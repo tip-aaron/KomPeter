@@ -36,7 +36,7 @@ public final class Directories {
 
         LOGS = String.format("%s%slogs", APP_DATA, File.separator);
         CONFIG = String.format("%s%sconfig", APP_DATA, File.separator);
-        SQLITE = String.format("%s%sqlite", APP_DATA, File.separator);
+        SQLITE = String.format("%s%ssqlite", APP_DATA, File.separator);
         IMAGES = String.format("%s%simages", APP_DATA, File.separator);
     }
 }

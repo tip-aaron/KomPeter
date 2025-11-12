@@ -8,9 +8,15 @@
 package kompeter.database.dao.impl.sqlite;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import kompeter.constants.Directories;
 import kompeter.database.dao.ADaoFactory;
@@ -38,14 +44,21 @@ import kompeter.database.dao.users.AccountDao;
 import kompeter.database.dao.users.RoleDao;
 import kompeter.database.dao.users.SessionDao;
 import kompeter.database.dao.users.UserDao;
+import kompeter.database.migrator.impl.sqlite.SqliteMigrator;
+import kompeter.database.seeder.impl.sqlite.SqliteSeeder;
+import kompeter.lib.logger.KompeterLogger;
+import kompeter.utils.FileUtils;
 
 public class SqliteDaoFactory extends ADaoFactory {
+    private static final Logger LOGGER = KompeterLogger.getLogger(SqliteDaoFactory.class);
     private static SqliteDaoFactory instance;
 
+    static final String DB_URL;
     static final String MAIN_DB_URL;
 
     static {
-        MAIN_DB_URL = String.format("jdbc:sqlite:/%s%smain", Directories.SQLITE, File.separator);
+        DB_URL = String.format("%s%smain.db", Directories.SQLITE, File.separator);
+        MAIN_DB_URL = String.format("jdbc:sqlite:/%s%smain.db", Directories.SQLITE, File.separator);
     }
 
     public static synchronized SqliteDaoFactory getInstance() {
@@ -54,6 +67,28 @@ public class SqliteDaoFactory extends ADaoFactory {
         }
 
         return instance;
+    }
+
+    @Override
+    public boolean setupDb() {
+        try {
+            FileUtils.createFileIfNotExists(DB_URL);
+
+            new SqliteMigrator().migrate();
+            new SqliteSeeder().seed();
+
+            return true;
+        } catch (SQLException | IOException err) {
+            LOGGER.log(Level.SEVERE, "Failed to setup database", err);
+
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(null,
+                        "Sorry. We cannot start the application because we cannot setup the database.",
+                        "Failed to Initialize", JOptionPane.ERROR_MESSAGE);
+            });
+
+            return false;
+        }
     }
 
     @Override

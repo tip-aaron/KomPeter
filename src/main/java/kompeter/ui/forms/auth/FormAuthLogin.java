@@ -257,7 +257,10 @@ public class FormAuthLogin extends Form {
     private class RegisterButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            FormManager.showAuthForm(new FormAuthRegister());
+            final Form form = new FormAuthRegister();
+
+            form.formInit();
+            FormManager.showAuthForm(form);
         }
     }
 }

@@ -1,4 +1,4 @@
-INSERT INTO roles (role_name, description)
+INSERT INTO roles (name, description)
 VALUES (
         'admin',
         'Full system access and management privileges.'
@@ -112,3 +112,5 @@ VALUES ('Logitech'),
     ('Cooler Master'),
     ('HyperX'),
     ('Dell');
+INSERT INTO db_settings (is_seeded)
+VALUES (true);

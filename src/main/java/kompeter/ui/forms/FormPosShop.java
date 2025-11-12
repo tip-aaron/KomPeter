@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import kompeter.services.pointofsale.Cart;
-import kompeter.services.pointofsale.ProductDisplayList;
+import kompeter.services.pointofsale.CartProductDisplayList;
 import kompeter.ui.components.form.pointofsale.LeftPanel;
 import kompeter.ui.components.form.pointofsale.RightPanel;
 import kompeter.ui.system.Form;
@@ -26,7 +26,7 @@ import net.miginfocom.swing.MigLayout;
 public class FormPosShop extends Form {
     private Cart cart;
     private LeftPanel leftPanel;
-    private ProductDisplayList productDisplayList;
+    private CartProductDisplayList productDisplayList;
     private RightPanel rightPanel;
     private JSplitPane splitPane;
 
@@ -66,7 +66,7 @@ public class FormPosShop extends Form {
     @Override
     public void formInit() {
         cart = new Cart();
-        productDisplayList = new ProductDisplayList();
+        productDisplayList = new CartProductDisplayList();
         leftPanel = new LeftPanel(productDisplayList);
         rightPanel = new RightPanel(cart);
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);

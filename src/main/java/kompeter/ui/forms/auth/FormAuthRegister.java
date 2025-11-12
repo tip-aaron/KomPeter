@@ -397,7 +397,10 @@ public class FormAuthRegister extends Form {
     private class LoginButtonActionListener implements ActionListener {
         @Override
         public void actionPerformed(final ActionEvent e) {
-            FormManager.showAuthForm(new FormAuthLogin());
+            final Form form = new FormAuthLogin();
+
+            form.formInit();
+            FormManager.showAuthForm(form);
         }
     }
 
@@ -457,16 +460,16 @@ public class FormAuthRegister extends Form {
             }
 
             switch (currentStep.get()) {
-                case 1 :
+                case 1:
                     stepOne();
                     break;
-                case 2 :
+                case 2:
                     stepTwo();
                     break;
-                case 3 :
+                case 3:
                     stepThree();
                     break;
-                default :
+                default:
                     JOptionPane.showMessageDialog(owner, "Something went wrong");
             }
         }
@@ -486,16 +489,16 @@ public class FormAuthRegister extends Form {
             }
 
             switch (currentStep.get()) {
-                case 1 :
+                case 1:
                     stepOne();
                     break;
-                case 2 :
+                case 2:
                     stepTwo();
                     break;
-                case 3 :
+                case 3:
                     stepThree();
                     break;
-                default :
+                default:
                     JOptionPane.showMessageDialog(owner, "Something went wrong");
             }
         }

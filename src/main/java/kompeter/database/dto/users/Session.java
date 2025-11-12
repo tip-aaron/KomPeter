@@ -22,6 +22,6 @@ public class Session {
     final User user;
 
     public boolean isExpired() {
-        return expiresAt.after(createdAt);
+        return expiresAt.before(createdAt);
     }
 }

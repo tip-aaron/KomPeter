@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import kompeter.constants.PropertyKey;
@@ -107,7 +108,7 @@ public final class Authentication {
                 throw err;
             }
         } catch (SQLException | IOException err) {
-            LOGGER.severe(String.format("Trying to login with email %s but failed: %s", email, err.getMessage()));
+            LOGGER.log(Level.SEVERE, String.format("Trying to login with email %s but failed", email), err);
 
             return AuthenticationStatus.builder().message("Sorry. We cannot log you in at this time.")
                     .statusType(AuthenticationStatus.StatusType.ERROR).build();

@@ -22,8 +22,8 @@ import kompeter.lib.logger.KompeterLogger;
 import lombok.Getter;
 
 @Getter
-public class ProductDisplayList {
-    private static final Logger LOGGER = KompeterLogger.getLogger(ProductDisplayList.class);
+public class CartProductDisplayList {
+    private static final Logger LOGGER = KompeterLogger.getLogger(CartProductDisplayList.class);
 
     private String[] brandFilters;
     private String[] categoryFilters;
@@ -32,9 +32,9 @@ public class ProductDisplayList {
 
     private final PropertyChangeSupport propertyChangeSupport;
 
-    public ProductDisplayList() {
-        brandFilters = new String[]{};
-        categoryFilters = new String[]{};
+    public CartProductDisplayList() {
+        brandFilters = new String[] {};
+        categoryFilters = new String[] {};
         nameFilter = "";
         products = new AtomicReference<>(new ArrayList<>());
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -57,7 +57,7 @@ public class ProductDisplayList {
 
     public void setBrandFilters(String[] brandFilters) {
         if (brandFilters == null) {
-            brandFilters = new String[]{};
+            brandFilters = new String[] {};
         }
 
         propertyChangeSupport.firePropertyChange("brandFilters", this.brandFilters, brandFilters);
@@ -67,7 +67,7 @@ public class ProductDisplayList {
 
     public void setCategoryFilters(String[] categoryFilters) {
         if (categoryFilters == null) {
-            categoryFilters = new String[]{};
+            categoryFilters = new String[] {};
         }
 
         propertyChangeSupport.firePropertyChange("categoryFilters", this.categoryFilters, categoryFilters);

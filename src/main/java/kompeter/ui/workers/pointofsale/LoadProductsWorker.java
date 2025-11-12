@@ -18,7 +18,7 @@ import javax.swing.SwingWorker;
 import kompeter.database.dto.products.CartProduct;
 import kompeter.loader.AssetLoader;
 import kompeter.services.pointofsale.Cart;
-import kompeter.services.pointofsale.ProductDisplayList;
+import kompeter.services.pointofsale.CartProductDisplayList;
 import kompeter.ui.components.form.pointofsale.LeftPanel;
 import kompeter.ui.components.form.pointofsale.LoadingPanel;
 import kompeter.ui.components.form.pointofsale.NoResultsPanel;
@@ -40,7 +40,7 @@ public class LoadProductsWorker extends SwingWorker<Void, WorkerData> {
     private final Cart cart;
     private final LeftPanel container;
     private final LoadingPanel loadingPanel;
-    private final ProductDisplayList productDisplayList;
+    private final CartProductDisplayList productDisplayList;
 
     @Override
     protected Void doInBackground() throws Exception {

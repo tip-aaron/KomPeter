@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,10 +41,10 @@ public final class FileUtils {
                 return;
             }
 
-            Files.createDirectory(path);
+            Files.createDirectories(path);
             LOGGER.info(String.format("Created directory %s", path.toString()));
         } catch (final SecurityException | UnsupportedOperationException | IOException err) {
-            LOGGER.severe(err.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to create directory", err);
         }
     }
 
@@ -58,7 +59,7 @@ public final class FileUtils {
             Files.createFile(path);
             LOGGER.info(String.format("Created file %s", path.toString()));
         } catch (final SecurityException | UnsupportedOperationException | IOException err) {
-            LOGGER.severe(err.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to create file", err);
         }
     }
 }

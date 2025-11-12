@@ -42,6 +42,8 @@ public abstract class ADaoFactory {
         return createConnection();
     }
 
+    public abstract boolean setupDb();
+
     protected abstract Connection createConnection() throws SQLException;
 
     public abstract ProductDao getProductDao();
