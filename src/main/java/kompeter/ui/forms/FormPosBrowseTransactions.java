@@ -10,6 +10,6 @@ package kompeter.ui.forms;
 import kompeter.ui.system.Form;
 import kompeter.ui.utils.SystemForm;
 
-@SystemForm(name = "Monitor Inventory", description = "Monitor inventory overview")
-public class FormMonitoringInventory extends Form {
+@SystemForm(name = "Browse Transactions", description = "Browse transactions all-time")
+public class FormPosBrowseTransactions extends Form {
 }

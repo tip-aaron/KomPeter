@@ -32,6 +32,10 @@ public class User {
     }
 
     public boolean isInventoryClerk() {
-        return Filter.isInArray("inventory_clerk", roles);
+        return Filter.isInArray("inventory clerk", roles);
+    }
+
+    public boolean isManager() {
+        return Filter.isInArray("manager", roles);
     }
 }

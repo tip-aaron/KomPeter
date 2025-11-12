@@ -7,5 +7,9 @@
 */
 package kompeter.ui.forms;
 
-public class FormMonitoringSales {
+import kompeter.ui.system.Form;
+import kompeter.ui.utils.SystemForm;
+
+@SystemForm(name = "Monitor Sales", description = "Monitor sales' overview")
+public class FormMonitoringSales extends Form {
 }

@@ -14,15 +14,7 @@ VALUES (
     (
         'inventory clerk',
         'Manages and updates inventory records.'
-    ),
-    (
-        'auditor',
-        'Performs financial and stock audits.'
-    ),
-    (
-        'supplier',
-        'External role for supplier data, not a direct system user.'
-    );
+    )
 INSERT INTO users (
         display_name,
         first_name,
@@ -52,12 +44,6 @@ VALUES (
         'Aaron',
         'Cruz',
         '/kompeter/ui/assets/images/peter.png'
-    ),
-    (
-        'Kurt',
-        'Kurt',
-        'Cobain',
-        '/kompeter/ui/assets/images/peter.png'
     );
 INSERT INTO accounts (_user_id, password_hash, password_salt, email)
 VALUES (
@@ -83,19 +69,12 @@ VALUES (
         'kHsoVp4WrbrC/mg/a7cqhGKb9u2VBNOE/VLmuIuYFe8=',
         'LGwkiq+nsgf+R7iRlpS3kQ==',
         'aaron.clerk@example.com'
-    ),
-    (
-        5,
-        'kHsoVp4WrbrC/mg/a7cqhGKb9u2VBNOE/VLmuIuYFe8=',
-        'LGwkiq+nsgf+R7iRlpS3kQ==',
-        'kurt.auditor@example.com'
     );
 INSERT INTO user_roles (_user_id, _role_id)
 VALUES (1, 1),
     (2, 2),
     (3, 3),
-    (4, 4),
-    (5, 5);
+    (4, 4);
 INSERT INTO product_categories (name)
 VALUES ('PC Components'),
     ('Peripherals'),

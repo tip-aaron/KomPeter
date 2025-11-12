@@ -8,6 +8,8 @@
 package kompeter.ui.forms;
 
 import kompeter.ui.system.Form;
+import kompeter.ui.utils.SystemForm;
 
+@SystemForm(name = "Add a Product", description = "Add a product")
 public class FormInventoryAddProduct extends Form {
 }

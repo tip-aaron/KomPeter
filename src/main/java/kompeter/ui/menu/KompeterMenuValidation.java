@@ -13,7 +13,8 @@ import raven.modal.drawer.menu.MenuValidation;
 
 public class KompeterMenuValidation extends MenuValidation {
     private static final int TAB_INVENTORY = 2;
-    private static final int TAB_LOGOUT = 4;
+    private static final int TAB_LOGOUT = 5;
+    private static final int TAB_USERS = 4;
     private static final int TAB_MONITORING = 3;
     private static final int TAB_POS = 1;
     private static final int TAB_PROFILE = 0;
@@ -38,6 +39,10 @@ public class KompeterMenuValidation extends MenuValidation {
 
         if (session.getUser().isInventoryClerk()) {
             return allowedTabs || index[0] == TAB_INVENTORY || index[0] == TAB_MONITORING;
+        }
+
+        if (session.getUser().isManager()) {
+            return allowedTabs || index[0] == TAB_USERS || index[0] == TAB_MONITORING;
         }
 
         return allowedTabs;

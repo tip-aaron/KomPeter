@@ -38,6 +38,7 @@ public class App {
         KompeterLightFlatLaf.setup();
 
         SwingUtilities.invokeLater(() -> {
+            LOGGER.info("init splash screen");
             splashScreen = new SplashScreen();
         });
 

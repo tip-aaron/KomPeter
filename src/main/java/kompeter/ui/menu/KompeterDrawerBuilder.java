@@ -24,12 +24,20 @@ import kompeter.services.auth.Authentication;
 import kompeter.services.auth.AuthenticationStatus;
 import kompeter.ui.components.icons.SVGIconUIColor;
 import kompeter.ui.forms.FormInventoryAddProduct;
+import kompeter.ui.forms.FormInventoryAddPurchase;
 import kompeter.ui.forms.FormInventoryBrowseProducts;
+import kompeter.ui.forms.FormInventoryBrowsePurchases;
+import kompeter.ui.forms.FormInventoryViewProduct;
+import kompeter.ui.forms.FormInventoryViewPurchase;
 import kompeter.ui.forms.FormMonitoringInventory;
 import kompeter.ui.forms.FormMonitoringSales;
+import kompeter.ui.forms.FormPosBrowseTransactions;
 import kompeter.ui.forms.FormPosShop;
-import kompeter.ui.forms.FormPosTransactions;
+import kompeter.ui.forms.FormPosViewTransaction;
 import kompeter.ui.forms.FormProfile;
+import kompeter.ui.forms.FormUserAddCustomer;
+import kompeter.ui.forms.FormUserAddSupplier;
+import kompeter.ui.forms.FormUserManageUsers;
 import kompeter.ui.system.AllForms;
 import kompeter.ui.system.Form;
 import kompeter.ui.system.FormManager;
@@ -65,13 +73,23 @@ public class KompeterDrawerBuilder extends SimpleDrawerBuilder {
 
         final MenuItem[] items = new MenuItem[] { new Item("Profile", "user.svg", FormProfile.class),
                 new Item("Point of Sale", "store.svg").subMenu(new Item("Shop", "shopping-cart.svg", FormPosShop.class))
-                        .subMenu(new Item("Transactions", "circle-dollar-sign.svg", FormPosTransactions.class)),
+                        .subMenu(new Item("Browse Transactions", "circle-dollar-sign.svg",
+                                FormPosBrowseTransactions.class))
+                        .subMenu("View Transaction", FormPosViewTransaction.class),
                 new Item("Inventory", "boxes.svg")
+                        .subMenu("View a Purchase", FormInventoryViewPurchase.class)
+                        .subMenu("Browse Purchases", FormInventoryBrowsePurchases.class)
+                        .subMenu("Add Purchase", FormInventoryAddPurchase.class)
+                        .subMenu("View a Product", FormInventoryViewProduct.class)
                         .subMenu(new Item("Browse Products", "package.svg", FormInventoryBrowseProducts.class))
                         .subMenu(new Item("Add Product", "plus.svg", FormInventoryAddProduct.class)),
                 new Item("Monitoring", "chart-no-axes-combined.svg")
                         .subMenu(new Item("Sales", "badge-dollar-sign.svg", FormMonitoringSales.class))
                         .subMenu(new Item("Inventory", "boxes.svg", FormMonitoringInventory.class)),
+                new Item("People", "users.svg")
+                        .subMenu("Add a Supplier", FormUserAddSupplier.class)
+                        .subMenu("Add a Customer", FormUserAddCustomer.class)
+                        .subMenu("Manage Users", FormUserManageUsers.class),
                 new Item("Logout", "logout.svg") };
 
         menuOption.setMenuStyle(new MenuStyle() {
