@@ -26,7 +26,7 @@ public final class FormProfile extends Form {
 
     @Override
     public void formInit() {
-        setLayout(new MigLayout("insets 12, flowx"));
+        setLayout(new MigLayout("insets 12, flowx", "[grow, fill, center]", "[center]"));
 
         if (SessionManager.getInstance().session() == null) {
             return;
@@ -39,13 +39,19 @@ public final class FormProfile extends Form {
         final JLabel email = new JLabel(String.format("Email: %s", user.email()));
         final JLabel roles = new JLabel(String.format("Role/s: %s", String.join(", ", user.roles())));
 
-        fullName.putClientProperty(FlatClientProperties.STYLE_CLASS, "h3");
+        fullName.putClientProperty(FlatClientProperties.STYLE_CLASS, "h2");
+        email.putClientProperty(FlatClientProperties.STYLE_CLASS, "h4");
+        roles.putClientProperty(FlatClientProperties.STYLE_CLASS, "h4");
+
+        fullName.setHorizontalAlignment(JLabel.CENTER);
+        email.setHorizontalAlignment(JLabel.CENTER);
+        roles.setHorizontalAlignment(JLabel.CENTER);
 
         email.putClientProperty(FlatClientProperties.STYLE, "foreground:$TextField.placeholderForeground;");
 
-        add(fullName, "wrap");
-        add(email, "wrap");
-        add(roles);
+        add(fullName, "wrap, growx");
+        add(email, "wrap, growx");
+        add(roles, "growx");
 
         super.formInit();
     }
