@@ -14,8 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -25,12 +28,15 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
 import kompeter.App;
 import kompeter.database.dto.products.CartProduct;
+import kompeter.loader.AssetLoader;
 import kompeter.services.pointofsale.Cart;
+import kompeter.services.pointofsale.CartProductDisplayList;
 import kompeter.ui.components.icons.SVGIconUIColor;
 import kompeter.ui.components.panels.ImagePanel;
 import kompeter.ui.utils.HtmlUtils;
@@ -39,22 +45,35 @@ import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.component.DropShadowBorder;
 
-@Getter
 public class ProductCard extends JPanel implements PropertyChangeListener {
+    @Getter
     private final Cart cart;
+    @Getter
     private final CartProduct data;
+    @Getter
     private final MouseAdapter mouseListener;
+    @Getter
+    private final AtomicReference<AddToCartDialog> addToCartDialog;
+    private final JLabel name;
+    private final JLabel price;
+    private final ImagePanel thumbnail;
+    private final CartProductDisplayList productDisplayList;
 
-    public ProductCard(final Cart cart, final CartProduct data, final ImagePanel thumbnail) {
+    public ProductCard(final Cart cart, final CartProduct data, final ImagePanel thumbnail,
+            final CartProductDisplayList productDisplayList) {
         this.cart = cart;
         this.data = data;
         this.mouseListener = new ProductCardMouseListener();
+        this.addToCartDialog = new AtomicReference<>(null);
+        this.productDisplayList = productDisplayList;
 
         setLayout(new BorderLayout());
 
+        this.thumbnail = thumbnail;
+
         final JPanel wrapper = new JPanel(new MigLayout("flowx, wrap, insets 0", "[grow, fill, center]"));
-        final JLabel name = new JLabel(HtmlUtils.wrapInHtml(String.format("<p align='center'>%s", data.getName())));
-        final JLabel price = new JLabel(HtmlUtils
+        name = new JLabel(HtmlUtils.wrapInHtml(String.format("<p align='center'>%s", data.getName())));
+        price = new JLabel(HtmlUtils
                 .wrapInHtml(String.format("<p align='center'>%s", NumberUtils.formatCurrencyPh(data.getNetPrice()))));
 
         name.putClientProperty(FlatClientProperties.STYLE, "font: bold;");
@@ -99,6 +118,8 @@ public class ProductCard extends JPanel implements PropertyChangeListener {
 
     class AddToCartDialog extends JDialog implements ActionListener {
         final JSpinner quantitySpinner;
+        JLabel quantityLabel;
+        JLabel subtitle;
 
         public AddToCartDialog() {
             super(App.getRootFrame(), "Add to Cart", Dialog.ModalityType.APPLICATION_MODAL);
@@ -106,14 +127,14 @@ public class ProductCard extends JPanel implements PropertyChangeListener {
             setLayout(new MigLayout("insets 12, flowx, wrap", "[grow, fill, center]"));
 
             final JLabel title = new JLabel("Add to Cart");
-            final JLabel subtitle = new JLabel(HtmlUtils
+            subtitle = new JLabel(HtmlUtils
                     .wrapInHtml(String.format("<p align='center'>This will add %s to the cart.", data.getName())));
 
             title.putClientProperty(FlatClientProperties.STYLE_CLASS, "h4 primary");
             subtitle.putClientProperty(FlatClientProperties.STYLE_CLASS, "muted");
             subtitle.putClientProperty(FlatClientProperties.STYLE, "font:-2;");
 
-            final JLabel quantityLabel = new JLabel(String.format("Quantity (Max %s)", data.getAvailableQuantity()));
+            quantityLabel = new JLabel(String.format("Quantity (Max %s)", data.getAvailableQuantity()));
             quantitySpinner = new JSpinner(new SpinnerNumberModel(1, 1, data.getAvailableQuantity(), 1));
 
             final JButton cancelButton = new JButton("Cancel", new SVGIconUIColor("x.svg", 1f, "foreground.muted"));
@@ -150,6 +171,10 @@ public class ProductCard extends JPanel implements PropertyChangeListener {
                 } else {
                     data.setQuantityInCart((Integer) quantitySpinner.getValue());
                     cart.addProduct(data);
+
+                    new Timer(5000, (ev) -> {
+                        data.setQuantityInHand(0);
+                    }).start();
                 }
             }
 
@@ -159,15 +184,71 @@ public class ProductCard extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        SwingUtilities.invokeLater(() -> {
-            // update toolbar when value of data changes
-            if (evt.getPropertyName().equals("quantityInCart")) {
+        final int availableQty = data.getAvailableQuantity();
+        final String name = data.getName();
+        final BigDecimal p = data.getNetPrice();
+        final String dp = data.getDisplayImage();
+
+        // update toolbar when value of data changes
+        if (evt.getPropertyName().equals("quantityInCart")) {
+            SwingUtilities.invokeLater(() -> {
                 setToolTipText(HtmlUtils.wrapInHtml(String.format(
                         "<p>Click this card to add <strong>%s</strong> to the cart. <br><p><em>Available:" + " %s</em>",
-                        data.getName(), data.getAvailableQuantity())));
+                        name, availableQty)));
+            });
+        } else if (evt.getPropertyName().equals("quantityInHand")) {
+            SwingUtilities.invokeLater(() -> {
+                setToolTipText(HtmlUtils.wrapInHtml(String.format(
+                        "<p>Click this card to add <strong>%s</strong> to the cart. <br><p><em>Available:" + " %s</em>",
+                        name, availableQty)));
 
-            }
-        });
+                if (addToCartDialog.getAcquire() == null) {
+                    return;
+                }
+
+                if (availableQty <= 0) {
+                    addToCartDialog.getAcquire().dispose();
+                    addToCartDialog.set(null);
+
+                    productDisplayList.removeProduct(data);
+                } else {
+                    final AddToCartDialog addToCartDialog = this.addToCartDialog.getAcquire();
+                    final int val = (Integer) addToCartDialog.quantitySpinner.getValue();
+
+                    if (val < availableQty) {
+                        addToCartDialog.quantitySpinner.setValue(availableQty);
+                    }
+
+                    addToCartDialog.quantityLabel
+                            .setText(String.format("Quantity (Max %s)", availableQty));
+                }
+            });
+        } else if (evt.getPropertyName().equals("name")) {
+            SwingUtilities.invokeLater(() -> {
+                this.name.setText(HtmlUtils.wrapInHtml(String.format("<p align='center'>%s", name)));
+
+                if (addToCartDialog.getAcquire() == null) {
+                    return;
+                }
+
+                final AddToCartDialog d = addToCartDialog.getAcquire();
+                d.subtitle.setText(HtmlUtils
+                        .wrapInHtml(String.format("<p align='center'>This will add %s to the cart.", name)));
+            });
+        } else if (evt.getPropertyName().equals("netPrice")) {
+            SwingUtilities.invokeLater(() -> {
+                this.price.setText(HtmlUtils
+                        .wrapInHtml(String.format("<p align='center'>%s", NumberUtils.formatCurrencyPh(p))));
+            });
+        } else if (evt.getPropertyName().equals("displayImage")) {
+            new Thread(() -> {
+                final BufferedImage image = AssetLoader.loadImage(dp, true);
+
+                SwingUtilities.invokeLater(() -> {
+                    thumbnail.setImage(image, true);
+                });
+            }).start();
+        }
     }
 
     class ProductCardMouseListener extends MouseAdapter {
@@ -181,7 +262,10 @@ public class ProductCard extends JPanel implements PropertyChangeListener {
                 return;
             }
 
-            new AddToCartDialog().setVisible(true);
+            final AddToCartDialog d = new AddToCartDialog();
+
+            addToCartDialog.set(d);
+            d.setVisible(true);
         }
     }
 }

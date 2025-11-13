@@ -27,9 +27,9 @@ import lombok.Getter;
 public class CartProductDisplayList {
     private static final Logger LOGGER = KompeterLogger.getLogger(CartProductDisplayList.class);
 
-    private String[] brandFilters;
-    private String[] categoryFilters;
-    private String nameFilter;
+    private final AtomicReference<String[]> brandFilters;
+    private final AtomicReference<String[]> categoryFilters;
+    private final AtomicReference<String> nameFilter;
     /**
      * 
      * The displayed products
@@ -41,12 +41,23 @@ public class CartProductDisplayList {
     private final PropertyChangeSupport propertyChangeSupport;
 
     public CartProductDisplayList() {
-        brandFilters = new String[] {};
-        categoryFilters = new String[] {};
-        nameFilter = "";
+        brandFilters = new AtomicReference<>(new String[] {});
+        categoryFilters = new AtomicReference<>(new String[] {});
+        nameFilter = new AtomicReference<>("");
         masterProducts = new AtomicReference<>(new ArrayList<>());
         products = new AtomicReference<>(new ArrayList<>());
         propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    public void removeProduct(final CartProduct p) {
+        final Object copy = products.getAcquire().clone();
+        final Object copy2 = products.getAcquire().clone();
+
+        products.getAcquire().remove(p);
+        masterProducts.getAcquire().remove(p);
+
+        propertyChangeSupport.firePropertyChange("products", copy, products.getAcquire());
+        propertyChangeSupport.firePropertyChange("masterProducts", copy2, masterProducts.getAcquire());
     }
 
     private CartProduct findProductById(final int id, final List<CartProduct> list) {
@@ -83,6 +94,7 @@ public class CartProductDisplayList {
     private void applySearch() {
         final ArrayList<CartProduct> products = this.products.getAcquire();
         final Object copy = products.clone();
+        final String nameFilter = this.nameFilter.getAcquire();
 
         products.clear();
 
@@ -103,7 +115,7 @@ public class CartProductDisplayList {
         final ProductDao productDao = factory.getProductDao();
 
         try (Connection conn = factory.getConnection()) {
-            final Object copy = products.getAcquire().clone();
+            final Object copy = masterProducts.getAcquire().clone();
             final ArrayList<CartProduct> sample = new ArrayList<>();
 
             sample.add(CartProduct.builder()
@@ -120,7 +132,7 @@ public class CartProductDisplayList {
 
             // reconciliate(productDao.getAllCartProducts(conn));
             reconciliate(sample);
-            propertyChangeSupport.firePropertyChange("masterProducts", copy, products.getAcquire());
+            propertyChangeSupport.firePropertyChange("masterProducts", copy, masterProducts.getAcquire());
             applySearch();
         } catch (final SQLException /* | IOException */ err) {
             LOGGER.severe(
@@ -134,7 +146,7 @@ public class CartProductDisplayList {
         }
 
         propertyChangeSupport.firePropertyChange("brandFilters", this.brandFilters, brandFilters);
-        this.brandFilters = brandFilters;
+        this.brandFilters.set(brandFilters);
         applySearch();
     }
 
@@ -144,7 +156,7 @@ public class CartProductDisplayList {
         }
 
         propertyChangeSupport.firePropertyChange("categoryFilters", this.categoryFilters, categoryFilters);
-        this.categoryFilters = categoryFilters;
+        this.categoryFilters.set(categoryFilters);
         applySearch();
     }
 
@@ -154,7 +166,7 @@ public class CartProductDisplayList {
         }
 
         propertyChangeSupport.firePropertyChange("nameFilter", this.nameFilter, nameFilter);
-        this.nameFilter = nameFilter;
+        this.nameFilter.set(nameFilter);
         applySearch();
     }
 }

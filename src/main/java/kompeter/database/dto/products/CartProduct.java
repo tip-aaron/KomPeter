@@ -59,15 +59,24 @@ public class CartProduct {
             throw new IllegalArgumentException("Another must be of the same type when calling updateFrom");
         }
 
-        propertyChangeSupport.firePropertyChange("netPrice", this.netPrice, another.getNetPrice());
-        propertyChangeSupport.firePropertyChange("quantityInHand", this.quantityInHand, another.getQuantityInHand());
-        propertyChangeSupport.firePropertyChange("displayImage", this.displayImage, another.getDisplayImage());
-        propertyChangeSupport.firePropertyChange("name", this.name, another.getName());
+        final int oldQty = this.quantityInHand;
+        final BigDecimal oldNp = this.netPrice;
+        final String oldDp = this.displayImage;
+        final String oldN = this.name;
 
         this.quantityInHand = another.getQuantityInHand();
         this.netPrice = another.netPrice;
         this.displayImage = another.displayImage;
         this.name = another.name;
+
+        if (getAvailableQuantity() < 0) {
+            setQuantityInCart(this.quantityInHand);
+        }
+
+        propertyChangeSupport.firePropertyChange("netPrice", oldNp, another.getNetPrice());
+        propertyChangeSupport.firePropertyChange("quantityInHand", oldQty, another.getQuantityInHand());
+        propertyChangeSupport.firePropertyChange("displayImage", oldDp, another.getDisplayImage());
+        propertyChangeSupport.firePropertyChange("name", oldN, another.getName());
     }
 
     public boolean isInCart() {
@@ -84,6 +93,18 @@ public class CartProduct {
 
     public BigDecimal getTotalNetPrice() {
         return netPrice.multiply(new BigDecimal(quantityInCart.getAcquire()));
+    }
+
+    public void setQuantityInHand(final int quantityInCart) {
+        final int oldQty = this.quantityInHand;
+
+        this.quantityInHand = quantityInCart;
+
+        if (getAvailableQuantity() < 0) {
+            setQuantityInCart(this.quantityInHand);
+        }
+
+        propertyChangeSupport.firePropertyChange("quantityInHand", oldQty, quantityInCart);
     }
 
     public void setQuantityInCart(final int quantityInCart) {

@@ -170,6 +170,7 @@ public class FormManager {
             form.formOpen();
             mainForm.setForm(form);
             mainForm.refresh();
+            form.formRefresh();
             form.formAfterOpen();
 
             if (prevForm != null) {

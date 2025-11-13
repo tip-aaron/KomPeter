@@ -4,11 +4,13 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import kompeter.database.dto.products.CartProduct;
+import kompeter.lib.logger.KompeterLogger;
 import kompeter.loader.AssetLoader;
 import kompeter.services.pointofsale.Cart;
 import kompeter.services.pointofsale.CartProductDisplayList;
@@ -30,6 +32,8 @@ class WorkerData {
 
 @Builder
 public class RenderProductsWorker extends SwingWorker<Void, WorkerData> {
+    private static final Logger LOGGER = KompeterLogger.getLogger(RenderProductsWorker.class);
+
     private final Cart cart;
     private final LeftPanel container;
     private final LoadingPanel loadingPanel;
@@ -37,6 +41,8 @@ public class RenderProductsWorker extends SwingWorker<Void, WorkerData> {
 
     @Override
     protected Void doInBackground() throws Exception {
+        LOGGER.info("Rendering products for Point of Sale Shop");
+
         SwingUtilities.invokeLater(() -> {
             container.getContent().removeAll();
             container.getContent().add(loadingPanel);
@@ -47,6 +53,10 @@ public class RenderProductsWorker extends SwingWorker<Void, WorkerData> {
         final ArrayList<CartProduct> cartProducts = productDisplayList.getProducts().getAcquire();
 
         for (final CartProduct cartProduct : cartProducts) {
+            if (isCancelled()) {
+                LOGGER.info("Rendering products for Point of Sale has been cancelled.");
+            }
+
             String imagePath = cartProduct.getDisplayImage();
 
             if (imagePath == null || imagePath.isEmpty()) {
@@ -72,6 +82,10 @@ public class RenderProductsWorker extends SwingWorker<Void, WorkerData> {
 
     @Override
     protected void done() {
+        if (isCancelled()) {
+            LOGGER.info("Rendering products for Point of Sale has been cancelled.");
+        }
+
         container.getContent().remove(loadingPanel);
 
         if (productDisplayList.getProducts().getAcquire().size() == 0) {
@@ -87,7 +101,8 @@ public class RenderProductsWorker extends SwingWorker<Void, WorkerData> {
         container.getContent().remove(loadingPanel);
 
         for (final WorkerData workerData : chunks) {
-            final ProductCard card = new ProductCard(cart, workerData.getCartProduct(), workerData.getImage());
+            final ProductCard card = new ProductCard(cart, workerData.getCartProduct(), workerData.getImage(),
+                    productDisplayList);
 
             container.getContent().add(card);
         }

@@ -17,7 +17,7 @@ public class SearchTextField extends JTextField implements DocumentListener {
         putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
         putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON,
-                new SVGIconUIColor("search.svg", 1f, "TextField.placeholderForeground"));
+                new SVGIconUIColor("search.svg", 0.75f, "TextField.placeholderForeground"));
 
         this.onSearch = onSearch;
     }

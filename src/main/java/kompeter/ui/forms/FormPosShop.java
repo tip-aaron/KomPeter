@@ -9,6 +9,10 @@ package kompeter.ui.forms;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import javax.swing.JLabel;
@@ -16,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -27,7 +32,6 @@ import kompeter.ui.components.form.pointofsale.LoadingPanel;
 import kompeter.ui.components.form.pointofsale.RightPanel;
 import kompeter.ui.system.Form;
 import kompeter.ui.utils.HtmlUtils;
-import kompeter.ui.workers.pointofsale.LoadProductsWorker;
 import kompeter.ui.workers.pointofsale.RenderProductsWorker;
 import net.miginfocom.swing.MigLayout;
 
@@ -38,29 +42,52 @@ public class FormPosShop extends Form implements PropertyChangeListener {
     private CartProductDisplayList productDisplayList;
     private RightPanel rightPanel;
     private JSplitPane splitPane;
+    private AtomicBoolean isBusy;
+    private AtomicReference<Queue<RenderProductsWorker>> queue;
 
     private void loadData() {
-        SwingUtilities.invokeLater(() -> {
-            leftPanel.getContent().removeAll();
-            leftPanel.getContent().repaint();
-            leftPanel.getContent().revalidate();
-        });
-
-        LoadProductsWorker.builder().cart(cart).productDisplayList(productDisplayList).container(leftPanel)
-                .loadingPanel(new LoadingPanel()).build()
-                .execute();
+        new Thread(() -> {
+            productDisplayList.reloadProducts();
+        }, "Reload Products").start();
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("products")) {
-            RenderProductsWorker.builder()
+            final RenderProductsWorker newWorker = RenderProductsWorker.builder()
                     .cart(cart)
                     .container(leftPanel)
                     .loadingPanel(new LoadingPanel())
                     .productDisplayList(productDisplayList)
-                    .build()
-                    .execute();
+                    .build();
+
+            newWorker.addPropertyChangeListener(new PropertyChangeListener() {
+                @Override
+                public void propertyChange(final PropertyChangeEvent evt) {
+                    if ("state".equals(evt.getPropertyName())) {
+                        if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
+                            LOGGER.info("Products for Point of Sale has been rendered.");
+
+                            newWorker.removePropertyChangeListener(this);
+                            // acquire here and not use que below to not cause locks
+                            queue.getAcquire().remove(newWorker);
+                            isBusy.set(false);
+                        }
+                    }
+                }
+            });
+
+            final Queue<RenderProductsWorker> que = queue.getAcquire();
+
+            que.add(newWorker);
+
+            if (isBusy.get()) {
+                final RenderProductsWorker worker = que.poll();
+
+                worker.cancel(true);
+            }
+
+            newWorker.execute();
         }
     }
 
@@ -127,6 +154,8 @@ public class FormPosShop extends Form implements PropertyChangeListener {
         leftPanel = new LeftPanel(productDisplayList);
         rightPanel = new RightPanel(cart);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        queue = new AtomicReference<>(new ArrayBlockingQueue<>(2));
+        isBusy = new AtomicBoolean(false);
 
         final JPanel headerPanel = new JPanel(
                 new MigLayout("insets 4, flowx, wrap", "[grow, fill, center]"));
@@ -149,8 +178,6 @@ public class FormPosShop extends Form implements PropertyChangeListener {
 
         add(headerPanel, "growx, wrap");
         add(splitPane, "grow");
-
-        loadData();
     }
 
     @Override

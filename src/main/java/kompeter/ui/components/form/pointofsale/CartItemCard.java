@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ import kompeter.ui.utils.HtmlUtils;
 import kompeter.utils.NumberUtils;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
+import raven.modal.Toast;
 
 public class CartItemCard extends JPanel implements ActionListener, PropertyChangeListener {
     private static final Logger LOGGER = KompeterLogger.getLogger(CartItemCard.class);
@@ -48,6 +50,7 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
 
     private final Runnable updateCartLabels;
     private final JLabel netPrice;
+    private final JLabel qtyInHand;
 
     public CartItemCard(final Cart cart, final CartProduct data, final Runnable updateCartLabels) {
         this.cart = cart;
@@ -57,7 +60,10 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
 
         setLayout(new MigLayout("insets 0, flowx", "[grow, fill, center]"));
 
-        final JLabel name = new JLabel(HtmlUtils.wrapInHtml(data.getName()));
+        final JLabel name = new JLabel(HtmlUtils
+                .wrapInHtml(String.format("%s", data.getName())));
+        qtyInHand = new JLabel(
+                HtmlUtils.wrapInHtml(String.format("(In Hand: %s)", data.getQuantityInHand())));
         netPrice = new JLabel(
                 HtmlUtils.wrapInHtml(
                         String.format("Net price: %s", NumberUtils.formatCurrencyPh(data.getTotalNetPrice()))));
@@ -69,6 +75,7 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
         incBtn = new JButton(new SVGIconUIColor("plus.svg", 0.75f, "foreground.background"));
 
         netPrice.putClientProperty(FlatClientProperties.STYLE, "foreground:$TextField.placeholderForeground;font:-1;");
+        qtyInHand.putClientProperty(FlatClientProperties.STYLE, "foreground:$TextField.placeholderForeground;font:-3;");
 
         qtyPanel.putClientProperty(FlatClientProperties.STYLE, "arc:999;background:tint($Panel.background,25%);");
         decBtn.putClientProperty(FlatClientProperties.STYLE, "arc:999;");
@@ -89,7 +96,8 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
         qtyPanel.add(qty);
         qtyPanel.add(incBtn);
 
-        add(name, "wrap, growx");
+        add(name, "split 2");
+        add(qtyInHand, "wrap, growx");
         add(netPrice, "split 2, pushx, growx");
         add(qtyPanel, "gapleft 8px");
 
@@ -131,15 +139,21 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
 
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
-        SwingUtilities.invokeLater(() -> {
-            if (evt.getPropertyName().equals("quantityInCart") && evt.getNewValue() instanceof final Integer newQty
-                    && evt.getOldValue() instanceof final Integer oldQty) {
+        // Do not access outside data in SwingUtilities
+
+        if (evt.getPropertyName().equals("quantityInCart") && evt.getNewValue() instanceof final Integer newQty
+                && evt.getOldValue() instanceof final Integer oldQty) {
+            final BigDecimal totalNetPrice = data.getTotalNetPrice();
+            final String name = data.getName();
+
+            SwingUtilities.invokeLater(() -> {
                 qty.setText(String.format("%d", newQty));
                 netPrice.setText(HtmlUtils
                         .wrapInHtml(
-                                String.format("Net price: %s", NumberUtils.formatCurrencyPh(data.getTotalNetPrice()))));
+                                String.format("Net price: %s", NumberUtils.formatCurrencyPh(totalNetPrice))));
+
                 LOGGER.info(
-                        String.format("Changed quantity of %s in cart from %d to %d", data.getName(), oldQty, newQty));
+                        String.format("Changed quantity of %s in cart from %d to %d", name, oldQty, newQty));
 
                 if (newQty == 1) {
                     decBtn.setIcon(trashIcon);
@@ -148,8 +162,37 @@ public class CartItemCard extends JPanel implements ActionListener, PropertyChan
                 }
 
                 updateCartLabels.run();
-            }
-        });
+            });
+
+            // In such cases where an external factor changed our product's quantity and the
+            // cart still isn't cleared
+        } else if (evt.getPropertyName().equals("quantityInHand")) {
+            final String name = data.getName();
+            final Integer newVal = (Integer) evt.getNewValue();
+            final int availableQty = data.getAvailableQuantity();
+
+            cart.removeProduct(data);
+
+            SwingUtilities.invokeLater(() -> {
+                qtyInHand.setText(String.format("%d", newVal));
+
+                // Don't adjust qty here because the event "quantityInCart" will be fired by
+                // CartProduct
+                // qty.setText(String.format("%d", data.getQuantityInCart()));
+
+                if (newVal <= 0) {
+                    Toast.show(App.getRootFrame(), Toast.Type.INFO, String.format(
+                            "%s has been removed from the cart because it is not available anymore.", name));
+
+                    removeListeners();
+                    // if qty in cart is > new qty in hand, then
+                    // just take all the available ones
+                } else if (availableQty < 0) {
+                    Toast.show(App.getRootFrame(), Toast.Type.INFO, String.format(
+                            "The quantity of %s in the cart has been adjusted to %s.", name, newVal));
+                }
+            });
+        }
     }
 
     public void removeListeners() {

@@ -13,7 +13,7 @@ import kompeter.database.dto.users.Role;
 
 public final class Filter {
     private static final JaroWinklerSimilarity similarity = new JaroWinklerSimilarity();
-    public static final double STRING_THRESHOLD_SIMILARITY = 0.5;
+    public static final double STRING_THRESHOLD_SIMILARITY = 0.7;
 
     public static boolean isInArray(final String str, final Role[] strArr) {
         for (final Role string : strArr) {

@@ -443,17 +443,19 @@ public class RightPanel extends JPanel implements ActionListener {
         class CartListener implements PropertyChangeListener {
             @Override
             public void propertyChange(final PropertyChangeEvent evt) {
-                SwingUtilities.invokeLater(() -> {
-                    LOGGER.info(String.format("Recevied property change event: %s", evt));
+                LOGGER.info(String.format("Recevied property change event: %s", evt));
 
-                    if (evt.getPropertyName().equals("discounts")) {
+                if (evt.getPropertyName().equals("discounts")) {
+                    SwingUtilities.invokeLater(() -> {
                         updateTotalLabels();
-                    }
+                    });
+                }
 
-                    if (evt.getPropertyName().equals("products")
-                            && evt.getOldValue() instanceof final ArrayList<?> oldList
-                            && evt.getNewValue() instanceof final ArrayList<?> list) {
-                        if (list.isEmpty()) {
+                if (evt.getPropertyName().equals("products")
+                        && evt.getOldValue() instanceof final ArrayList<?> oldList
+                        && evt.getNewValue() instanceof final ArrayList<?> list) {
+                    if (list.isEmpty()) {
+                        SwingUtilities.invokeLater(() -> {
                             LOGGER.info("Cart is empty.");
 
                             for (final Component c : content.getComponents()) {
@@ -469,27 +471,35 @@ public class RightPanel extends JPanel implements ActionListener {
                             scroller.setViewportView(noResultsPanel);
                             repaint();
                             revalidate();
+                        });
 
-                            // added a product
-                        } else if (oldList.size() < list.size()) {
-                            if (oldList.isEmpty()) {
+                        // added a product
+                    } else if (oldList.size() < list.size()) {
+                        if (oldList.isEmpty()) {
+                            SwingUtilities.invokeLater(() -> {
                                 scroller.setViewportView(content);
 
                                 scroller.repaint();
                                 scroller.revalidate();
-                            }
+                            });
+                        }
 
-                            final CartProduct product = (CartProduct) list.getLast();
+                        final CartProduct product = (CartProduct) list.getLast();
 
+                        SwingUtilities.invokeLater(() -> {
                             updateTotalLabels();
 
                             content.add(new CartItemCard(cart, product, () -> updateTotalLabels()), "growx");
                             repaint();
                             revalidate();
+                        });
 
-                            LOGGER.info(String.format("Added new product to cart: %s\nNew List size: %d", product,
-                                    list.size()));
-                        } else if (oldList.size() > list.size()) {
+                        LOGGER.info(String.format("Added new product to cart: %s\nNew List size: %d", product,
+                                list.size()));
+
+                        // removed a product
+                    } else if (oldList.size() > list.size()) {
+                        SwingUtilities.invokeLater(() -> {
                             final ArrayList<CartItemCard> toBeRemoved = new ArrayList<>();
 
                             for (final Component c : content.getComponents()) {
@@ -523,9 +533,9 @@ public class RightPanel extends JPanel implements ActionListener {
 
                             LOGGER.info(String.format("Removed product from cart: %s\nNew List size: %d", toBeRemoved,
                                     list.size()));
-                        }
+                        });
                     }
-                });
+                }
             }
         }
     }
